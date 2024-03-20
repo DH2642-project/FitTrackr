@@ -18,6 +18,24 @@ declare module "@tanstack/react-router" {
   }
 }
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app"
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCEoStnp59JE3vmVMc_Y0K8cNw-A7haUSQ",
+  authDomain: "dh2642-project-7eb8e.firebaseapp.com",
+  projectId: "dh2642-project-7eb8e",
+  storageBucket: "dh2642-project-7eb8e.appspot.com",
+  messagingSenderId: "230765286214",
+  appId: "1:230765286214:web:7771f9814dfc7ac78e4b47",
+}
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig)
+
 // Render the app
 const rootElement = document.getElementById("root")!
 if (!rootElement.innerHTML) {
