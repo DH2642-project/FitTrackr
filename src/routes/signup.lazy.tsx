@@ -3,7 +3,7 @@ import { Box, Button, InputAdornment, Link, Paper, Stack, TextField, Typography 
 import { createLazyFileRoute, Link as ReactRouterLink } from "@tanstack/react-router";
 import { useState } from "react";
 
-function Login() {
+function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState({ username: false, password: false });
@@ -26,7 +26,7 @@ function Login() {
     >
       <Paper elevation={12} sx={{ padding: 2, borderRadius: 2 }}>
         <Typography variant="h4" mb={2}>
-          Welcome back!
+          Welcome to FitTrackr!
         </Typography>
         <Stack direction="column" spacing={2}>
           <TextField
@@ -65,11 +65,11 @@ function Login() {
               ),
             }}
           />
-          <Link component={ReactRouterLink} to="/signup" color="info.main">
-            No account? Sign up here
+          <Link component={ReactRouterLink} to="/login" color="info.main">
+            Already have an account? Log in here
           </Link>
           <Button variant="contained" size="large" sx={{ my: 1 }} onClick={handleCreateAccount}>
-            Login
+            Create account
           </Button>
         </Stack>
       </Paper>
@@ -77,6 +77,6 @@ function Login() {
   );
 }
 
-export const Route = createLazyFileRoute("/login")({
-  component: Login,
+export const Route = createLazyFileRoute("/signup")({
+  component: Signup,
 });
