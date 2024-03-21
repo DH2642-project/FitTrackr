@@ -121,7 +121,7 @@ export const Route = createRootRoute({
       <Box sx={{ display: "flex" }}>
         <SideBar />
         {/* Padding on mobile for button */}
-        <Box sx={isMobile ? { pt: 4 } : {}}>
+        <Box sx={{ width: "100%", height: "100vh" }}>
           <Outlet />
         </Box>
       </Box>
