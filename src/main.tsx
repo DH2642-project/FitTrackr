@@ -8,6 +8,9 @@ import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth"
 import { routeTree } from "./routeTree.gen" // Import the generated route tree
+import { Provider } from 'react-redux'
+import { store } from "./store"
+
 
 // Create a new router instance
 const router = createRouter({ routeTree })
@@ -42,10 +45,12 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <RouterProvider router={router} />
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </Provider>
     </StrictMode>
   )
 }
