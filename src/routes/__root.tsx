@@ -1,7 +1,17 @@
-import { DonutLarge, EventNote, FitnessCenter, Flag, Home, Person, Restaurant } from "@mui/icons-material";
-import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
+import { DonutLarge, EventNote, FitnessCenter, Flag, Home, Menu, Person, Restaurant } from "@mui/icons-material";
+import {
+  Box,
+  Drawer,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 
 // TanStack devtools only in development
 const TanStackRouterDevtools =
@@ -16,26 +26,49 @@ const TanStackRouterDevtools =
         }))
       );
 
-export const Route = createRootRoute({
-  component: () => (
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+function SideBar() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  return (
     <>
       <Box sx={{ display: "flex" }}>
+        {/* Mobile Menu button */}
+        {isMobile && (
+          <IconButton
+            size="large"
+            onClick={() => setSidebarOpen(true)}
+            sx={{
+              color: "primary.contrastText",
+              top: 0,
+              left: 0,
+              position: "fixed",
+              zIndex: 1000,
+              bgcolor: "primary.main",
+              borderRadius: "0 0 30px 0",
+            }}
+          >
+            <Menu />
+          </IconButton>
+        )}
         <Drawer
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
           sx={{
             width: 240,
             flexShrink: 0,
-            bgcolor: "#535353",
             "& .MuiDrawer-paper": {
               bgcolor: "#535353",
-              color: "#ffffff",
+              color: "white",
               width: 240,
               boxSizing: "border-box",
             },
             "& .MuiListItemIcon-root": {
-              color: "#ffffff",
+              // for icons
+              color: "white",
             },
           }}
-          variant="permanent"
+          variant={isMobile ? "temporary" : "permanent"}
           anchor="left"
         >
           <Toolbar>
@@ -59,31 +92,38 @@ export const Route = createRootRoute({
               { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: true },
               { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
               { text: "About", path: "/about", icon: <Person /> },
-            ].map((obj, index) => (
+            ].map((page, index) => (
               <ListItemButton
                 key={index}
                 component={Link}
-                to={obj.path}
+                to={page.path}
                 sx={{
                   borderRadius: "30px",
                   "&.active": {
-                    backgroundColor: "#ff904d",
+                    backgroundColor: "primary.main",
                   },
                 }}
-                disabled={obj.disabled}
+                disabled={page.disabled}
               >
-                <ListItemIcon>{obj.icon}</ListItemIcon>
-                <ListItemText primary={<Typography variant="h6">{obj.text}</Typography>} />
+                <ListItemIcon>{page.icon}</ListItemIcon>
+                <ListItemText primary={<Typography variant="h6">{page.text}</Typography>} />
               </ListItemButton>
             ))}
           </List>
         </Drawer>
-        <Outlet />
+        {/* Padding on mobile for button */}
+        <Box sx={isMobile ? { pt: 4 } : {}}>
+          <Outlet />
+        </Box>
       </Box>
 
       <Suspense>
         <TanStackRouterDevtools />
       </Suspense>
     </>
-  ),
+  );
+}
+
+export const Route = createRootRoute({
+  component: SideBar,
 });
