@@ -1,4 +1,4 @@
-import { DonutLarge, EventNote, FitnessCenter, Flag, Home, Menu, Person, Restaurant } from "@mui/icons-material";
+import { DonutLarge, EventNote, FitnessCenter, Flag, Home, Login, Menu, Person, Restaurant } from "@mui/icons-material";
 import {
   Box,
   Drawer,
@@ -32,85 +32,94 @@ function SideBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <>
-      <Box sx={{ display: "flex" }}>
-        {/* Mobile Menu button */}
-        {isMobile && (
-          <IconButton
-            size="large"
-            onClick={() => setSidebarOpen(true)}
+      {/* Mobile Menu button */}
+      {isMobile && (
+        <IconButton
+          size="large"
+          onClick={() => setSidebarOpen(true)}
+          sx={{
+            color: "primary.contrastText",
+            top: 0,
+            left: 0,
+            position: "fixed",
+            zIndex: 1000,
+            bgcolor: "primary.main",
+            borderRadius: "0 0 30px 0",
+          }}
+        >
+          <Menu />
+        </IconButton>
+      )}
+      <Drawer
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        sx={{
+          width: 240,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            bgcolor: "#535353",
+            color: "white",
+            width: 240,
+            boxSizing: "border-box",
+          },
+          "& .MuiListItemIcon-root": {
+            // for icons
+            color: "white",
+          },
+        }}
+        variant={isMobile ? "temporary" : "permanent"}
+        anchor="left"
+      >
+        <Toolbar>
+          <Typography
+            variant="h4"
             sx={{
-              color: "primary.contrastText",
-              top: 0,
-              left: 0,
-              position: "fixed",
-              zIndex: 1000,
-              bgcolor: "primary.main",
-              borderRadius: "0 0 30px 0",
+              fontWeight: "bold",
+              textAlign: "center",
+              width: "100%",
             }}
           >
-            <Menu />
-          </IconButton>
-        )}
-        <Drawer
-          open={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-          sx={{
-            width: 240,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              bgcolor: "#535353",
-              color: "white",
-              width: 240,
-              boxSizing: "border-box",
-            },
-            "& .MuiListItemIcon-root": {
-              // for icons
-              color: "white",
-            },
-          }}
-          variant={isMobile ? "temporary" : "permanent"}
-          anchor="left"
-        >
-          <Toolbar>
-            <Typography
-              variant="h4"
+            FitTrackr
+          </Typography>
+        </Toolbar>
+        <List>
+          {[
+            { text: "Login", path: "/login", icon: <Login /> },
+            { text: "Overview", path: "/", icon: <Home /> },
+            { text: "Exercises", path: "/exercises", icon: <FitnessCenter />, disabled: true },
+            { text: "Goals", path: "/goals", icon: <Flag />, disabled: true },
+            { text: "Schedule", path: "/schedule", icon: <EventNote />, disabled: true },
+            { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: true },
+            { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
+            { text: "About", path: "/about", icon: <Person /> },
+          ].map((page, index) => (
+            <ListItemButton
+              key={index}
+              component={Link}
+              to={page.path}
               sx={{
-                fontWeight: "bold",
-                textAlign: "center",
-                width: "100%",
+                borderRadius: "30px",
+                "&.active": {
+                  backgroundColor: "primary.main",
+                },
               }}
+              disabled={page.disabled}
             >
-              FitTrackr
-            </Typography>
-          </Toolbar>
-          <List>
-            {[
-              { text: "Overview", path: "/", icon: <Home /> },
-              { text: "Exercises", path: "/exercises", icon: <FitnessCenter />, disabled: true },
-              { text: "Goals", path: "/goals", icon: <Flag />, disabled: true },
-              { text: "Schedule", path: "/schedule", icon: <EventNote />, disabled: true },
-              { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: true },
-              { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
-              { text: "About", path: "/about", icon: <Person /> },
-            ].map((page, index) => (
-              <ListItemButton
-                key={index}
-                component={Link}
-                to={page.path}
-                sx={{
-                  borderRadius: "30px",
-                  "&.active": {
-                    backgroundColor: "primary.main",
-                  },
-                }}
-                disabled={page.disabled}
-              >
-                <ListItemIcon>{page.icon}</ListItemIcon>
-                <ListItemText primary={<Typography variant="h6">{page.text}</Typography>} />
-              </ListItemButton>
-            ))}
-          </List>
-        </Drawer>
+              <ListItemIcon>{page.icon}</ListItemIcon>
+              <ListItemText primary={<Typography variant="h6">{page.text}</Typography>} />
+            </ListItemButton>
+          ))}
+        </List>
+      </Drawer>
+    </>
+  );
+}
+
+export const Route = createRootRoute({
+  component: () => (
+    <>
+      <Box sx={{ display: "flex" }}>
+        <SideBar />
         {/* Padding on mobile for button */}
         <Box sx={isMobile ? { pt: 4 } : {}}>
           <Outlet />
@@ -121,9 +130,5 @@ function SideBar() {
         <TanStackRouterDevtools />
       </Suspense>
     </>
-  );
-}
-
-export const Route = createRootRoute({
-  component: SideBar,
+  ),
 });
