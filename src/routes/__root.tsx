@@ -1,4 +1,4 @@
-import { DonutLarge, EventNote, FitnessCenter, Flag, Home, Login, Menu, Person, Restaurant } from "@mui/icons-material";
+import { DonutLarge, EventNote, FitnessCenter, Flag, Home, Menu, Person, Restaurant } from "@mui/icons-material";
 import {
   Box,
   Drawer,
@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import React, { Suspense, useState } from "react";
+import firebase from "firebase/compat/app";
 
 // TanStack devtools only in development
 const TanStackRouterDevtools =
@@ -84,7 +85,7 @@ function SideBar() {
         </Toolbar>
         <List>
           {[
-            { text: "Login", path: "/login", icon: <Login /> },
+            { text: "Profile", path: "/profile", icon: <Person /> },
             { text: "Overview", path: "/", icon: <Home /> },
             { text: "Exercises", path: "/exercises", icon: <FitnessCenter /> },
             { text: "Goals", path: "/goals", icon: <Flag />, disabled: true },
