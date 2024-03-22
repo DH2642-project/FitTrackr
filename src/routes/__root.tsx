@@ -86,7 +86,7 @@ function SideBar() {
           {[
             { text: "Login", path: "/login", icon: <Login /> },
             { text: "Overview", path: "/", icon: <Home /> },
-            { text: "Exercises", path: "/exercises", icon: <FitnessCenter />, disabled: true },
+            { text: "Exercises", path: "/exercises", icon: <FitnessCenter /> },
             { text: "Goals", path: "/goals", icon: <Flag />, disabled: true },
             { text: "Schedule", path: "/schedule", icon: <EventNote />, disabled: true },
             { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: true },
