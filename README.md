@@ -29,6 +29,7 @@
   - [Realtime Database](https://firebase.google.com/docs/database/web/read-and-write)
   - Hosting
 - [Tanstack Router](https://tanstack.com/router/latest/docs/framework/react/quick-start)
+- Redux with [Redux Toolkit](https://redux-toolkit.js.org/tutorials/quick-start)
 
 
 ## Expanding the ESLint configuration (from Vite README)
