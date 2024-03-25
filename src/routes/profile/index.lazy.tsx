@@ -3,15 +3,14 @@ import Cover from "../../components/Cover";
 import LoginForm from "../../components/LoginForm";
 import LoggedIn from "../../components/LoggedIn";
 import { auth } from "../../main";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Alert, AlertColor, CircularProgress, Snackbar } from "@mui/material";
 import firebase from "firebase/compat/app";
-import { onAuthStateChanged } from "firebase/auth";
+import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 
-function Profile() {
-  const [loading, setLoading] = useState(true);
-  // TODO: user should be in model or store?
-  const [user, setUser] = useState<firebase.User | null>(firebase.auth().currentUser);
+export function ProfilePresenter() {
+  const [user, userLoading] = useAuthState(auth);
+  const [signOut, signOutLoading] = useSignOut(auth);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>();
@@ -22,31 +21,14 @@ function Profile() {
     setSnackbarSeverity(severity);
   }
 
-  function handleLogout() {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        // Sign-out successful.
-        showSnackbar("Successfully signed out!", "success");
-      })
-      .catch((error) => {
-        // Handle error
-        showSnackbar(`Error signing out: ${error.message}`, "error");
-      });
+  async function handleSignOut() {
+    const success = await signOut();
+    if (!success) {
+      showSnackbar("An error occurred while signing out.", "error");
+    }
   }
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user as firebase.User | null);
-      setLoading(false);
-    });
-
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
-
-  if (loading) {
+  if (userLoading) {
     return (
       <Cover>
         <CircularProgress />
@@ -56,7 +38,11 @@ function Profile() {
 
   return (
     <Cover>
-      {user ? <LoggedIn user={user} logout={handleLogout} /> : <LoginForm />}
+      {user ? (
+        <LoggedIn user={user as firebase.User} signOut={handleSignOut} signOutLoading={signOutLoading} />
+      ) : (
+        <LoginForm />
+      )}
       <Snackbar
         open={snackbarOpen}
         message={snackbarMessage}
@@ -72,5 +58,5 @@ function Profile() {
 }
 
 export const Route = createLazyFileRoute("/profile/")({
-  component: Profile,
+  component: ProfilePresenter,
 });
