@@ -2,16 +2,20 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import Cover from "../../components/Cover";
 import LoginForm from "../../components/LoginForm";
 import LoggedIn from "../../components/LoggedIn";
-import { auth } from "../../main";
+import { UserProfile, auth, database } from "../../main";
 import { useState } from "react";
 import { Alert, AlertColor, CircularProgress, Snackbar } from "@mui/material";
 import firebase from "firebase/compat/app";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import { useObject } from "react-firebase-hooks/database";
+import { ref, set } from "firebase/database";
 
 export function ProfilePresenter() {
   const [user, userLoading] = useAuthState(auth);
   const [signOut, signOutLoading] = useSignOut(auth);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snapshot, snapshotLoading] = useObject(ref(database, "users/" + user?.uid + "/profile"));
+  const userProfile: UserProfile = snapshot?.val();
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>();
 
@@ -28,7 +32,16 @@ export function ProfilePresenter() {
     }
   }
 
-  if (userLoading) {
+  function handleSetGender(event: React.ChangeEvent<HTMLInputElement>) {
+    const success = set(ref(database, "users/" + user?.uid + "/profile"), {
+      gender: event.target.value,
+    });
+    if (!success) {
+      showSnackbar("An error occurred while updating your profile.", "error");
+    }
+  }
+
+  if (userLoading || snapshotLoading) {
     return (
       <Cover>
         <CircularProgress />
@@ -39,7 +52,13 @@ export function ProfilePresenter() {
   return (
     <Cover>
       {user ? (
-        <LoggedIn user={user as firebase.User} signOut={handleSignOut} signOutLoading={signOutLoading} />
+        <LoggedIn
+          user={user as firebase.User}
+          signOut={handleSignOut}
+          signOutLoading={signOutLoading}
+          userProfile={userProfile}
+          setGender={handleSetGender}
+        />
       ) : (
         <LoginForm />
       )}

@@ -22,6 +22,13 @@ declare module "@tanstack/react-router" {
   }
 }
 
+export type UserProfile = {
+  gender: string;
+  height: number;
+  weight: number;
+  age: number;
+};
+
 // Your web app's Firebase configuration
 export const firebaseConfig = {
   apiKey: "AIzaSyCEoStnp59JE3vmVMc_Y0K8cNw-A7haUSQ",
