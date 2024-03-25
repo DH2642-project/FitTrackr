@@ -5,13 +5,12 @@ export default function LoggedIn() {
   return (
     <>
       <Typography variant="h6" mb={2} textAlign="center">
-        Hi, {firebase.auth().currentUser!.displayName || "user"}!
+        Hi, {firebase.auth().currentUser!.displayName || "there"}!
       </Typography>
       <Button
         variant="contained"
         onClick={() => {
           firebase.auth().signOut();
-          window.location.reload();
         }}
       >
         Logout
