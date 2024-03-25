@@ -4,6 +4,7 @@ import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 import { useEffect } from "react";
 import { firebaseConfig } from "../main";
+import { useTheme } from "@mui/material/styles";
 
 firebase.initializeApp(firebaseConfig);
 // Initialize the FirebaseUI Widget using Firebase.
@@ -41,6 +42,8 @@ const uiConfig = {
 };
 
 export default function LoginForm() {
+  const theme = useTheme();
+
   useEffect(() => {
     // The start method will wait until the DOM is loaded.
     ui.start("#firebaseui-auth-container", uiConfig);
@@ -48,8 +51,11 @@ export default function LoginForm() {
 
   return (
     <Box>
-      <Typography variant="h5" mb={2} textAlign="center">
-        Welcome to FitTrackr!
+      <Typography variant="h5" textAlign="center">
+        Welcome to <span style={{ color: theme.palette.primary.main }}>FitTrackr</span>!
+      </Typography>
+      <Typography variant="body2" textAlign="center">
+        Please sign in to continue
       </Typography>
       <div id="firebaseui-auth-container"></div>
       <div id="loader">

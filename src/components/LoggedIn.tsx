@@ -1,14 +1,26 @@
-import { Button, Typography } from "@mui/material";
+import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import firebase from "firebase/compat/app";
 
 export default function LoggedIn() {
+  const user = firebase.auth().currentUser!;
+  const displayName = user.displayName;
+  const email = user.email;
+  const photoURL = user.photoURL;
+
   return (
     <>
-      <Typography variant="h6" mb={2} textAlign="center">
-        Hi, {firebase.auth().currentUser!.displayName || "there"}!
+      <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
+        <Typography variant="h6" mb={2} textAlign="center">
+          Hi, {displayName || "there"}!
+        </Typography>
+        {photoURL && <Avatar alt={"Profile Picture"} src={photoURL} />}
+      </Stack>
+      <Typography variant="body2" mb={2} textAlign="center">
+        You are logged in as <b>{email}</b>.
       </Typography>
       <Button
         variant="contained"
+        color="error"
         onClick={() => {
           firebase.auth().signOut();
         }}
