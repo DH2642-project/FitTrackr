@@ -1,5 +1,4 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import firebase from "firebase/compat/app";
 import Cover from "../../components/Cover";
 import LoginForm from "../../components/LoginForm";
 import LoggedIn from "../../components/LoggedIn";

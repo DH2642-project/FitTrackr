@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import React, { Suspense, useState } from "react";
-import firebase from "firebase/compat/app";
 
 // TanStack devtools only in development
 const TanStackRouterDevtools =
