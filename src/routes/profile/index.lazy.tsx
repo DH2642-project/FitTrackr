@@ -11,11 +11,14 @@ import { useObject } from "react-firebase-hooks/database";
 import { ref, set } from "firebase/database";
 
 export function ProfilePresenter() {
+  // User Authentication
   const [user, userLoading] = useAuthState(auth);
   const [signOut, signOutLoading] = useSignOut(auth);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  // Database User Profile
   const [snapshot, snapshotLoading] = useObject(ref(database, "users/" + user?.uid + "/profile"));
   const userProfile: UserProfile = snapshot?.val();
+  // Snackbar state
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>();
 
@@ -34,7 +37,38 @@ export function ProfilePresenter() {
 
   function handleSetGender(event: React.ChangeEvent<HTMLInputElement>) {
     const success = set(ref(database, "users/" + user?.uid + "/profile"), {
+      ...userProfile,
       gender: event.target.value,
+    });
+    if (!success) {
+      showSnackbar("An error occurred while updating your profile.", "error");
+    }
+  }
+
+  function handleSetWeight(event: React.ChangeEvent<HTMLInputElement>) {
+    const success = set(ref(database, "users/" + user?.uid + "/profile"), {
+      ...userProfile,
+      weight: Number(event.target.value),
+    });
+    if (!success) {
+      showSnackbar("An error occurred while updating your profile.", "error");
+    }
+  }
+
+  function handleSetHeight(event: React.ChangeEvent<HTMLInputElement>) {
+    const success = set(ref(database, "users/" + user?.uid + "/profile"), {
+      ...userProfile,
+      height: Number(event.target.value),
+    });
+    if (!success) {
+      showSnackbar("An error occurred while updating your profile.", "error");
+    }
+  }
+
+  function handleSetAge(event: React.ChangeEvent<HTMLInputElement>) {
+    const success = set(ref(database, "users/" + user?.uid + "/profile"), {
+      ...userProfile,
+      age: Number(event.target.value),
     });
     if (!success) {
       showSnackbar("An error occurred while updating your profile.", "error");
@@ -58,6 +92,9 @@ export function ProfilePresenter() {
           signOutLoading={signOutLoading}
           userProfile={userProfile}
           setGender={handleSetGender}
+          setWeight={handleSetWeight}
+          setHeight={handleSetHeight}
+          setAge={handleSetAge}
         />
       ) : (
         <LoginForm />
