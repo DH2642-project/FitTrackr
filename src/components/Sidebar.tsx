@@ -120,6 +120,7 @@ export default function Sidebar({
                 },
               }}
               disabled={page.disabled}
+              onClick={() => setSidebarOpen(false)} // close mobile sidebar on click
             >
               <ListItemIcon>{page.icon}</ListItemIcon>
               <ListItemText primary={<Typography variant="h6">{page.text}</Typography>} />
