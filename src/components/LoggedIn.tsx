@@ -54,7 +54,7 @@ export default function LoggedIn({
       <Stack direction="column">
         <FormControl>
           <FormLabel>Gender</FormLabel>
-          <RadioGroup value={userProfile?.gender} onChange={setGender}>
+          <RadioGroup value={userProfile?.gender || ""} onChange={setGender}>
             <FormControlLabel value="female" control={<Radio />} label="Female" />
             <FormControlLabel value="male" control={<Radio />} label="Male" />
           </RadioGroup>
@@ -64,7 +64,7 @@ export default function LoggedIn({
           <FormLabel>Weight</FormLabel>
           <TextField
             type="number"
-            value={userProfile?.weight}
+            value={userProfile?.weight || ""}
             onChange={setWeight}
             InputProps={{
               endAdornment: <InputAdornment position="end">kg</InputAdornment>,
@@ -76,7 +76,7 @@ export default function LoggedIn({
           <FormLabel>Height</FormLabel>
           <TextField
             type="number"
-            value={userProfile?.height}
+            value={userProfile?.height || ""}
             onChange={setHeight}
             InputProps={{
               endAdornment: <InputAdornment position="end">cm</InputAdornment>,
@@ -86,7 +86,7 @@ export default function LoggedIn({
         {/* Age */}
         <FormControl>
           <FormLabel>Age</FormLabel>
-          <TextField type="number" value={userProfile?.age} onChange={setAge} />
+          <TextField type="number" value={userProfile?.age || ""} onChange={setAge} />
         </FormControl>
       </Stack>
       <Divider sx={{ my: 1 }} />
