@@ -38,6 +38,7 @@ function RootPresenter() {
       ),
     },
     { text: "Overview", path: "/", icon: <Home /> },
+    { text: "Add Workout", path: "/add-workout", icon: <FitnessCenter /> },
     { text: "Exercises", path: "/exercises", icon: <FitnessCenter /> },
     { text: "Goals", path: "/goals", icon: <Flag />, disabled: true },
     { text: "Schedule", path: "/schedule", icon: <EventNote />, disabled: true },
