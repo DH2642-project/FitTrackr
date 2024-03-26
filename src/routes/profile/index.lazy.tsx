@@ -10,6 +10,10 @@ import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { useObject } from "react-firebase-hooks/database";
 import { ref, set } from "firebase/database";
 
+export const Route = createLazyFileRoute("/profile/")({
+  component: ProfilePresenter,
+});
+
 export function ProfilePresenter() {
   // User Authentication
   const [user, userLoading] = useAuthState(auth);
@@ -112,7 +116,3 @@ export function ProfilePresenter() {
     </Cover>
   );
 }
-
-export const Route = createLazyFileRoute("/profile/")({
-  component: ProfilePresenter,
-});
