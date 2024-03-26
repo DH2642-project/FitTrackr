@@ -25,7 +25,7 @@ const initialState: GoalsState = {
     goals: [],
     description: '',
     progress: 0,
-    goalType: 'Cardio',
+    goalType: "Cardio",
     distance: '',
     startingPoint: '',
     endGoal: '',
@@ -56,6 +56,8 @@ const goalsSlice = createSlice({
             const distance = state.distance;
             const startingPoint = state.startingPoint;
             const endGoal = state.endGoal;
+
+            console.log(goalType)
             
 
             const newGoal: Goal = {

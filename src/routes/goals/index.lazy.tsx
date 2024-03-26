@@ -1,8 +1,16 @@
-import { createLazyFileRoute } from "@tanstack/react-router"
+import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { useDispatch, useSelector } from "react-redux";
-import { SelectChangeEvent, Container, Typography, Select, MenuItem, Button } from "@mui/material";
+import {
+  SelectChangeEvent,
+  Container,
+  Typography,
+  Select,
+  MenuItem,
+  Button,
+} from "@mui/material";
 import { CardioGoalForm } from "../../components/Goals/CardioGoalForm";
+import { WeightGoalForm } from "../../components/Goals/WeightGoalForm";
 
 import {
   setDescription,
@@ -14,14 +22,15 @@ import {
   removeGoal,
 } from "../../features/goals/goalsReducer";
 import { CurrentGoals } from "../../components/Goals/CurrentGoals";
+import { RootState } from "../../store";
 
 export const Route = createLazyFileRoute("/goals/")({
   component: Goals,
-})
+});
 
 export function Goals() {
-  const goalType = useSelector((state: any) => state.goalType);
-  
+  const goalType = useSelector((state: RootState) => state.goals.goalType);
+
   const dispatch = useDispatch();
 
   const handleSelectChange = (evt: SelectChangeEvent<string>) => {
@@ -33,7 +42,7 @@ export function Goals() {
   }
 
   function updateDistance(dist: string) {
-  dispatch(setDistance(dist))
+    dispatch(setDistance(dist));
   }
 
   function updateStartingPoint(startingPoint: string) {
@@ -42,13 +51,41 @@ export function Goals() {
   function updateEndGoal(endGoal: string) {
     dispatch(setEndGoal(endGoal));
   }
-  
+
   function handleSubmit() {
-    dispatch(addGoal())
-  };
+    dispatch(addGoal());
+  }
 
   function deleteGoal(id: string) {
-    dispatch(removeGoal(id))
+    dispatch(removeGoal(id));
+  }
+
+  let form;
+
+  if (goalType === "Cardio") {
+    form = (
+      <CardioGoalForm
+        onDescriptionChange={updateDescription}
+        onDistanceChange={updateDistance}
+        onStartingPointChange={updateStartingPoint}
+        onEndGoalChange={updateEndGoal}
+      />
+    );
+  } else if (goalType === "Weight") {
+    form = (
+      <WeightGoalForm
+        onDescriptionChange={updateDescription}
+        onStartingPointChange={updateStartingPoint}
+        onEndGoalChange={updateEndGoal}
+      />
+    )
+  } else {
+    form =
+     <WeightGoalForm
+       onDescriptionChange={updateDescription}
+       onStartingPointChange={updateStartingPoint}
+       onEndGoalChange={updateEndGoal}
+     />;
   }
 
   return (
@@ -64,14 +101,7 @@ export function Goals() {
         <MenuItem value="Strength">Strength</MenuItem>
       </Select>
 
-      <CardioGoalForm
-        onDescriptionChange={updateDescription}
-        onDistanceChange={updateDistance}
-        onStartingPointChange={updateStartingPoint}
-        onEndGoalChange={updateEndGoal}
-      ></CardioGoalForm>
-
-    
+      {form}
 
       <Button variant="contained" onClick={handleSubmit}>
         Add goal
