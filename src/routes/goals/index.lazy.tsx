@@ -8,8 +8,12 @@ import {
   Select,
   MenuItem,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
-import { GoalFormView } from "../../components/Goals/GoalFormView";
+
 
 import {
   setDescription,
@@ -20,7 +24,9 @@ import {
   removeGoal,
 } from "../../features/goals/goalsReducer";
 import { CurrentGoalsView } from "../../components/Goals/CurrentGoalsView";
+import { GoalFormView } from "../../components/Goals/GoalFormView";
 import { RootState } from "../../store";
+import { useState } from "react";
 
 export const Route = createLazyFileRoute("/goals/")({
   component: Goals,
@@ -28,8 +34,9 @@ export const Route = createLazyFileRoute("/goals/")({
 
 export function Goals() {
   const goalType = useSelector((state: RootState) => state.goals.goalType);
-
   const dispatch = useDispatch();
+
+  const [open, setOpen] = useState(false);
 
   const handleSelectChange = (evt: SelectChangeEvent<string>) => {
     dispatch(setGoalType(evt.target.value));
@@ -48,6 +55,7 @@ export function Goals() {
 
   function handleSubmit() {
     dispatch(addGoal());
+    setOpen(false);
   }
 
   function deleteGoal(id: string) {
@@ -68,26 +76,38 @@ export function Goals() {
     <Container>
       <Typography variant="h5">My goals</Typography>
       <CurrentGoalsView onDeleteGoal={deleteGoal}></CurrentGoalsView>
-      <Typography variant="h5">Create goal</Typography>
-      <Select
-        value={goalType}
-        onChange={handleSelectChange}
-        defaultValue="Cardio"
-      >
-        <MenuItem value="Cardio">Cardio</MenuItem>
-        <MenuItem value="Weight">Weight</MenuItem>
-        <MenuItem value="Strength">Strength</MenuItem>
-      </Select>
-      <GoalFormView
-        onDescriptionChange={updateDescription}
-        onStartingPointChange={updateStartingPoint}
-        onEndGoalChange={updateEndGoal}
-        goalMetric={formMetric}
-      />
       
-      <Button variant="contained" onClick={handleSubmit}>
-        Add goal
+      <Button variant="contained" onClick={() => setOpen(true)}>
+        Create new goal
       </Button>
+
+      
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Add New Goal</DialogTitle>
+        <DialogContent>
+          <Select
+            value={goalType}
+            onChange={handleSelectChange}
+            defaultValue="Cardio"
+          >
+            <MenuItem value="Cardio">Cardio</MenuItem>
+            <MenuItem value="Weight">Weight</MenuItem>
+            <MenuItem value="Strength">Strength</MenuItem>
+          </Select>
+          <GoalFormView
+            onDescriptionChange={updateDescription}
+            onStartingPointChange={updateStartingPoint}
+            onEndGoalChange={updateEndGoal}
+            goalMetric={formMetric}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button onClick={handleSubmit}>
+            Add goal
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
