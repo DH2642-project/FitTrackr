@@ -16,27 +16,21 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
-const AboutLazyImport = createFileRoute('/about')()
-const IndexLazyImport = createFileRoute('/')()
 const ProfileIndexLazyImport = createFileRoute('/profile/')()
+const IndexIndexLazyImport = createFileRoute('/index/')()
 const ExercisesIndexLazyImport = createFileRoute('/exercises/')()
 
 // Create/Update Routes
-
-const AboutLazyRoute = AboutLazyImport.update({
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
-
-const IndexLazyRoute = IndexLazyImport.update({
-  path: '/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
 const ProfileIndexLazyRoute = ProfileIndexLazyImport.update({
   path: '/profile/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/profile/index.lazy').then((d) => d.Route))
+
+const IndexIndexLazyRoute = IndexIndexLazyImport.update({
+  path: '/index/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/index/index.lazy').then((d) => d.Route))
 
 const ExercisesIndexLazyRoute = ExercisesIndexLazyImport.update({
   path: '/exercises/',
@@ -49,16 +43,12 @@ const ExercisesIndexLazyRoute = ExercisesIndexLazyImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      preLoaderRoute: typeof IndexLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/about': {
-      preLoaderRoute: typeof AboutLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/exercises/': {
       preLoaderRoute: typeof ExercisesIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/index/': {
+      preLoaderRoute: typeof IndexIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/profile/': {
@@ -71,9 +61,8 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  IndexLazyRoute,
-  AboutLazyRoute,
   ExercisesIndexLazyRoute,
+  IndexIndexLazyRoute,
   ProfileIndexLazyRoute,
 ])
 

@@ -1,17 +1,5 @@
+import { Menu } from "@mui/icons-material";
 import {
-  AccountCircle,
-  DonutLarge,
-  EventNote,
-  FitnessCenter,
-  Flag,
-  Home,
-  Menu,
-  Person,
-  Restaurant,
-} from "@mui/icons-material";
-import {
-  Avatar,
-  CircularProgress,
   Drawer,
   IconButton,
   List,
@@ -21,18 +9,15 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import firebase from "firebase/compat/app";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 
 export default function Sidebar({
-  user,
-  loading,
   isMobile,
+  pages,
 }: {
-  user: firebase.User | null;
-  loading: boolean;
   isMobile: boolean;
+  pages: { path: string; text: string; icon: JSX.Element; disabled?: boolean }[];
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -89,26 +74,7 @@ export default function Sidebar({
           </Typography>
         </Toolbar>
         <List>
-          {[
-            {
-              text: "Profile",
-              path: "/profile",
-              icon: loading ? (
-                <CircularProgress sx={{ color: "primary.contrastText" }} />
-              ) : user?.photoURL ? (
-                <Avatar src={user.photoURL} />
-              ) : (
-                <AccountCircle />
-              ),
-            },
-            { text: "Overview", path: "/", icon: <Home /> },
-            { text: "Exercises", path: "/exercises", icon: <FitnessCenter /> },
-            { text: "Goals", path: "/goals", icon: <Flag />, disabled: true },
-            { text: "Schedule", path: "/schedule", icon: <EventNote />, disabled: true },
-            { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: true },
-            { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
-            { text: "About", path: "/about", icon: <Person /> },
-          ].map((page, index) => (
+          {pages.map((page, index) => (
             <ListItemButton
               key={index}
               component={Link}

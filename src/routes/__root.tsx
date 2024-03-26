@@ -1,11 +1,11 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Avatar, Box, CircularProgress } from "@mui/material";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import React, { Suspense } from "react";
 import { auth } from "../main";
-import firebase from "firebase/compat/app";
 import { ProfilePresenter } from "./profile/index.lazy";
 import Sidebar from "../components/Sidebar";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { AccountCircle, DonutLarge, EventNote, FitnessCenter, Flag, Home, Restaurant } from "@mui/icons-material";
 
 // TanStack devtools only in development
 const TanStackRouterDevtools =
@@ -23,13 +23,32 @@ const TanStackRouterDevtools =
 function RootPresenter() {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-  // const [user, setUser] = useState<firebase.User | null>(auth.currentUser as firebase.User | null);
   const [user, loading] = useAuthState(auth);
+
+  const pages = [
+    {
+      text: "Profile",
+      path: "/profile",
+      icon: loading ? (
+        <CircularProgress sx={{ color: "primary.contrastText" }} />
+      ) : user?.photoURL ? (
+        <Avatar src={user.photoURL} />
+      ) : (
+        <AccountCircle />
+      ),
+    },
+    { text: "Overview", path: "/", icon: <Home /> },
+    { text: "Exercises", path: "/exercises", icon: <FitnessCenter /> },
+    { text: "Goals", path: "/goals", icon: <Flag />, disabled: true },
+    { text: "Schedule", path: "/schedule", icon: <EventNote />, disabled: true },
+    { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: true },
+    { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
+  ];
 
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <Sidebar user={user as firebase.User | null} loading={loading} isMobile={isMobile} />
+        <Sidebar isMobile={isMobile} pages={pages} />
         {loading ? (
           <Box sx={{ width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
             <CircularProgress />
