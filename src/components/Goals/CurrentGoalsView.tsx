@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { Gauge } from "@mui/x-charts/Gauge";
 
-export function CurrentGoals(props: any) {
+export function CurrentGoalsView(props: any) {
      function currentGoalCardCB(goal: any) {
        return (
          <Card key={goal.id}>

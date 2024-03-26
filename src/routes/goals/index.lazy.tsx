@@ -9,19 +9,17 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import { CardioGoalForm } from "../../components/Goals/CardioGoalForm";
-import { WeightGoalForm } from "../../components/Goals/WeightGoalForm";
+import { GoalFormView } from "../../components/Goals/GoalFormView";
 
 import {
   setDescription,
-  setDistance,
   setEndGoal,
   setGoalType,
   setStartingPoint,
   addGoal,
   removeGoal,
 } from "../../features/goals/goalsReducer";
-import { CurrentGoals } from "../../components/Goals/CurrentGoals";
+import { CurrentGoalsView } from "../../components/Goals/CurrentGoalsView";
 import { RootState } from "../../store";
 
 export const Route = createLazyFileRoute("/goals/")({
@@ -41,10 +39,6 @@ export function Goals() {
     dispatch(setDescription(description));
   }
 
-  function updateDistance(dist: string) {
-    dispatch(setDistance(dist));
-  }
-
   function updateStartingPoint(startingPoint: string) {
     dispatch(setStartingPoint(startingPoint));
   }
@@ -60,37 +54,21 @@ export function Goals() {
     dispatch(removeGoal(id));
   }
 
-  let form;
+  let formMetric;
 
   if (goalType === "Cardio") {
-    form = (
-      <CardioGoalForm
-        onDescriptionChange={updateDescription}
-        onDistanceChange={updateDistance}
-        onStartingPointChange={updateStartingPoint}
-        onEndGoalChange={updateEndGoal}
-      />
-    );
+    formMetric = "mm:ss";
   } else if (goalType === "Weight") {
-    form = (
-      <WeightGoalForm
-        onDescriptionChange={updateDescription}
-        onStartingPointChange={updateStartingPoint}
-        onEndGoalChange={updateEndGoal}
-      />
-    )
+    formMetric = "kg";
   } else {
-    form =
-     <WeightGoalForm
-       onDescriptionChange={updateDescription}
-       onStartingPointChange={updateStartingPoint}
-       onEndGoalChange={updateEndGoal}
-     />;
+    formMetric = "kg";
   }
 
   return (
     <Container>
-      <Typography variant="h5">Create Goal</Typography>
+      <Typography variant="h5">My goals</Typography>
+      <CurrentGoalsView onDeleteGoal={deleteGoal}></CurrentGoalsView>
+      <Typography variant="h5">Create goal</Typography>
       <Select
         value={goalType}
         onChange={handleSelectChange}
@@ -100,14 +78,16 @@ export function Goals() {
         <MenuItem value="Weight">Weight</MenuItem>
         <MenuItem value="Strength">Strength</MenuItem>
       </Select>
-
-      {form}
-
+      <GoalFormView
+        onDescriptionChange={updateDescription}
+        onStartingPointChange={updateStartingPoint}
+        onEndGoalChange={updateEndGoal}
+        goalMetric={formMetric}
+      />
+      
       <Button variant="contained" onClick={handleSubmit}>
         Add goal
       </Button>
-
-      <CurrentGoals onDeleteGoal={deleteGoal}></CurrentGoals>
     </Container>
   );
 }
