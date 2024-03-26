@@ -5,7 +5,7 @@ import "firebaseui/dist/firebaseui.css";
 import { useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 
-export default function LoginForm() {
+export default function LoginFormView() {
   const theme = useTheme();
 
   // Initialize the FirebaseUI Widget using Firebase.

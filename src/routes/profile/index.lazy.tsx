@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import Cover from "../../components/Cover";
-import LoginForm from "../../components/LoginForm";
-import LoggedIn from "../../components/LoggedIn";
+import LoginFormView from "../../views/LoginFormView";
+import LoggedInView from "../../views/LoggedInView";
 import { UserProfile, auth, database } from "../../main";
 import { useState } from "react";
 import { Alert, AlertColor, CircularProgress, Snackbar } from "@mui/material";
@@ -90,7 +90,7 @@ export function ProfilePresenter() {
   return (
     <Cover>
       {user ? (
-        <LoggedIn
+        <LoggedInView
           user={user as firebase.User}
           signOut={handleSignOut}
           signOutLoading={signOutLoading}
@@ -101,7 +101,7 @@ export function ProfilePresenter() {
           setAge={handleSetAge}
         />
       ) : (
-        <LoginForm />
+        <LoginFormView />
       )}
       <Snackbar
         open={snackbarOpen}

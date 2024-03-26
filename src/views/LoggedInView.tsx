@@ -15,7 +15,7 @@ import {
 import firebase from "firebase/compat/app";
 import { UserProfile } from "../main";
 
-export default function LoggedIn({
+export default function LoggedInView({
   user,
   signOut,
   signOutLoading,
