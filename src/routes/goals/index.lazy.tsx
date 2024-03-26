@@ -74,14 +74,12 @@ export function Goals() {
 
   return (
     <Container>
-      <Typography variant="h5">My goals</Typography>
-      <CurrentGoalsView onDeleteGoal={deleteGoal}></CurrentGoalsView>
-      
       <Button variant="contained" onClick={() => setOpen(true)}>
         Create new goal
       </Button>
+      <Typography variant="h5">My goals</Typography>
+      <CurrentGoalsView onDeleteGoal={deleteGoal}></CurrentGoalsView>
 
-      
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Add New Goal</DialogTitle>
         <DialogContent>
@@ -103,9 +101,7 @@ export function Goals() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={handleSubmit}>
-            Add goal
-          </Button>
+          <Button onClick={handleSubmit}>Add goal</Button>
         </DialogActions>
       </Dialog>
     </Container>
