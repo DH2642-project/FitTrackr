@@ -87,7 +87,7 @@ function SideBar() {
             { text: "Profile", path: "/profile", icon: <Person /> },
             { text: "Overview", path: "/", icon: <Home /> },
             { text: "Exercises", path: "/exercises", icon: <FitnessCenter /> },
-            { text: "Goals", path: "/goals", icon: <Flag />, disabled: true },
+            { text: "Goals", path: "/goals", icon: <Flag /> },
             { text: "Schedule", path: "/schedule", icon: <EventNote />, disabled: true },
             { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: true },
             { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
