@@ -1,17 +1,11 @@
-import { DonutLarge, EventNote, FitnessCenter, Flag, Home, Menu, Person, Restaurant } from "@mui/icons-material";
-import {
-  Box,
-  Drawer,
-  IconButton,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
-import React, { Suspense, useState } from "react";
+import { Avatar, Box, CircularProgress } from "@mui/material";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
+import React, { Suspense } from "react";
+import { auth } from "../main";
+import { ProfilePresenter } from "./profile/index.lazy";
+import Sidebar from "../components/Sidebar";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { AccountCircle, DonutLarge, EventNote, FitnessCenter, Flag, Home, Restaurant } from "@mui/icons-material";
 
 // TanStack devtools only in development
 const TanStackRouterDevtools =
@@ -26,108 +20,51 @@ const TanStackRouterDevtools =
         }))
       );
 
-const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+function RootPresenter() {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-function SideBar() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [user, loading] = useAuthState(auth);
+
+  const pages = [
+    {
+      text: "Profile",
+      path: "/profile",
+      icon: loading ? (
+        <CircularProgress sx={{ color: "primary.contrastText" }} />
+      ) : user?.photoURL ? (
+        <Avatar src={user.photoURL} />
+      ) : (
+        <AccountCircle />
+      ),
+    },
+    { text: "Overview", path: "/", icon: <Home /> },
+    { text: "Exercises", path: "/exercises", icon: <FitnessCenter /> },
+    { text: "Goals", path: "/goals", icon: <Flag /> },
+    { text: "Schedule", path: "/schedule", icon: <EventNote />, disabled: true },
+    { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: true },
+    { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
+  ];
+
   return (
     <>
-      {/* Mobile Menu button */}
-      {isMobile && (
-        <IconButton
-          size="large"
-          onClick={() => setSidebarOpen(true)}
-          sx={{
-            color: "primary.contrastText",
-            top: 0,
-            left: 0,
-            position: "fixed",
-            zIndex: 1000,
-            bgcolor: "primary.main",
-            borderRadius: "0 0 30px 0",
-          }}
-        >
-          <Menu />
-        </IconButton>
-      )}
-      <Drawer
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        sx={{
-          width: 240,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            bgcolor: "#535353",
-            color: "white",
-            width: 240,
-            boxSizing: "border-box",
-          },
-          "& .MuiListItemIcon-root": {
-            // for icons
-            color: "white",
-          },
-        }}
-        variant={isMobile ? "temporary" : "permanent"}
-        anchor="left"
-      >
-        <Toolbar>
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: "bold",
-              textAlign: "center",
-              width: "100%",
-            }}
-          >
-            FitTrackr
-          </Typography>
-        </Toolbar>
-        <List>
-          {[
-            { text: "Profile", path: "/profile", icon: <Person /> },
-            { text: "Overview", path: "/", icon: <Home /> },
-            { text: "Exercises", path: "/exercises", icon: <FitnessCenter /> },
-            { text: "Goals", path: "/goals", icon: <Flag /> },
-            { text: "Schedule", path: "/schedule", icon: <EventNote />, disabled: true },
-            { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: true },
-            { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
-            { text: "About", path: "/about", icon: <Person /> },
-          ].map((page, index) => (
-            <ListItemButton
-              key={index}
-              component={Link}
-              to={page.path}
-              sx={{
-                borderRadius: "30px",
-                "&.active": {
-                  backgroundColor: "primary.main",
-                },
-              }}
-              disabled={page.disabled}
-            >
-              <ListItemIcon>{page.icon}</ListItemIcon>
-              <ListItemText primary={<Typography variant="h6">{page.text}</Typography>} />
-            </ListItemButton>
-          ))}
-        </List>
-      </Drawer>
-    </>
-  );
-}
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
       <Box sx={{ display: "flex" }}>
-        <SideBar />
-        <Box sx={{ width: "100%", height: "100vh" }}>
-          <Outlet />
-        </Box>
+        <Sidebar isMobile={isMobile} pages={pages} />
+        {loading ? (
+          <Box sx={{ width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Box sx={{ width: "100%", height: "100vh" }}>{auth.currentUser ? <Outlet /> : <ProfilePresenter />}</Box>
+        )}
       </Box>
 
       <Suspense>
         <TanStackRouterDevtools />
       </Suspense>
     </>
-  ),
+  );
+}
+
+export const Route = createRootRoute({
+  component: RootPresenter,
 });
