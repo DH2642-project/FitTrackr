@@ -60,7 +60,6 @@ const goalsSlice = createSlice({
             };
 
             state.goals.push(newGoal);
-
         }, removeGoal: (state, action: PayloadAction<string>) => {
             state.goals = state.goals.filter(goal => goal.id !== action.payload);
         },

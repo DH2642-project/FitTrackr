@@ -2,11 +2,8 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
-  SelectChangeEvent,
   Container,
   Typography,
-  Select,
-  MenuItem,
   Button,
   Dialog,
   DialogTitle,
@@ -38,8 +35,8 @@ export function Goals() {
 
   const [open, setOpen] = useState(false);
 
-  const handleSelectChange = (evt: SelectChangeEvent<string>) => {
-    dispatch(setGoalType(evt.target.value));
+  const updateGoalType = (type : string) => {
+    dispatch(setGoalType(type));
   };
 
   function updateDescription(description: string) {
@@ -83,19 +80,11 @@ export function Goals() {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Add New Goal</DialogTitle>
         <DialogContent>
-          <Select
-            value={goalType}
-            onChange={handleSelectChange}
-            defaultValue="Cardio"
-          >
-            <MenuItem value="Cardio">Cardio</MenuItem>
-            <MenuItem value="Weight">Weight</MenuItem>
-            <MenuItem value="Strength">Strength</MenuItem>
-          </Select>
           <GoalFormView
             onDescriptionChange={updateDescription}
             onStartingPointChange={updateStartingPoint}
             onEndGoalChange={updateEndGoal}
+            onUpdateGoalType={updateGoalType}
             goalMetric={formMetric}
           />
         </DialogContent>
