@@ -4,11 +4,12 @@ import LoginFormView from "../../views/LoginFormView";
 import LoggedInView from "../../views/LoggedInView";
 import { UserProfile, auth, database } from "../../main";
 import { useState } from "react";
-import { Alert, AlertColor, CircularProgress, Snackbar } from "@mui/material";
+import { AlertColor, CircularProgress } from "@mui/material";
 import firebase from "firebase/compat/app";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { useObject } from "react-firebase-hooks/database";
 import { ref, set } from "firebase/database";
+import CustomSnackbar from "../../components/CustomSnackbar";
 
 export const Route = createLazyFileRoute("/profile/")({
   component: ProfilePresenter,
@@ -24,7 +25,7 @@ export function ProfilePresenter() {
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>();
+  const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>("info");
 
   function showSnackbar(message: string, severity: AlertColor = "info") {
     setSnackbarMessage(message);
@@ -103,16 +104,12 @@ export function ProfilePresenter() {
       ) : (
         <LoginFormView />
       )}
-      <Snackbar
-        open={snackbarOpen}
-        message={snackbarMessage}
-        autoHideDuration={5000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      <CustomSnackbar
+        snackbarOpen={snackbarOpen}
+        snackbarMessage={snackbarMessage}
+        snackbarSeverity={snackbarSeverity}
+        setSnackbarOpen={setSnackbarOpen}
+      />
     </Cover>
   );
 }

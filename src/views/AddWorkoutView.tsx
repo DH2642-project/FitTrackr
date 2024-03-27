@@ -1,4 +1,4 @@
-import { Search } from "@mui/icons-material";
+import { Delete, Search } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -8,6 +8,7 @@ import {
   CardMedia,
   Container,
   Grid,
+  IconButton,
   InputAdornment,
   List,
   ListItem,
@@ -19,19 +20,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Exercise, Workout } from "../features/workouts/workoutsSlice";
+import { Exercise } from "../features/workouts/workoutsSlice";
 
-export default function WorkoutsView({
+export default function AddWorkoutView({
   categories,
   category,
   setCategory,
   search,
   searchResults,
   addWorkout,
-  deleteWorkout,
   exercises,
   addExercise,
-  workouts,
+  removeExercise,
 }: {
   categories: string[];
   category: string;
@@ -39,92 +39,91 @@ export default function WorkoutsView({
   search: (event: React.ChangeEvent<HTMLInputElement>) => void;
   searchResults: Exercise[];
   addWorkout: () => void;
-  deleteWorkout: (id: number) => void;
   exercises: Exercise[];
   addExercise: (exercise: Exercise) => void;
-  workouts: Workout[];
+  removeExercise: (id: string) => void;
 }) {
   return (
-    <Stack direction="column">
-      <Container>
-        <Typography variant="h3">Previous workouts:</Typography>
-        {workouts.map((workout) => (
-          <Card key={workout.id}>
-            <CardHeader title="Workout session" />
-            <CardContent>
-              <List>
-                {workout.exercises.map((exercise) => (
-                  <ListItem key={exercise.id}>{exercise.title}</ListItem>
+    <Grid container spacing={2} sx={{ width: "100%", height: "100%", p: 2 }}>
+      <Grid item md={8} xs={12}>
+        {/* Search menu */}
+        <Paper elevation={4} sx={{ width: "100%", height: "100%" }}>
+          <Container sx={{ pt: 2 }}>
+            <Stack direction="row" spacing={2}>
+              {/* Filter by category */}
+              <Select variant="standard" value={category} onChange={setCategory}>
+                {categories.map((category) => (
+                  <MenuItem key={category} value={category}>
+                    {category}
+                  </MenuItem>
                 ))}
-              </List>
-            </CardContent>
-            <CardActions>
-              <Button onClick={() => deleteWorkout(workout.id)}>Delete session</Button>
-            </CardActions>
-          </Card>
-        ))}
-      </Container>
-      <Grid container rowSpacing={2} columnSpacing={2} sx={{ width: "100%", height: "100%", p: 2 }}>
-        <Grid item md={8} xs={12}>
-          {/* Search menu */}
-          <Paper elevation={4} sx={{ width: "100%", height: "100%" }}>
-            <Container sx={{ pt: 2 }}>
-              <Stack direction="row" spacing={2}>
-                {/* Filter by category */}
-                <Select variant="standard" value={category} onChange={setCategory}>
-                  {categories.map((category) => (
-                    <MenuItem key={category} value={category}>
-                      {category}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {/* Search field */}
-                <TextField
-                  variant="standard"
-                  sx={{ width: "100%" }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Search />
-                      </InputAdornment>
-                    ),
-                  }}
-                  onChange={search}
-                />
-              </Stack>
-            </Container>
-            {/* Search results */}
-            <Container sx={{ pt: 2 }}>
-              <Grid container rowSpacing={2} columnSpacing={2} sx={{ pb: 1 }}>
-                {searchResults.map((result) => (
-                  <Grid item key={result.title} md={6} xs={12}>
-                    <Card>
-                      <CardMedia component="img" height="140" image={result.image} alt={result.title} />
-                      <CardHeader title={result.title} subheader={result.description} />
-                      <CardActions>
-                        <Button onClick={() => addExercise(result)}>Add to workout</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Container>
-          </Paper>
-        </Grid>
-        <Grid item md={4} xs={12}>
-          <Card>
-            <CardHeader title="Workout session" />
-            <CardContent>
-              <List>
-                {exercises && exercises.map((workout) => <ListItem key={workout.id}>{workout.title}</ListItem>)}
-              </List>
-            </CardContent>
-            <CardActions>
-              <Button onClick={addWorkout}>Add session</Button>
-            </CardActions>
-          </Card>
-        </Grid>
+              </Select>
+              {/* Search field */}
+              <TextField
+                variant="standard"
+                sx={{ width: "100%" }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+                onChange={search}
+              />
+            </Stack>
+          </Container>
+          {/* Search results */}
+          <Container sx={{ pt: 2 }}>
+            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, lg: 12 }} sx={{ pb: 1 }}>
+              {searchResults.map((result) => (
+                <Grid item key={result.title} xs={2} sm={4} lg={4}>
+                  <Card>
+                    <CardMedia component="img" height="140" image={result.image} alt={result.title} />
+                    <CardHeader title={result.title} subheader={result.description} />
+                    <CardActions>
+                      <Button disabled={exercises.some((e) => e.id === result.id)} onClick={() => addExercise(result)}>
+                        Add to workout
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+        </Paper>
       </Grid>
-    </Stack>
+      <Grid item md={4} xs={12}>
+        {/* Selected Workout */}
+        <Card>
+          <CardHeader title="New workout" />
+          <CardContent>
+            {exercises.length > 0 ? (
+              <List>
+                {exercises.map((exercise) => (
+                  <ListItem
+                    key={exercise.id}
+                    secondaryAction={
+                      <IconButton edge="end" onClick={() => removeExercise(exercise.id)}>
+                        <Delete />
+                      </IconButton>
+                    }
+                  >
+                    {exercise.title}
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <Typography variant="body1">No exercises added yet</Typography>
+            )}
+          </CardContent>
+          <CardActions>
+            <Button disabled={exercises.length == 0} onClick={addWorkout}>
+              Add workout
+            </Button>
+          </CardActions>
+        </Card>
+      </Grid>
+    </Grid>
   );
 }
