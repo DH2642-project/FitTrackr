@@ -35,7 +35,14 @@ export default function WorkoutsView({
                 <Card>
                   <CardContent>
                     <Typography variant="h6">
-                      {workout.date ? new Date(workout.date as string).toLocaleDateString() : "No date"}
+                      {workout.date
+                        ? new Date(workout.date as string).toLocaleDateString(undefined, {
+                            weekday: "long",
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })
+                        : "No date"}
                     </Typography>
                     <Typography variant="body2">{workout.key}</Typography>
                     <List dense sx={{ listStyleType: "numeric", pl: 4 }}>

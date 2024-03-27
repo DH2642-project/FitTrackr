@@ -48,8 +48,18 @@ export default function AddWorkoutView({
       {/* Selected Workout */}
       <Grid item md={3} xs={12}>
         <Card>
-          <CardHeader title="New workout" />
           <CardContent>
+            <Typography gutterBottom variant="h6">
+              New workout
+            </Typography>
+            <Typography variant="subtitle1">
+              {new Date().toLocaleDateString(undefined, {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </Typography>
             {exercises.length > 0 ? (
               <List disablePadding sx={{ listStyleType: "numeric", pl: 4 }}>
                 {exercises.map((exercise) => (
