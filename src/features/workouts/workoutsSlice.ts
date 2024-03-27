@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ref, push, get, child, set } from "firebase/database";
-import { auth, database } from "../../main";
-
+import { auth, database } from "../../firebase";
 export const categories = ["Strength", "Cardio", "Flexibility", "Balance"];
 
 // TODO: Implement proper Exercise type

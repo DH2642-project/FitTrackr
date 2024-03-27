@@ -20,7 +20,11 @@ export function WorkoutsPresenter() {
 
   useEffect(() => {
     // Fetch workouts from database
-    dispatch(fetchWorkouts());
+    try {
+      dispatch(fetchWorkouts());
+    } catch (error) {
+      showSnackbar("Error fetching workouts. Try again later.", "error");
+    }
   }, [dispatch]);
 
   // Snackbar state
@@ -34,10 +38,14 @@ export function WorkoutsPresenter() {
     setSnackbarSeverity(severity);
   }
 
-  function handleDeleteWorkout(key: string) {
-    dispatch(deleteWorkout(key));
-    dispatch(fetchWorkouts());
-    showSnackbar("Workout deleted.", "success");
+  async function handleDeleteWorkout(key: string) {
+    try {
+      await dispatch(deleteWorkout(key));
+      showSnackbar("Workout deleted.", "success");
+      await dispatch(fetchWorkouts());
+    } catch (error) {
+      showSnackbar("Error deleting workout. Try again later.", "error");
+    }
   }
 
   if (status === "loading") {

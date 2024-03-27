@@ -1,7 +1,7 @@
 import { Avatar, Box, CircularProgress } from "@mui/material";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import React, { Suspense } from "react";
-import { auth } from "../main";
+import { auth } from "../firebase";
 import { ProfilePresenter } from "./profile/index.lazy";
 import Sidebar from "../components/Sidebar";
 import { useAuthState } from "react-firebase-hooks/auth";

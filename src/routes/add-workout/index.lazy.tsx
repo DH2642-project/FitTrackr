@@ -122,12 +122,16 @@ export function AddWorkoutPresenter() {
     setExercises(exercises.filter((exercise) => exercise.id !== id));
   }
 
-  function handleAddWorkout() {
+  async function handleAddWorkout() {
     const kcal = exercises.reduce((acc) => acc + 100, 0); // TODO: Calculate kcal
     const date = new Date().toISOString();
-    dispatch(addWorkout({ exercises, kcal, date }));
-    setExercises([]);
-    showSnackbar('Workout added. See "Workouts" page.', "success");
+    try {
+      await dispatch(addWorkout({ exercises, kcal, date }));
+      setExercises([]);
+      showSnackbar('Workout added. See "Workouts" page.', "success");
+    } catch (error) {
+      showSnackbar("Error adding workout. Try again later.", "error");
+    }
   }
 
   return (
