@@ -1,20 +1,16 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import AddWorkoutView from "../../views/AddWorkoutView";
+import WorkoutsView from "../../views/AddWorkoutView";
 import { useState } from "react";
 import { SelectChangeEvent } from "@mui/material";
+import { Exercise, add, categories, remove } from "../../features/workouts/workoutsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
 
-export const Route = createLazyFileRoute("/add-workout/")({
-  component: IndexPresenter,
+export const Route = createLazyFileRoute("/workouts/")({
+  component: WorkoutsPresenter,
 });
 
-export type Workout = {
-  id: string;
-  title: string;
-  description: string;
-  image?: string;
-};
-
-const testData: Workout[] = [
+const testData: Exercise[] = [
   {
     id: "1",
     title: "Pushups",
@@ -88,13 +84,15 @@ const testData: Workout[] = [
     image: "https://picsum.photos/400/211",
   },
 ];
+// TODO: Add view for previous workouts
+export function WorkoutsPresenter() {
+  const workouts = useSelector((state: RootState) => state.workouts.workouts);
+  const dispatch = useDispatch();
 
-export function IndexPresenter() {
-  const categories = ["Strength", "Cardio", "Flexibility", "Balance"];
-  const [searchResults, setSearchResults] = useState<Workout[]>(testData);
+  const [searchResults, setSearchResults] = useState<Exercise[]>(testData);
 
   const [category, setCategory] = useState(categories[0]);
-  const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
 
   function handleSetCategory(event: SelectChangeEvent) {
     setCategory(event.target.value);
@@ -104,19 +102,36 @@ export function IndexPresenter() {
     // Search logic goes here...
   }
 
-  function handleAddWorkout(workout: Workout) {
-    setWorkouts([...workouts, workout]);
+  function handleAddExercise(exercise: Exercise) {
+    setExercises([...exercises, exercise]);
+  }
+
+  function handleAddWorkout() {
+    dispatch(
+      add({
+        id: Math.random(),
+        exercises,
+      })
+    );
+    setExercises([]);
+  }
+
+  function handleDeleteWorkout(id: number) {
+    dispatch(remove(id));
   }
 
   return (
-    <AddWorkoutView
+    <WorkoutsView
       category={category}
       categories={categories}
       setCategory={handleSetCategory}
       search={handleSearch}
       searchResults={searchResults}
-      addWorkout={handleAddWorkout}
+      addExercise={handleAddExercise}
+      exercises={exercises}
       workouts={workouts}
+      addWorkout={handleAddWorkout}
+      deleteWorkout={handleDeleteWorkout}
     />
   );
 }
