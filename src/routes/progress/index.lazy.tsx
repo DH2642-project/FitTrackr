@@ -2,6 +2,9 @@ import {Grid } from "@mui/material";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import  WeightChart  from "../../components/Progress/WeightLossChart.tsx";
 import ActivityChart from "../../components/Progress/ActivityChart.tsx";
+import StrengthGoalChart from "../../components/Progress/StrengthGoalChart.tsx";
+import { setCurrentGoal } from "../../features/goals/goalsReducer.ts";
+import { useDispatch } from "react-redux";
 
 export const Route = createLazyFileRoute("/progress/")({
   component: ProgressPresenter,
@@ -13,7 +16,7 @@ interface Data {
   value: number;
 }
 // Random weright loss data
-const generateWeightLossData = (): Data[] => {
+export function generateRandomData() {
   const startDate = new Date(2024, 0, 1); // January 1, 2024
   const endDate = new Date(); // Current date
 
@@ -62,8 +65,14 @@ const generateMonthlyData = () => {
 
 
 export function ProgressPresenter() {
-    const weightLossData = generateWeightLossData();
+    const weightLossData = generateRandomData();
     const monthlyData = generateMonthlyData();
+    const dispatch = useDispatch();
+
+    const updateGoalSelection = (id: string) => {
+        dispatch(setCurrentGoal(id));
+    };
+
     return (
       <>
         <Grid container spacing={4} sx={{ padding: "30px" }}>
@@ -79,6 +88,14 @@ export function ProgressPresenter() {
               data={monthlyData}
               title={"Monthly activity"}
             ></ActivityChart>
+          </Grid>
+          <Grid item xs={6}>
+            <StrengthGoalChart
+              data={weightLossData}
+              title={"Weight loss"}
+                progress={65}
+                onGoalSelection={updateGoalSelection}
+            ></StrengthGoalChart>
           </Grid>
         </Grid>
       </>

@@ -18,6 +18,7 @@ import { Route as rootRoute } from './routes/__root'
 
 const ProgressIndexLazyImport = createFileRoute('/progress/')()
 const ProfileIndexLazyImport = createFileRoute('/profile/')()
+const GoalsIndexLazyImport = createFileRoute('/goals/')()
 const ExercisesIndexLazyImport = createFileRoute('/exercises/')()
 const IndexIndexLazyImport = createFileRoute('/_index/')()
 
@@ -34,6 +35,11 @@ const ProfileIndexLazyRoute = ProfileIndexLazyImport.update({
   path: '/profile/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/profile/index.lazy').then((d) => d.Route))
+
+const GoalsIndexLazyRoute = GoalsIndexLazyImport.update({
+  path: '/goals/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/goals/index.lazy').then((d) => d.Route))
 
 const ExercisesIndexLazyRoute = ExercisesIndexLazyImport.update({
   path: '/exercises/',
@@ -59,6 +65,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExercisesIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/goals/': {
+      preLoaderRoute: typeof GoalsIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/profile/': {
       preLoaderRoute: typeof ProfileIndexLazyImport
       parentRoute: typeof rootRoute
@@ -75,6 +85,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexIndexLazyRoute,
   ExercisesIndexLazyRoute,
+  GoalsIndexLazyRoute,
   ProfileIndexLazyRoute,
   ProgressIndexLazyRoute,
 ])
