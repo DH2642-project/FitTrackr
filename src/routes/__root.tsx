@@ -13,7 +13,6 @@ import {
   FitnessCenter,
   Flag,
   Home,
-  QuestionMark,
   Restaurant,
 } from "@mui/icons-material";
 
@@ -50,7 +49,6 @@ function RootPresenter() {
     { text: "Overview", path: "/", icon: <Home /> },
     { text: "Add Workout", path: "/add-workout", icon: <Add /> },
     { text: "Workouts", path: "/workouts", icon: <FitnessCenter /> },
-    { text: "Exercises", path: "/exercises", icon: <QuestionMark /> },
     { text: "Goals", path: "/goals", icon: <Flag />, disabled: true },
     { text: "Schedule", path: "/schedule", icon: <EventNote />, disabled: true },
     { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: true },
