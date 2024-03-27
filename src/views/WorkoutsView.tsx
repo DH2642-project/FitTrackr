@@ -37,15 +37,14 @@ export default function WorkoutsView({
                     <Typography variant="h6">
                       {workout.date
                         ? new Date(workout.date as string).toLocaleDateString(undefined, {
-                            weekday: "long",
+                            weekday: "short",
                             month: "long",
                             day: "numeric",
                             year: "numeric",
                           })
                         : "No date"}
                     </Typography>
-                    <Typography variant="body2">{workout.key}</Typography>
-                    <List dense sx={{ listStyleType: "numeric", pl: 4 }}>
+                    <List dense sx={{ listStyleType: "circle", pl: 4 }}>
                       {workout.exercises.map((exercise) => (
                         <ListItem key={exercise.id} sx={{ display: "list-item" }}>
                           {exercise.title}

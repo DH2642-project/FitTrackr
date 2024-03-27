@@ -91,6 +91,7 @@ export function AddWorkoutPresenter() {
   const dispatch = useDispatch<AppDispatch>();
 
   const [searchResults, setSearchResults] = useState<Exercise[]>(testData);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const [category, setCategory] = useState(categories[0]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -111,7 +112,13 @@ export function AddWorkoutPresenter() {
   }
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
-    // Search logic goes here...
+    setSearchLoading(true);
+    const query = event.target.value.toLowerCase();
+    setTimeout(() => {
+      const results = testData.filter((exercise) => exercise.title.toLowerCase().includes(query));
+      setSearchResults(results);
+      setSearchLoading(false);
+    }, 500);
   }
 
   function handleAddExercise(exercise: Exercise) {
@@ -141,6 +148,7 @@ export function AddWorkoutPresenter() {
         category={category}
         setCategory={handleSetCategory}
         search={handleSearch}
+        searchLoading={searchLoading}
         searchResults={searchResults}
         addWorkout={handleAddWorkout}
         exercises={exercises}

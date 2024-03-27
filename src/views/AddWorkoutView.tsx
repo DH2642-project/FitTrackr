@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardMedia,
   Container,
+  Divider,
   Grid,
   IconButton,
   InputAdornment,
@@ -21,12 +22,14 @@ import {
   Typography,
 } from "@mui/material";
 import { Exercise } from "../features/workouts/workoutsSlice";
+import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
 
 export default function AddWorkoutView({
   categories,
   category,
   setCategory,
   search,
+  searchLoading,
   searchResults,
   addWorkout,
   exercises,
@@ -37,6 +40,7 @@ export default function AddWorkoutView({
   category: string;
   setCategory: (event: SelectChangeEvent) => void;
   search: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  searchLoading: boolean;
   searchResults: Exercise[];
   addWorkout: () => void;
   exercises: Exercise[];
@@ -49,36 +53,31 @@ export default function AddWorkoutView({
       <Grid item md={3} xs={12}>
         <Card>
           <CardContent>
-            <Typography gutterBottom variant="h6">
-              New workout
-            </Typography>
+            <Typography variant="h6">New workout</Typography>
             <Typography variant="subtitle1">
               {new Date().toLocaleDateString(undefined, {
-                weekday: "long",
+                weekday: "short",
                 month: "long",
                 day: "numeric",
                 year: "numeric",
               })}
             </Typography>
-            {exercises.length > 0 ? (
-              <List disablePadding sx={{ listStyleType: "numeric", pl: 4 }}>
-                {exercises.map((exercise) => (
-                  <ListItem
-                    key={exercise.id}
-                    secondaryAction={
-                      <IconButton edge="end" onClick={() => removeExercise(exercise.id)}>
-                        <Delete />
-                      </IconButton>
-                    }
-                    sx={{ display: "list-item" }}
-                  >
-                    {exercise.title}
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <Typography variant="body1">No exercises added yet</Typography>
-            )}
+            <Divider sx={{ my: 1 }} />
+            <List disablePadding sx={{ listStyleType: "circle", pl: 4 }}>
+              {exercises.map((exercise) => (
+                <ListItem
+                  key={exercise.id}
+                  secondaryAction={
+                    <IconButton edge="end" onClick={() => removeExercise(exercise.id)}>
+                      <Delete />
+                    </IconButton>
+                  }
+                  sx={{ display: "list-item" }}
+                >
+                  {exercise.title}
+                </ListItem>
+              ))}
+            </List>
           </CardContent>
           <CardActions>
             <Button disabled={exercises.length == 0} onClick={addWorkout}>
@@ -118,21 +117,30 @@ export default function AddWorkoutView({
           </Container>
           {/* Search results */}
           <Container sx={{ pt: 2 }}>
-            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, lg: 12 }} sx={{ pb: 1 }}>
-              {searchResults.map((result) => (
-                <Grid item key={result.title} xs={2} sm={4} lg={4}>
-                  <Card>
-                    <CardMedia component="img" height="140" image={result.image} alt={result.title} />
-                    <CardHeader title={result.title} subheader={result.description} />
-                    <CardActions>
-                      <Button disabled={exercises.some((e) => e.id === result.id)} onClick={() => addExercise(result)}>
-                        Add to workout
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
+            {searchLoading ? (
+              <FullscreenCircularProgress />
+            ) : searchResults.length == 0 ? (
+              <Typography variant="h5">No exercises found, try another search </Typography>
+            ) : (
+              <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, lg: 12 }} sx={{ pb: 1 }}>
+                {searchResults.map((result) => (
+                  <Grid item key={result.title} xs={2} sm={4} lg={4}>
+                    <Card>
+                      <CardMedia component="img" height="140" image={result.image} alt={result.title} />
+                      <CardHeader title={result.title} subheader={result.description} />
+                      <CardActions>
+                        <Button
+                          disabled={exercises.some((e) => e.id === result.id)}
+                          onClick={() => addExercise(result)}
+                        >
+                          Add to workout
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            )}
           </Container>
         </Paper>
       </Grid>
