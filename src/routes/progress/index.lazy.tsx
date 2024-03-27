@@ -8,23 +8,23 @@ export const Route = createLazyFileRoute("/progress/")({
 });
 
 
-interface WeightData {
+interface Data {
   date: string;
-  weight: number;
+  value: number;
 }
 // Random weright loss data
-const generateWeightLossData = (): WeightData[] => {
+const generateWeightLossData = (): Data[] => {
   const startDate = new Date(2024, 0, 1); // January 1, 2024
   const endDate = new Date(); // Current date
 
-  const data: WeightData[] = [];
+  const data: Data[] = [];
   let currentDate = new Date(startDate);
 
   while (currentDate <= endDate) {
     const randomWeight = Math.random() * 10 + 65; // Generate weight between 75 and 80
     data.push({
       date: currentDate.toISOString().slice(0, 10),
-      weight: randomWeight,
+      value: randomWeight,
     });
     currentDate.setDate(
       currentDate.getDate() + Math.floor(Math.random() * 5) + 1
@@ -68,7 +68,11 @@ export function ProgressPresenter() {
       <>
         <Grid container spacing={4} sx={{ padding: "30px" }}>
           <Grid item xs={6}>
-            <WeightChart data={weightLossData} title={"Weight loss"} progress={65}></WeightChart>
+            <WeightChart
+              data={weightLossData}
+              title={"Weight loss"}
+              progress={65}
+            ></WeightChart>
           </Grid>
           <Grid item xs={6}>
             <ActivityChart

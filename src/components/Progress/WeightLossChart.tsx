@@ -44,8 +44,9 @@ const WeightLossChart: React.FC<{
           <Tooltip />
           <Line
             type="monotone"
-            dataKey="weight"
+            dataKey="value"
             stroke="#ff7f0e"
+            strokeWidth={3}
             activeDot={{ r: 8 }}
             dot={false}
           />
