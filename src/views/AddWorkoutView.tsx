@@ -45,7 +45,40 @@ export default function AddWorkoutView({
 }) {
   return (
     <Grid container spacing={2} sx={{ width: "100%", height: "100%", p: 2 }}>
-      <Grid item md={8} xs={12}>
+      {/* Selected Workout */}
+      <Grid item md={3} xs={12}>
+        <Card>
+          <CardHeader title="New workout" />
+          <CardContent>
+            {exercises.length > 0 ? (
+              <List disablePadding sx={{ listStyleType: "numeric", pl: 4 }}>
+                {exercises.map((exercise) => (
+                  <ListItem
+                    key={exercise.id}
+                    secondaryAction={
+                      <IconButton edge="end" onClick={() => removeExercise(exercise.id)}>
+                        <Delete />
+                      </IconButton>
+                    }
+                    sx={{ display: "list-item" }}
+                  >
+                    {exercise.title}
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <Typography variant="body1">No exercises added yet</Typography>
+            )}
+          </CardContent>
+          <CardActions>
+            <Button disabled={exercises.length == 0} onClick={addWorkout}>
+              Add workout
+            </Button>
+          </CardActions>
+        </Card>
+      </Grid>
+      {/* Add exercises */}
+      <Grid item md={9} xs={12}>
         {/* Search menu */}
         <Paper elevation={4} sx={{ width: "100%", height: "100%" }}>
           <Container sx={{ pt: 2 }}>
@@ -92,37 +125,6 @@ export default function AddWorkoutView({
             </Grid>
           </Container>
         </Paper>
-      </Grid>
-      <Grid item md={4} xs={12}>
-        {/* Selected Workout */}
-        <Card>
-          <CardHeader title="New workout" />
-          <CardContent>
-            {exercises.length > 0 ? (
-              <List>
-                {exercises.map((exercise) => (
-                  <ListItem
-                    key={exercise.id}
-                    secondaryAction={
-                      <IconButton edge="end" onClick={() => removeExercise(exercise.id)}>
-                        <Delete />
-                      </IconButton>
-                    }
-                  >
-                    {exercise.title}
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <Typography variant="body1">No exercises added yet</Typography>
-            )}
-          </CardContent>
-          <CardActions>
-            <Button disabled={exercises.length == 0} onClick={addWorkout}>
-              Add workout
-            </Button>
-          </CardActions>
-        </Card>
       </Grid>
     </Grid>
   );

@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ref, push, get, child, set } from "firebase/database";
+import { auth, database } from "../../main";
 
 export const categories = ["Strength", "Cardio", "Flexibility", "Balance"];
 
@@ -12,43 +14,74 @@ export type Exercise = {
 
 export type Workout = {
   exercises: Exercise[];
-  id: number;
+  kcal?: number;
+  key?: string;
 };
 
 // Define a type for the slice state
 export interface WorkoutsState {
   workouts: Workout[];
+  status: string;
+  error?: string;
 }
 
 // Define the initial state using that type
 const initialState: WorkoutsState = {
   workouts: [],
+  status: "loading", // always fetch data on page load
 };
+
+export const fetchWorkouts = createAsyncThunk("workouts/fetchWorkouts", async () => {
+  const userId = auth.currentUser?.uid;
+  const snapshot = await get(child(ref(database), `workouts/${userId}`));
+  if (snapshot.exists()) {
+    const workouts = Object.entries(snapshot.val() as Record<string, Workout>).map(([key, value]) => ({
+      ...value,
+      key,
+    }));
+    return workouts;
+  } else {
+    return [];
+  }
+});
+
+export const addWorkout = createAsyncThunk("workouts/addWorkout", async (workout: Workout) => {
+  const userId = auth.currentUser?.uid;
+  const snapshot = await push(ref(database, `workouts/${userId}`), workout);
+  return snapshot.key;
+});
+
+export const deleteWorkout = createAsyncThunk("workouts/deleteWorkout", async (key: string) => {
+  const userId = auth.currentUser?.uid;
+  set(ref(database, `workouts/${userId}/${key}`), null);
+});
 
 export const workoutsSlice = createSlice({
   name: "workouts",
   initialState,
-  reducers: {
-    /**  Add a workout to the list
-     * @param state - The current state
-     * @param action - The workout to add
-     * @returns void
-     */
-    add: (state, action: PayloadAction<Workout>) => {
-      state.workouts.push(action.payload);
-    },
-    /** Remove a workout in the list
-     * @param state - The current state
-     * @param action - The id of the workout to remove
-     * @returns void
-     */
-    remove: (state, action: PayloadAction<number>) => {
-      const id = action.payload;
-      state.workouts = state.workouts.filter((e) => e.id !== id);
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchWorkouts.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchWorkouts.fulfilled, (state, action: PayloadAction<Workout[]>) => {
+        state.status = "idle";
+        state.workouts = action.payload;
+      })
+      .addCase(addWorkout.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(addWorkout.fulfilled, (state) => {
+        state.status = "idle";
+      })
+      .addCase(deleteWorkout.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteWorkout.fulfilled, (state) => {
+        state.status = "idle";
+      });
   },
 });
-
-export const { add, remove } = workoutsSlice.actions;
 
 export default workoutsSlice.reducer;

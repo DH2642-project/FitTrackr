@@ -1,11 +1,12 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertColor } from "@mui/material";
-import { remove } from "../../features/workouts/workoutsSlice";
+import { fetchWorkouts, deleteWorkout } from "../../features/workouts/workoutsSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 import WorkoutsView from "../../views/WorkoutsView";
 import CustomSnackbar from "../../components/CustomSnackbar";
+import FullscreenCircularProgress from "../../components/FullscreenCircularProgress";
 
 export const Route = createLazyFileRoute("/workouts/")({
   component: WorkoutsPresenter,
@@ -14,7 +15,13 @@ export const Route = createLazyFileRoute("/workouts/")({
 // TODO: Add view for previous workouts
 export function WorkoutsPresenter() {
   const workouts = useSelector((state: RootState) => state.workouts.workouts);
-  const dispatch = useDispatch();
+  const status = useSelector((state: RootState) => state.workouts.status);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    // Fetch workouts from database
+    dispatch(fetchWorkouts());
+  }, [dispatch]);
 
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -27,9 +34,14 @@ export function WorkoutsPresenter() {
     setSnackbarSeverity(severity);
   }
 
-  function handleDeleteWorkout(id: number) {
-    dispatch(remove(id));
+  function handleDeleteWorkout(key: string) {
+    dispatch(deleteWorkout(key));
+    dispatch(fetchWorkouts());
     showSnackbar("Workout deleted.", "success");
+  }
+
+  if (status === "loading") {
+    return <FullscreenCircularProgress />;
   }
 
   return (

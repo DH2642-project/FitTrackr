@@ -2,9 +2,9 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import AddWorkoutView from "../../views/AddWorkoutView";
 import { useState } from "react";
 import { AlertColor, SelectChangeEvent } from "@mui/material";
-import { Exercise, add, categories } from "../../features/workouts/workoutsSlice";
+import { Exercise, addWorkout, categories } from "../../features/workouts/workoutsSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 import CustomSnackbar from "../../components/CustomSnackbar";
 
 export const Route = createLazyFileRoute("/add-workout/")({
@@ -88,7 +88,7 @@ const testData: Exercise[] = [
 // TODO: Add view for previous workouts
 export function AddWorkoutPresenter() {
   useSelector((state: RootState) => state.workouts.workouts);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [searchResults, setSearchResults] = useState<Exercise[]>(testData);
 
@@ -123,12 +123,8 @@ export function AddWorkoutPresenter() {
   }
 
   function handleAddWorkout() {
-    dispatch(
-      add({
-        id: Math.random(),
-        exercises,
-      })
-    );
+    const kcal = exercises.reduce((acc) => acc + 100, 0); // TODO: Calculate kcal
+    dispatch(addWorkout({ exercises, kcal }));
     setExercises([]);
     showSnackbar('Workout added. See "Workouts" page.', "success");
   }

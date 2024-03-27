@@ -1,12 +1,24 @@
-import { Button, Card, CardActions, CardContent, CardHeader, Container, Grid, List, ListItem } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Chip,
+  Container,
+  Grid,
+  List,
+  ListItem,
+  Typography,
+} from "@mui/material";
 import { Workout } from "../features/workouts/workoutsSlice";
+import { LocalFireDepartment } from "@mui/icons-material";
 
 export default function WorkoutsView({
   workouts,
   deleteWorkout,
 }: {
   workouts: Workout[];
-  deleteWorkout: (id: number) => void;
+  deleteWorkout: (key: string) => void;
 }) {
   return (
     <>
@@ -17,25 +29,37 @@ export default function WorkoutsView({
           columns={{ xs: 4, sm: 8, md: 12 }}
           sx={{ width: "100%", height: "100%" }}
         >
-          {workouts.map((workout) => (
-            <Grid item xs={2} sm={4} md={4}>
-              <Card key={workout.id}>
-                <CardHeader title="Workout" />
-                <CardContent>
-                  <List dense>
-                    {workout.exercises.map((exercise) => (
-                      <ListItem key={exercise.id}>{exercise.title}</ListItem>
-                    ))}
-                  </List>
-                </CardContent>
-                <CardActions>
-                  <Button color="error" onClick={() => deleteWorkout(workout.id)}>
-                    Delete Workout
-                  </Button>
-                </CardActions>
-              </Card>
+          {workouts.length > 0 ? (
+            workouts.map((workout) => (
+              <Grid key={workout.key} item xs={2} sm={4} md={4}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6">6 March 2024</Typography>
+                    <Typography variant="body2">{workout.key}</Typography>
+                    <List dense sx={{ listStyleType: "numeric", pl: 4 }}>
+                      {workout.exercises.map((exercise) => (
+                        <ListItem key={exercise.id} sx={{ display: "list-item" }}>
+                          {exercise.title}
+                        </ListItem>
+                      ))}
+                    </List>
+                    <Chip icon={<LocalFireDepartment />} color="primary" label={`${workout.kcal} kcal`} />
+                  </CardContent>
+                  <CardActions>
+                    <Button color="error" onClick={() => deleteWorkout(workout.key!)}>
+                      Delete Workout
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))
+          ) : (
+            <Grid item xs={12}>
+              <Typography variant="h5" align="center">
+                No workouts found
+              </Typography>
             </Grid>
-          ))}
+          )}
         </Grid>
       </Container>
     </>
