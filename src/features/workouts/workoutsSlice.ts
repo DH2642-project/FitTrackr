@@ -14,6 +14,7 @@ export type Exercise = {
 
 export type Workout = {
   exercises: Exercise[];
+  date?: string;
   kcal?: number;
   key?: string;
 };

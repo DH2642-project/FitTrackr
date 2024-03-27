@@ -124,7 +124,8 @@ export function AddWorkoutPresenter() {
 
   function handleAddWorkout() {
     const kcal = exercises.reduce((acc) => acc + 100, 0); // TODO: Calculate kcal
-    dispatch(addWorkout({ exercises, kcal }));
+    const date = new Date().toISOString();
+    dispatch(addWorkout({ exercises, kcal, date }));
     setExercises([]);
     showSnackbar('Workout added. See "Workouts" page.', "success");
   }

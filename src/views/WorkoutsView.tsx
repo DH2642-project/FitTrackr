@@ -34,7 +34,9 @@ export default function WorkoutsView({
               <Grid key={workout.key} item xs={2} sm={4} md={4}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h6">6 March 2024</Typography>
+                    <Typography variant="h6">
+                      {workout.date ? new Date(workout.date as string).toLocaleDateString() : "No date"}
+                    </Typography>
                     <Typography variant="body2">{workout.key}</Typography>
                     <List dense sx={{ listStyleType: "numeric", pl: 4 }}>
                       {workout.exercises.map((exercise) => (
