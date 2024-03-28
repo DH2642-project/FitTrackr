@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ref, push, get, child, set } from "firebase/database";
+import { ref, get, child, set } from "firebase/database";
 import { auth, database } from "../../firebase";
 
 export type ExerciseType =
@@ -84,12 +84,6 @@ export const fetchWorkouts = createAsyncThunk("workouts/fetchWorkouts", async ()
   }
 });
 
-export const addWorkout = createAsyncThunk("workouts/addWorkout", async (workout: Workout) => {
-  const userId = auth.currentUser?.uid;
-  const snapshot = await push(ref(database, `workouts/${userId}`), workout);
-  return snapshot.key;
-});
-
 export const deleteWorkout = createAsyncThunk("workouts/deleteWorkout", async (key: string) => {
   const userId = auth.currentUser?.uid;
   set(ref(database, `workouts/${userId}/${key}`), null);
@@ -107,12 +101,6 @@ export const workoutsSlice = createSlice({
       .addCase(fetchWorkouts.fulfilled, (state, action: PayloadAction<Workout[]>) => {
         state.status = "idle";
         state.workouts = action.payload;
-      })
-      .addCase(addWorkout.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(addWorkout.fulfilled, (state) => {
-        state.status = "idle";
       })
       .addCase(deleteWorkout.pending, (state) => {
         state.status = "loading";

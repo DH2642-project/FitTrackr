@@ -2,17 +2,18 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import AddWorkoutView from "../../views/AddWorkoutView";
 import { useEffect, useState } from "react";
 import { AlertColor, SelectChangeEvent } from "@mui/material";
-import { Exercise, addWorkout, ExerciseType, ExerciseTypes } from "../../features/workouts/workoutsSlice";
+import { Exercise, ExerciseType, ExerciseTypes } from "../../features/workouts/workoutsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import CustomSnackbar from "../../components/CustomSnackbar";
+import { registerWorkout } from "../../features/addWorkout/addWorkoutSlice";
 
 export const Route = createLazyFileRoute("/add-workout/")({
   component: AddWorkoutPresenter,
 });
 
 export function AddWorkoutPresenter() {
-  useSelector((state: RootState) => state.workouts.workouts);
+  useSelector((state: RootState) => state.addWorkout.workout);
   const dispatch = useDispatch<AppDispatch>();
 
   const [searchResults, setSearchResults] = useState<Exercise[]>([]);
@@ -42,12 +43,11 @@ export function AddWorkoutPresenter() {
   async function handleSearch(name: string) {
     setSearchLoading(true);
     const query = new URLSearchParams(type === "all" ? { name } : { name, type });
-    const url = "https://exercises-by-api-ninjas.p.rapidapi.com/v1/exercises?" + query;
+    const url = "https://api.api-ninjas.com/v1/exercises?" + query;
     const options = {
       method: "GET",
       headers: {
-        "X-RapidAPI-Key": import.meta.env.VITE_RAPID_API_KEY,
-        "X-RapidAPI-Host": "exercises-by-api-ninjas.p.rapidapi.com",
+        "X-Api-Key": import.meta.env.VITE_RAPID_API_KEY,
       },
     };
     try {
@@ -76,7 +76,7 @@ export function AddWorkoutPresenter() {
     const kcal = exercises.reduce((acc) => acc + 100, 0); // TODO: Calculate kcal
     const date = new Date().toISOString();
     try {
-      await dispatch(addWorkout({ exercises, kcal, date }));
+      await dispatch(registerWorkout({ exercises, kcal, date }));
       setExercises([]);
       showSnackbar('Workout added. See "Workouts" page.', "success");
     } catch (error) {
