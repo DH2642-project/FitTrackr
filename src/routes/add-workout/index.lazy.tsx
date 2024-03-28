@@ -6,24 +6,22 @@ import { Exercise, ExerciseType, ExerciseTypes } from "../../features/workouts/w
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import CustomSnackbar from "../../components/CustomSnackbar";
-import { registerWorkout } from "../../features/addWorkout/addWorkoutSlice";
+import {
+  addWorkout,
+  addExercise,
+  removeExercise,
+  searchExercises,
+  setSearchType,
+  setSearchName,
+} from "../../features/addWorkout/addWorkoutSlice";
 
 export const Route = createLazyFileRoute("/add-workout/")({
   component: AddWorkoutPresenter,
 });
 
 export function AddWorkoutPresenter() {
-  useSelector((state: RootState) => state.addWorkout.workout);
+  const addWorkoutState = useSelector((state: RootState) => state.addWorkout);
   const dispatch = useDispatch<AppDispatch>();
-
-  const [searchResults, setSearchResults] = useState<Exercise[]>([]);
-  const [searchLoading, setSearchLoading] = useState(true);
-  useEffect(() => {
-    handleSearch("");
-  }, []);
-
-  const [type, setType] = useState<ExerciseType | "all">("all");
-  const [exercises, setExercises] = useState<Exercise[]>([]);
 
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -37,64 +35,62 @@ export function AddWorkoutPresenter() {
   }
 
   function handleSetType(event: SelectChangeEvent) {
-    setType(event.target.value as ExerciseType | "all");
+    dispatch(setSearchType(event.target.value as ExerciseType | "all"));
   }
 
-  async function handleSearch(name: string) {
-    setSearchLoading(true);
-    const query = new URLSearchParams(type === "all" ? { name } : { name, type });
-    const url = "https://api.api-ninjas.com/v1/exercises?" + query;
-    const options = {
-      method: "GET",
-      headers: {
-        "X-Api-Key": import.meta.env.VITE_RAPID_API_KEY,
-      },
-    };
-    try {
-      const response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error("Error fetching exercises.");
-      }
-      const data = await response.json();
-      setSearchResults(data);
-      setSearchLoading(false);
-    } catch (error) {
+  function handleSetName(name: string) {
+    dispatch(setSearchName(name));
+  }
+
+  async function handleSearch() {
+    const response = await dispatch(searchExercises());
+    if (response.meta.requestStatus === "rejected") {
       showSnackbar("Error fetching exercises. Try again later.", "error");
-      setSearchLoading(false);
     }
   }
 
   function handleAddExercise(exercise: Exercise) {
-    setExercises([...exercises, exercise]);
+    dispatch(addExercise(exercise));
   }
 
   function handleRemoveExercise(name: string) {
-    setExercises(exercises.filter((exercise) => exercise.name !== name));
+    const exercise = addWorkoutState.workout.exercises.find((exercise) => exercise.name === name);
+    if (exercise) {
+      dispatch(removeExercise(exercise));
+    }
   }
 
   async function handleAddWorkout() {
-    const kcal = exercises.reduce((acc) => acc + 100, 0); // TODO: Calculate kcal
-    const date = new Date().toISOString();
-    try {
-      await dispatch(registerWorkout({ exercises, kcal, date }));
-      setExercises([]);
-      showSnackbar('Workout added. See "Workouts" page.', "success");
-    } catch (error) {
+    const response = await dispatch(addWorkout());
+    if (response.meta.requestStatus === "rejected") {
       showSnackbar("Error adding workout. Try again later.", "error");
+    } else {
+      showSnackbar("Workout added.", "success");
     }
   }
+
+  useEffect(() => {
+    // Fetch exercises from database
+    try {
+      dispatch(searchExercises());
+    } catch (error) {
+      showSnackbar("Error fetching exercises. Try again later.", "error");
+    }
+  }, [dispatch]);
 
   return (
     <>
       <AddWorkoutView
         types={ExerciseTypes}
-        selectedType={type}
+        selectedType={addWorkoutState.searchType}
         setType={handleSetType}
+        setName={handleSetName}
+        name={addWorkoutState.searchName}
         search={handleSearch}
-        searchLoading={searchLoading}
-        searchResults={searchResults}
+        searchLoading={addWorkoutState.searchStatus !== "idle"}
+        searchResults={addWorkoutState.searchResults}
         addWorkout={handleAddWorkout}
-        exercises={exercises}
+        exercises={addWorkoutState.workout.exercises}
         addExercise={handleAddExercise}
         removeExercise={handleRemoveExercise}
       />

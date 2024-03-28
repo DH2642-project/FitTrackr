@@ -1,6 +1,5 @@
 import { Delete, Search } from "@mui/icons-material";
 import {
-  Box,
   Button,
   Card,
   CardActions,
@@ -31,6 +30,8 @@ export default function AddWorkoutView({
   types,
   selectedType,
   setType,
+  setName,
+  name,
   search,
   searchLoading,
   searchResults,
@@ -42,7 +43,9 @@ export default function AddWorkoutView({
   types: ExerciseType[];
   selectedType: ExerciseType | "all";
   setType: (event: SelectChangeEvent) => void;
-  search: (name: string) => void;
+  setName: (name: string) => void;
+  name: string;
+  search: () => void;
   searchLoading: boolean;
   searchResults: Exercise[];
   addWorkout: () => void;
@@ -50,7 +53,6 @@ export default function AddWorkoutView({
   addExercise: (exercise: Exercise) => void;
   removeExercise: (name: string) => void;
 }) {
-  const [searchQuery, setSearchQuery] = useState("");
   const [addModal, setAddModal] = useState(false);
   const [result, setResult] = useState<Exercise | null>(null);
 
@@ -120,7 +122,7 @@ export default function AddWorkoutView({
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    search(searchQuery);
+                    search();
                   }}
                   style={{ flexGrow: 1 }}
                 >
@@ -128,8 +130,8 @@ export default function AddWorkoutView({
                     placeholder="Search Exercise"
                     variant="standard"
                     sx={{ width: "100%" }}
-                    value={searchQuery}
-                    onChange={(event) => setSearchQuery(event.target.value)}
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -144,11 +146,11 @@ export default function AddWorkoutView({
               </Stack>
             </Container>
             {/* Search results */}
-            <Container sx={{ pt: 2 }}>
+            <Container sx={{ pt: 2, minHeight: 400 }}>
               {searchLoading ? (
                 <FullscreenCircularProgress />
               ) : searchResults.length == 0 ? (
-                <Typography variant="h5">No exercises found, try another search</Typography>
+                <Typography variant="h5">No exercises found</Typography>
               ) : (
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, lg: 12 }} sx={{ pb: 1 }}>
                   {searchResults.map((result) => (
