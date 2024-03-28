@@ -61,7 +61,9 @@ export const searchExercises = createAsyncThunk("addWorkout/searchExercises", as
   const response = await fetch(url, options);
   if (!response.ok) {
     thunkAPI.rejectWithValue("Error fetching exercises");
+    return;
   }
+
   const data = await response.json();
   return data;
 });

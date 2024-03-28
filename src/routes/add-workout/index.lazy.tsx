@@ -60,6 +60,8 @@ export function AddWorkoutPresenter() {
 
   async function handleSearch() {
     const response = await dispatch(searchExercises());
+    console.log(response.meta.requestStatus);
+
     if (response.meta.requestStatus === "rejected") {
       showSnackbar("Error fetching exercises. Try again later.", "error");
     }
@@ -90,6 +92,17 @@ export function AddWorkoutPresenter() {
       showSnackbar("Error fetching exercises. Try again later.", "error");
     }
   }, [dispatch]);
+
+  if (addWorkoutState.searchResults === undefined) {
+    return (
+      <CustomSnackbar
+        snackbarOpen={true}
+        snackbarMessage="Error fetching exercises. Try again later."
+        snackbarSeverity="error"
+        setSnackbarOpen={setSnackbarOpen}
+      />
+    );
+  }
 
   return (
     <>
