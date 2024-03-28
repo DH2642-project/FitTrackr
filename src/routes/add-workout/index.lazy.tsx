@@ -84,12 +84,14 @@ export function AddWorkoutPresenter() {
   }
 
   useEffect(() => {
-    // Fetch exercises from database
-    try {
-      dispatch(searchExercises());
-    } catch (error) {
-      showSnackbar("Error fetching exercises. Try again later.", "error");
+    if (addWorkoutState.searchResults.length === 0 && addWorkoutState.searchName === "") {
+      try {
+        dispatch(searchExercises());
+      } catch (error) {
+        showSnackbar("Error fetching exercises. Try again later.", "error");
+      }
     }
+    // Fetch exercises from database
   }, [dispatch]);
 
   if (addWorkoutState.searchResults === undefined) {

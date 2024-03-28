@@ -6,6 +6,7 @@ import {
   CardActions,
   CardContent,
   Chip,
+  CircularProgress,
   Container,
   Divider,
   FormControlLabel,
@@ -114,9 +115,15 @@ export default function AddWorkoutView({
               </List>
             </CardContent>
             <CardActions>
-              <Button disabled={addWorkoutLoading || exercises.length == 0} onClick={addWorkout}>
-                Add workout
-              </Button>
+              {addWorkoutLoading ? (
+                <Button startIcon={<CircularProgress color="inherit" size={20} />} disabled>
+                  Loading...
+                </Button>
+              ) : (
+                <Button disabled={exercises.length == 0} onClick={addWorkout}>
+                  Add workout
+                </Button>
+              )}
             </CardActions>
           </Card>
         </Grid>
@@ -169,7 +176,9 @@ export default function AddWorkoutView({
               {searchLoading ? (
                 <FullscreenCircularProgress />
               ) : searchResults.length == 0 ? (
-                <Typography variant="h5">No exercises found</Typography>
+                <Typography variant="h6" align="center">
+                  No exercises found
+                </Typography>
               ) : (
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, md: 8 }} sx={{ pb: 1 }}>
                   {searchResults.map((result) => {
