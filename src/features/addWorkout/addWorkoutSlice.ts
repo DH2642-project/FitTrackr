@@ -55,7 +55,7 @@ export const searchExercises = createAsyncThunk("addWorkout/searchExercises", as
   const options = {
     method: "GET",
     headers: {
-      "X-Api-Key": import.meta.env.VITE_RAPID_API_KEY,
+      "X-Api-Key": import.meta.env.VITE_API_NINJAS_API_KEY,
     },
   };
   const response = await fetch(url, options);

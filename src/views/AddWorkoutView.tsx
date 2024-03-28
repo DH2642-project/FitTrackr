@@ -1,4 +1,4 @@
-import { CheckCircle, Delete, Remove, Search } from "@mui/icons-material";
+import { CheckCircle, Remove, Search } from "@mui/icons-material";
 import {
   Badge,
   Button,
