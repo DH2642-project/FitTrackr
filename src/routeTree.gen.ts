@@ -16,22 +16,30 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const WorkoutsIndexLazyImport = createFileRoute('/workouts/')()
 const ProfileIndexLazyImport = createFileRoute('/profile/')()
-const ExercisesIndexLazyImport = createFileRoute('/exercises/')()
+const AddWorkoutIndexLazyImport = createFileRoute('/add-workout/')()
 const IndexIndexLazyImport = createFileRoute('/_index/')()
 
 // Create/Update Routes
+
+const WorkoutsIndexLazyRoute = WorkoutsIndexLazyImport.update({
+  path: '/workouts/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/workouts/index.lazy').then((d) => d.Route),
+)
 
 const ProfileIndexLazyRoute = ProfileIndexLazyImport.update({
   path: '/profile/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/profile/index.lazy').then((d) => d.Route))
 
-const ExercisesIndexLazyRoute = ExercisesIndexLazyImport.update({
-  path: '/exercises/',
+const AddWorkoutIndexLazyRoute = AddWorkoutIndexLazyImport.update({
+  path: '/add-workout/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/exercises/index.lazy').then((d) => d.Route),
+  import('./routes/add-workout/index.lazy').then((d) => d.Route),
 )
 
 const IndexIndexLazyRoute = IndexIndexLazyImport.update({
@@ -47,12 +55,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexIndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/exercises/': {
-      preLoaderRoute: typeof ExercisesIndexLazyImport
+    '/add-workout/': {
+      preLoaderRoute: typeof AddWorkoutIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/profile/': {
       preLoaderRoute: typeof ProfileIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/workouts/': {
+      preLoaderRoute: typeof WorkoutsIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -62,8 +74,9 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexIndexLazyRoute,
-  ExercisesIndexLazyRoute,
+  AddWorkoutIndexLazyRoute,
   ProfileIndexLazyRoute,
+  WorkoutsIndexLazyRoute,
 ])
 
 /* prettier-ignore-end */
