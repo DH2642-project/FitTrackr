@@ -1,14 +1,53 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ref, push, get, child, set } from "firebase/database";
 import { auth, database } from "../../firebase";
-export const categories = ["Strength", "Cardio", "Flexibility", "Balance"];
 
-// TODO: Implement proper Exercise type
+export type ExerciseType =
+  | "cardio"
+  | "olympic_weightlifting"
+  | "plyometrics"
+  | "powerlifting"
+  | "strength"
+  | "stretching"
+  | "strongman";
+
+export const ExerciseTypes: ExerciseType[] = [
+  "cardio",
+  "olympic_weightlifting",
+  "plyometrics",
+  "powerlifting",
+  "strength",
+  "stretching",
+  "strongman",
+];
+
+export type ExerciseMuscle =
+  | "abdominals"
+  | "abductors"
+  | "adductors"
+  | "biceps"
+  | "calves"
+  | "chest"
+  | "forearms"
+  | "glutes"
+  | "hamstrings"
+  | "lats"
+  | "lower_back"
+  | "middle_back"
+  | "neck"
+  | "quadriceps"
+  | "traps"
+  | "triceps";
+
+export type ExerciseDifficulty = "beginner" | "intermediate" | "expert";
+
 export type Exercise = {
-  id: string; // TODO: Change to number? Check API
-  title: string;
-  description: string;
-  image?: string;
+  name: string;
+  type?: ExerciseType;
+  muscle?: string;
+  difficulty?: ExerciseDifficulty;
+  instructions?: string;
+  equipment?: string;
 };
 
 export type Workout = {

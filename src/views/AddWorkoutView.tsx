@@ -4,8 +4,7 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardHeader,
-  CardMedia,
+  Chip,
   Container,
   Divider,
   Grid,
@@ -13,6 +12,7 @@ import {
   InputAdornment,
   List,
   ListItem,
+  ListItemText,
   MenuItem,
   Paper,
   Select,
@@ -21,13 +21,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Exercise } from "../features/workouts/workoutsSlice";
+import { Exercise, ExerciseType } from "../features/workouts/workoutsSlice";
 import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
 
 export default function AddWorkoutView({
-  categories,
-  category,
-  setCategory,
+  types,
+  selectedType,
+  setType,
   search,
   searchLoading,
   searchResults,
@@ -36,16 +36,16 @@ export default function AddWorkoutView({
   addExercise,
   removeExercise,
 }: {
-  categories: string[];
-  category: string;
-  setCategory: (event: SelectChangeEvent) => void;
+  types: ExerciseType[];
+  selectedType: ExerciseType;
+  setType: (event: SelectChangeEvent) => void;
   search: (event: React.ChangeEvent<HTMLInputElement>) => void;
   searchLoading: boolean;
   searchResults: Exercise[];
   addWorkout: () => void;
   exercises: Exercise[];
   addExercise: (exercise: Exercise) => void;
-  removeExercise: (id: string) => void;
+  removeExercise: (name: string) => void;
 }) {
   return (
     <Grid container spacing={2} sx={{ width: "100%", height: "100%", p: 2 }}>
@@ -63,18 +63,23 @@ export default function AddWorkoutView({
               })}
             </Typography>
             <Divider sx={{ my: 1 }} />
-            <List disablePadding sx={{ listStyleType: "circle", pl: 4 }}>
+            <List disablePadding>
               {exercises.map((exercise) => (
                 <ListItem
-                  key={exercise.id}
+                  key={exercise.name}
                   secondaryAction={
-                    <IconButton edge="end" onClick={() => removeExercise(exercise.id)}>
+                    <IconButton edge="end" onClick={() => removeExercise(exercise.name)}>
                       <Delete />
                     </IconButton>
                   }
-                  sx={{ display: "list-item" }}
                 >
-                  {exercise.title}
+                  <ListItemText
+                    primary={exercise.name}
+                    secondary={[
+                      exercise.type?.replace("_", " ").toLocaleUpperCase(),
+                      exercise.muscle?.replace("_", " ").toLocaleUpperCase(),
+                    ].join(", ")}
+                  />
                 </ListItem>
               ))}
             </List>
@@ -92,11 +97,11 @@ export default function AddWorkoutView({
         <Paper elevation={4} sx={{ width: "100%", height: "100%" }}>
           <Container sx={{ pt: 2 }}>
             <Stack direction="row" spacing={2}>
-              {/* Filter by category */}
-              <Select variant="standard" value={category} onChange={setCategory}>
-                {categories.map((category) => (
-                  <MenuItem key={category} value={category}>
-                    {category}
+              {/* Filter by type */}
+              <Select variant="standard" value={selectedType} onChange={setType}>
+                {types.map((type) => (
+                  <MenuItem key={type} value={type}>
+                    {type.replace("_", " ").toLocaleUpperCase()}
                   </MenuItem>
                 ))}
               </Select>
@@ -124,13 +129,38 @@ export default function AddWorkoutView({
             ) : (
               <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, lg: 12 }} sx={{ pb: 1 }}>
                 {searchResults.map((result) => (
-                  <Grid item key={result.title} xs={2} sm={4} lg={4}>
+                  <Grid item key={result.name} xs={4} sm={4} lg={4}>
                     <Card>
-                      <CardMedia component="img" height="140" image={result.image} alt={result.title} />
-                      <CardHeader title={result.title} subheader={result.description} />
+                      <CardContent>
+                        <Typography variant="h6" noWrap>
+                          {result.name}
+                        </Typography>
+                        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                          {result.difficulty && (
+                            <Chip color="secondary" size="small" label={result.difficulty.toLocaleUpperCase()} />
+                          )}
+                          {result.type && (
+                            <Chip
+                              color="success"
+                              size="small"
+                              label={result.type.replace("_", " ").toLocaleUpperCase()}
+                            />
+                          )}
+                          {result.muscle && (
+                            <Chip
+                              color="primary"
+                              size="small"
+                              label={result.muscle.replace("_", " ").toLocaleUpperCase()}
+                            />
+                          )}
+                        </Stack>
+                        <Typography variant="body1" noWrap>
+                          {result.instructions}
+                        </Typography>
+                      </CardContent>
                       <CardActions>
                         <Button
-                          disabled={exercises.some((e) => e.id === result.id)}
+                          disabled={exercises.some((e) => e.name === result.name)}
                           onClick={() => addExercise(result)}
                         >
                           Add to workout
