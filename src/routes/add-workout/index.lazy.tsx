@@ -21,7 +21,7 @@ export function AddWorkoutPresenter() {
     handleSearch("");
   }, []);
 
-  const [type, setType] = useState<ExerciseType>("cardio");
+  const [type, setType] = useState<ExerciseType | "all">("all");
   const [exercises, setExercises] = useState<Exercise[]>([]);
 
   // Snackbar state
@@ -36,12 +36,13 @@ export function AddWorkoutPresenter() {
   }
 
   function handleSetType(event: SelectChangeEvent) {
-    setType(event.target.value as ExerciseType);
+    setType(event.target.value as ExerciseType | "all");
   }
 
   async function handleSearch(name: string) {
     setSearchLoading(true);
-    const url = `https://exercises-by-api-ninjas.p.rapidapi.com/v1/exercises?name=${name}&type=${type}`;
+    const query = new URLSearchParams(type === "all" ? { name } : { name, type });
+    const url = "https://exercises-by-api-ninjas.p.rapidapi.com/v1/exercises?" + query;
     const options = {
       method: "GET",
       headers: {

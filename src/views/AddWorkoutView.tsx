@@ -38,7 +38,7 @@ export default function AddWorkoutView({
   removeExercise,
 }: {
   types: ExerciseType[];
-  selectedType: ExerciseType;
+  selectedType: ExerciseType | "all";
   setType: (event: SelectChangeEvent) => void;
   search: (name: string) => void;
   searchLoading: boolean;
@@ -101,7 +101,10 @@ export default function AddWorkoutView({
           <Container sx={{ pt: 2 }}>
             <Stack direction="row" spacing={2}>
               {/* Filter by type */}
-              <Select variant="standard" value={selectedType} onChange={setType}>
+              <Select variant="standard" value={selectedType || "all"} onChange={setType}>
+                <MenuItem key={1} value={"all"}>
+                  ALL
+                </MenuItem>
                 {types.map((type) => (
                   <MenuItem key={type} value={type}>
                     {type.replace("_", " ").toLocaleUpperCase()}
@@ -114,8 +117,10 @@ export default function AddWorkoutView({
                   e.preventDefault();
                   search(searchQuery);
                 }}
+                style={{ flexGrow: 1 }}
               >
                 <TextField
+                  placeholder="Search Exercise"
                   variant="standard"
                   sx={{ width: "100%" }}
                   value={searchQuery}
