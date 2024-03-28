@@ -53,7 +53,11 @@ export function WorkoutsPresenter() {
 
   return (
     <>
-      <WorkoutsView workouts={workoutsState.workouts} deleteWorkout={handleDeleteWorkout} />
+      <WorkoutsView
+        workoutsLoading={workoutsState.status === "loading"}
+        workouts={workoutsState.workouts}
+        deleteWorkout={handleDeleteWorkout}
+      />
       <CustomSnackbar
         snackbarOpen={snackbarOpen}
         snackbarMessage={snackbarMessage}

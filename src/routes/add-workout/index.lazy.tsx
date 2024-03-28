@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import AddWorkoutView from "../../views/AddWorkoutView";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { AlertColor, SelectChangeEvent } from "@mui/material";
 import { Exercise, ExerciseType, ExerciseTypes } from "../../features/workouts/workoutsSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,8 +23,13 @@ export function AddWorkoutPresenter() {
   const addWorkoutState = useSelector((state: RootState) => state.addWorkout);
   const dispatch = useDispatch<AppDispatch>();
 
+  const [includeSetsReps, setIncludeSetsReps] = useState(true);
   const [sets, setSets] = useState(3);
   const [reps, setReps] = useState(10);
+
+  function handleSetIncludeSetsReps(_: ChangeEvent<HTMLInputElement>, checked: boolean) {
+    setIncludeSetsReps(checked);
+  }
 
   function handleSetSets(_: Event, value: number | number[]) {
     setSets(value as number);
@@ -61,7 +66,7 @@ export function AddWorkoutPresenter() {
   }
 
   function handleAddExercise(exercise: Exercise) {
-    dispatch(addExercise({ ...exercise, sets, reps }));
+    dispatch(addExercise(includeSetsReps ? { ...exercise, sets, reps } : exercise));
   }
 
   function handleRemoveExercise(name: string) {
@@ -89,6 +94,8 @@ export function AddWorkoutPresenter() {
   return (
     <>
       <AddWorkoutView
+        includeSetsReps={includeSetsReps}
+        setIncludeSetsReps={handleSetIncludeSetsReps}
         sets={sets}
         setSets={handleSetSets}
         reps={reps}
@@ -102,6 +109,7 @@ export function AddWorkoutPresenter() {
         searchLoading={addWorkoutState.searchStatus !== "idle"}
         searchResults={addWorkoutState.searchResults}
         addWorkout={handleAddWorkout}
+        addWorkoutLoading={addWorkoutState.workoutStatus === "loading"}
         exercises={addWorkoutState.workout.exercises}
         addExercise={handleAddExercise}
         removeExercise={handleRemoveExercise}

@@ -19,9 +19,7 @@ export interface AddWorkoutState {
 // Define the initial state using that type
 const initialState: AddWorkoutState = {
   workout: {
-    date: new Date().toISOString(),
     exercises: [],
-    kcal: 0,
   },
   workoutStatus: "idle",
   searchName: "",
@@ -34,7 +32,11 @@ export const addWorkout = createAsyncThunk("addWorkout/addWorkout", async (_, th
   const state = thunkAPI.getState() as { addWorkout: AddWorkoutState };
   const userId = auth.currentUser?.uid;
   try {
-    const snapshot = await push(ref(database, `workouts/${userId}`), state.addWorkout.workout);
+    const snapshot = await push(ref(database, `workouts/${userId}`), {
+      ...state.addWorkout.workout,
+      date: new Date().toISOString(),
+      kcal: state.addWorkout.workout.exercises.reduce((acc) => acc + 100, 0),
+    });
     // Clear exercises
     thunkAPI.dispatch(clearExercises());
     return snapshot.key;

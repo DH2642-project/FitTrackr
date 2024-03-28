@@ -1,5 +1,6 @@
-import { Delete, Search } from "@mui/icons-material";
+import { CheckCircle, Delete, Remove, Search } from "@mui/icons-material";
 import {
+  Badge,
   Button,
   Card,
   CardActions,
@@ -7,6 +8,8 @@ import {
   Chip,
   Container,
   Divider,
+  FormControlLabel,
+  FormGroup,
   Grid,
   IconButton,
   InputAdornment,
@@ -20,14 +23,17 @@ import {
   SelectChangeEvent,
   Slider,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from "@mui/material";
 import { Exercise, ExerciseType } from "../features/workouts/workoutsSlice";
 import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 export default function AddWorkoutView({
+  includeSetsReps,
+  setIncludeSetsReps,
   sets,
   setSets,
   reps,
@@ -41,10 +47,13 @@ export default function AddWorkoutView({
   searchLoading,
   searchResults,
   addWorkout,
+  addWorkoutLoading,
   exercises,
   addExercise,
   removeExercise,
 }: {
+  includeSetsReps: boolean;
+  setIncludeSetsReps: (event: ChangeEvent<HTMLInputElement>, checked: boolean) => void;
   sets: number;
   setSets: (event: Event, value: number | number[]) => void;
   reps: number;
@@ -58,6 +67,7 @@ export default function AddWorkoutView({
   searchLoading: boolean;
   searchResults: Exercise[];
   addWorkout: () => void;
+  addWorkoutLoading: boolean;
   exercises: Exercise[];
   addExercise: (exercise: Exercise) => void;
   removeExercise: (name: string) => void;
@@ -86,26 +96,32 @@ export default function AddWorkoutView({
                 {exercises.map((exercise) => (
                   <ListItem
                     key={exercise.name}
+                    disablePadding
                     secondaryAction={
                       <IconButton edge="end" onClick={() => removeExercise(exercise.name)}>
-                        <Delete />
+                        <Remove />
                       </IconButton>
                     }
                   >
-                    <ListItemText primary={exercise.name} secondary={`${exercise.sets} sets, ${exercise.reps} reps`} />
+                    <ListItemText
+                      primary={<Typography lineHeight={1}>{exercise.name}</Typography>}
+                      secondary={
+                        exercise.sets ? `${exercise.sets} sets, ${exercise.reps} reps` : <em>Sets/reps omitted</em>
+                      }
+                    />
                   </ListItem>
                 ))}
               </List>
             </CardContent>
             <CardActions>
-              <Button disabled={exercises.length == 0} onClick={addWorkout}>
+              <Button disabled={addWorkoutLoading || exercises.length == 0} onClick={addWorkout}>
                 Add workout
               </Button>
             </CardActions>
           </Card>
         </Grid>
         {/* Add exercises */}
-        <Grid item md={9} xs={12}>
+        <Grid item md={9} xs={12} sx={{ minHeight: "100%" }}>
           {/* Search menu */}
           <Paper elevation={4} sx={{ width: "100%", height: "100%" }}>
             <Container sx={{ pt: 2 }}>
@@ -149,65 +165,100 @@ export default function AddWorkoutView({
               </Stack>
             </Container>
             {/* Search results */}
-            <Container sx={{ pt: 2, minHeight: 400 }}>
+            <Container sx={{ py: 2, height: "100%" }}>
               {searchLoading ? (
                 <FullscreenCircularProgress />
               ) : searchResults.length == 0 ? (
                 <Typography variant="h5">No exercises found</Typography>
               ) : (
-                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, lg: 12 }} sx={{ pb: 1 }}>
-                  {searchResults.map((result) => (
-                    <Grid item key={result.name} xs={4} sm={4} lg={4}>
-                      <Card>
-                        <CardContent>
-                          <Typography variant="h6" noWrap>
-                            {result.name}
-                          </Typography>
-                          <Stack direction="row" spacing={0.5} useFlexGap flexWrap="wrap" sx={{ p: 0 }}>
-                            {result.difficulty && (
-                              <Chip color="secondary" size="small" label={result.difficulty.toLocaleUpperCase()} />
-                            )}
-                            {result.type && (
-                              <Chip
-                                color="success"
-                                size="small"
-                                label={result.type.replace("_", " ").toLocaleUpperCase()}
-                              />
-                            )}
-                            {result.muscle && (
-                              <Chip
-                                color="primary"
-                                size="small"
-                                label={result.muscle.replace("_", " ").toLocaleUpperCase()}
-                              />
-                            )}
-                          </Stack>
-                          <Typography
-                            variant="body1"
-                            sx={{
-                              overflow: "hidden",
-                              display: "-webkit-box",
-                              WebkitBoxOrient: "vertical",
-                              WebkitLineClamp: 2,
-                            }}
-                          >
-                            {result.instructions}
-                          </Typography>
-                        </CardContent>
-                        <CardActions>
-                          <Button
-                            disabled={exercises.some((e) => e.name === result.name)}
-                            onClick={() => {
-                              setResult(result);
-                              setAddModal(true);
-                            }}
-                          >
-                            Add to workout
-                          </Button>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                  ))}
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, md: 8 }} sx={{ pb: 1 }}>
+                  {searchResults.map((result) => {
+                    const isAdded = exercises.some((e) => e.name === result.name);
+                    return (
+                      <Grid item key={result.name} xs={4}>
+                        <Badge
+                          invisible={!isAdded}
+                          badgeContent={
+                            <CheckCircle
+                              sx={{
+                                fontSize: 32,
+                                color: "success.main",
+                              }}
+                            />
+                          }
+                        >
+                          <Card variant={isAdded ? "outlined" : "elevation"} elevation={isAdded ? 0 : 3}>
+                            <CardContent>
+                              <Typography variant="h5" gutterBottom lineHeight={1}>
+                                {result.name}
+                              </Typography>
+                              <Stack
+                                direction="row"
+                                spacing={0.5}
+                                useFlexGap
+                                flexWrap="wrap"
+                                sx={{ pb: 1, filter: isAdded ? "grayscale(1)" : "none" }}
+                              >
+                                {result.difficulty && (
+                                  <Chip color="secondary" size="small" label={result.difficulty.toLocaleUpperCase()} />
+                                )}
+                                {result.type && (
+                                  <Chip
+                                    color="success"
+                                    size="small"
+                                    label={result.type.replace("_", " ").toLocaleUpperCase()}
+                                  />
+                                )}
+                                {result.muscle && (
+                                  <Chip
+                                    color="error"
+                                    size="small"
+                                    label={result.muscle.replace("_", " ").toLocaleUpperCase()}
+                                  />
+                                )}
+                              </Stack>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{
+                                  overflow: "hidden",
+                                  display: "-webkit-box",
+                                  WebkitBoxOrient: "vertical",
+                                  WebkitLineClamp: 3,
+                                }}
+                                title={result.instructions}
+                              >
+                                {result.instructions}
+                              </Typography>
+                            </CardContent>
+                            <CardActions>
+                              {isAdded ? (
+                                <Button
+                                  color="error"
+                                  onClick={() => {
+                                    removeExercise(result.name);
+                                  }}
+                                >
+                                  Remove from workout
+                                </Button>
+                              ) : (
+                                <Button
+                                  color="primary"
+                                  disabled={isAdded}
+                                  onClick={() => {
+                                    setResult(result);
+                                    setAddModal(true);
+                                  }}
+                                >
+                                  Add to workout
+                                </Button>
+                              )}
+                            </CardActions>
+                          </Card>
+                        </Badge>
+                      </Grid>
+                    );
+                  })}
                 </Grid>
               )}
             </Container>
@@ -221,20 +272,43 @@ export default function AddWorkoutView({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 400,
+            width: 350,
             boxShadow: 24,
             p: 4,
           }}
         >
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             {result?.name}
           </Typography>
+          <FormGroup>
+            <FormControlLabel
+              control={<Switch checked={includeSetsReps} onChange={setIncludeSetsReps} />}
+              label="Include sets/reps"
+            />
+          </FormGroup>
           <Typography variant="subtitle1">Sets</Typography>
-          <Slider value={sets} onChange={setSets} step={1} marks min={1} max={8} valueLabelDisplay="on" />
+          <Slider
+            disabled={!includeSetsReps}
+            value={sets}
+            onChange={setSets}
+            step={1}
+            marks
+            min={1}
+            max={8}
+            valueLabelDisplay="on"
+          />
           <Typography variant="subtitle1">Reps</Typography>
-          <Slider value={reps} onChange={setReps} step={1} marks min={1} max={20} valueLabelDisplay="on" />
+          <Slider
+            disabled={!includeSetsReps}
+            value={reps}
+            onChange={setReps}
+            step={1}
+            marks
+            min={1}
+            max={20}
+            valueLabelDisplay="on"
+          />
           <Button
-            disabled={result === null}
             onClick={() => {
               addExercise(result!);
               setAddModal(false);
