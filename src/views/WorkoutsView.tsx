@@ -9,6 +9,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Workout } from "../features/workouts/workoutsSlice";
@@ -86,7 +87,12 @@ export default function WorkoutsView({
                         </ListItem>
                       ))}
                     </List>
-                    <Chip icon={<LocalFireDepartment />} color="primary" label={`${workout.kcal} kcal`} />
+                    <Tooltip
+                      title={<Typography variant="caption">*Assumes each exercise is 15 min</Typography>}
+                      placement="top"
+                    >
+                      <Chip icon={<LocalFireDepartment />} color="primary" label={`${workout.kcal} kcal*`} />
+                    </Tooltip>
                   </CardContent>
                   <CardActions>
                     <Button color="error" onClick={() => deleteWorkout(workout.key!)}>

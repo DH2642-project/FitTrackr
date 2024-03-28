@@ -60,7 +60,6 @@ export function AddWorkoutPresenter() {
 
   async function handleSearch() {
     const response = await dispatch(searchExercises());
-    console.log(response.meta.requestStatus);
 
     if (response.meta.requestStatus === "rejected") {
       showSnackbar("Error fetching exercises. Try again later.", "error");

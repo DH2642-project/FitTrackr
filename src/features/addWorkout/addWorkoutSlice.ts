@@ -29,13 +29,36 @@ const initialState: AddWorkoutState = {
 };
 
 export const addWorkout = createAsyncThunk("addWorkout/addWorkout", async (_, thunkAPI) => {
+  async function getKcalCB(exercise: Exercise) {
+    const estimate = 45;
+    const query = new URLSearchParams({ activity: exercise.name }); //TODO: couple with weight from user profile once made a slice
+    const response = await fetch("https://api.api-ninjas.com/v1/caloriesburned?" + query, {
+      method: "GET",
+      headers: {
+        "X-Api-Key": import.meta.env.VITE_API_NINJAS_API_KEY,
+      },
+    });
+    if (!response.ok) {
+      return estimate;
+    }
+    const data = await response.json();
+
+    if (data.length === 0) {
+      return estimate;
+    }
+    return data[0].calories_per_hour * 0.25; // assume 15 minutes
+  }
+
   const state = thunkAPI.getState() as { addWorkout: AddWorkoutState };
   const userId = auth.currentUser?.uid;
   try {
     const snapshot = await push(ref(database, `workouts/${userId}`), {
       ...state.addWorkout.workout,
       date: new Date().toISOString(),
-      kcal: state.addWorkout.workout.exercises.reduce((acc) => acc + 100, 0),
+      kcal: await state.addWorkout.workout.exercises.reduce(
+        async (acc, exercise) => (await acc) + (await getKcalCB(exercise)),
+        Promise.resolve(0)
+      ),
     });
     // Clear exercises
     thunkAPI.dispatch(clearExercises());
