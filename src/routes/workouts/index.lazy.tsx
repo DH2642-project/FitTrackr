@@ -14,8 +14,7 @@ export const Route = createLazyFileRoute("/workouts/")({
 
 // TODO: Add view for previous workouts
 export function WorkoutsPresenter() {
-  const workouts = useSelector((state: RootState) => state.workouts.workouts);
-  const status = useSelector((state: RootState) => state.workouts.status);
+  const workoutsState = useSelector((state: RootState) => state.workouts);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -54,7 +53,7 @@ export function WorkoutsPresenter() {
 
   return (
     <>
-      <WorkoutsView workouts={workouts} deleteWorkout={handleDeleteWorkout} />
+      <WorkoutsView workouts={workoutsState.workouts} deleteWorkout={handleDeleteWorkout} />
       <CustomSnackbar
         snackbarOpen={snackbarOpen}
         snackbarMessage={snackbarMessage}

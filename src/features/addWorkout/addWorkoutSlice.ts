@@ -71,8 +71,8 @@ export const addWorkoutSlice = createSlice({
     addExercise: (state, action: PayloadAction<Exercise>) => {
       state.workout.exercises.push(action.payload);
     },
-    removeExercise: (state, action: PayloadAction<Exercise>) => {
-      state.workout.exercises = state.workout.exercises.filter((exercise) => exercise !== action.payload);
+    removeExercise: (state, action: PayloadAction<string>) => {
+      state.workout.exercises = state.workout.exercises.filter((exercise) => exercise.name !== action.payload);
     },
     clearExercises: (state) => {
       state.workout.exercises = [];

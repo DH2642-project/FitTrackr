@@ -18,6 +18,7 @@ import {
   Paper,
   Select,
   SelectChangeEvent,
+  Slider,
   Stack,
   TextField,
   Typography,
@@ -27,6 +28,10 @@ import FullscreenCircularProgress from "../components/FullscreenCircularProgress
 import { useState } from "react";
 
 export default function AddWorkoutView({
+  sets,
+  setSets,
+  reps,
+  setReps,
   types,
   selectedType,
   setType,
@@ -40,6 +45,10 @@ export default function AddWorkoutView({
   addExercise,
   removeExercise,
 }: {
+  sets: number;
+  setSets: (event: Event, value: number | number[]) => void;
+  reps: number;
+  setReps: (event: Event, value: number | number[]) => void;
   types: ExerciseType[];
   selectedType: ExerciseType | "all";
   setType: (event: SelectChangeEvent) => void;
@@ -83,13 +92,7 @@ export default function AddWorkoutView({
                       </IconButton>
                     }
                   >
-                    <ListItemText
-                      primary={exercise.name}
-                      secondary={[
-                        exercise.type?.replace("_", " ").toLocaleUpperCase(),
-                        exercise.muscle?.replace("_", " ").toLocaleUpperCase(),
-                      ].join(", ")}
-                    />
+                    <ListItemText primary={exercise.name} secondary={`${exercise.sets} sets, ${exercise.reps} reps`} />
                   </ListItem>
                 ))}
               </List>
@@ -219,11 +222,17 @@ export default function AddWorkoutView({
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 400,
-            border: "2px solid #000",
             boxShadow: 24,
             p: 4,
           }}
         >
+          <Typography variant="h6" gutterBottom>
+            {result?.name}
+          </Typography>
+          <Typography variant="subtitle1">Sets</Typography>
+          <Slider value={sets} onChange={setSets} step={1} marks min={1} max={8} valueLabelDisplay="on" />
+          <Typography variant="subtitle1">Reps</Typography>
+          <Slider value={reps} onChange={setReps} step={1} marks min={1} max={20} valueLabelDisplay="on" />
           <Button
             disabled={result === null}
             onClick={() => {

@@ -75,10 +75,7 @@ export default function WorkoutsView({
                         <ListItem key={exercise.name}>
                           <ListItemText
                             primary={exercise.name}
-                            secondary={[
-                              exercise.type?.replace("_", " ").toLocaleUpperCase(),
-                              exercise.muscle?.replace("_", " ").toLocaleUpperCase(),
-                            ].join(", ")}
+                            secondary={`${exercise.sets} sets, ${exercise.reps} reps`}
                           />
                         </ListItem>
                       ))}

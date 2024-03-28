@@ -23,6 +23,17 @@ export function AddWorkoutPresenter() {
   const addWorkoutState = useSelector((state: RootState) => state.addWorkout);
   const dispatch = useDispatch<AppDispatch>();
 
+  const [sets, setSets] = useState(3);
+  const [reps, setReps] = useState(10);
+
+  function handleSetSets(_: Event, value: number | number[]) {
+    setSets(value as number);
+  }
+
+  function handleSetReps(_: Event, value: number | number[]) {
+    setReps(value as number);
+  }
+
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -50,14 +61,11 @@ export function AddWorkoutPresenter() {
   }
 
   function handleAddExercise(exercise: Exercise) {
-    dispatch(addExercise(exercise));
+    dispatch(addExercise({ ...exercise, sets, reps }));
   }
 
   function handleRemoveExercise(name: string) {
-    const exercise = addWorkoutState.workout.exercises.find((exercise) => exercise.name === name);
-    if (exercise) {
-      dispatch(removeExercise(exercise));
-    }
+    dispatch(removeExercise(name));
   }
 
   async function handleAddWorkout() {
@@ -81,6 +89,10 @@ export function AddWorkoutPresenter() {
   return (
     <>
       <AddWorkoutView
+        sets={sets}
+        setSets={handleSetSets}
+        reps={reps}
+        setReps={handleSetReps}
         types={ExerciseTypes}
         selectedType={addWorkoutState.searchType}
         setType={handleSetType}

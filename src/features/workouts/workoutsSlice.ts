@@ -48,6 +48,8 @@ export type Exercise = {
   difficulty?: ExerciseDifficulty;
   instructions?: string;
   equipment?: string;
+  sets?: number;
+  reps?: number;
 };
 
 export type Workout = {
