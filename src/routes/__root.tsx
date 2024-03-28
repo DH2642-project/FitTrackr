@@ -1,11 +1,20 @@
 import { Avatar, Box, CircularProgress } from "@mui/material";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import React, { Suspense } from "react";
-import { auth } from "../main";
+import { auth } from "../firebase";
 import { ProfilePresenter } from "./profile/index.lazy";
 import Sidebar from "../components/Sidebar";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { AccountCircle, DonutLarge, EventNote, FitnessCenter, Flag, Home, Restaurant } from "@mui/icons-material";
+import {
+  AccountCircle,
+  Add,
+  DonutLarge,
+  EventNote,
+  FitnessCenter,
+  Flag,
+  Home,
+  Restaurant,
+} from "@mui/icons-material";
 
 // TanStack devtools only in development
 const TanStackRouterDevtools =
@@ -38,7 +47,8 @@ function RootPresenter() {
       ),
     },
     { text: "Overview", path: "/", icon: <Home /> },
-    { text: "Exercises", path: "/exercises", icon: <FitnessCenter /> },
+    { text: "Add Workout", path: "/add-workout", icon: <Add /> },
+    { text: "My Workouts", path: "/workouts", icon: <FitnessCenter /> },
     { text: "Goals", path: "/goals", icon: <Flag />, disabled: true },
     { text: "Schedule", path: "/schedule", icon: <EventNote />, disabled: true },
     { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: true },
