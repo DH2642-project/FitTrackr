@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import { Exercise, ExerciseType } from "../features/workouts/workoutsSlice";
 import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
+import { useState } from "react";
 
 export default function AddWorkoutView({
   types,
@@ -39,7 +40,7 @@ export default function AddWorkoutView({
   types: ExerciseType[];
   selectedType: ExerciseType;
   setType: (event: SelectChangeEvent) => void;
-  search: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  search: (name: string) => void;
   searchLoading: boolean;
   searchResults: Exercise[];
   addWorkout: () => void;
@@ -47,6 +48,8 @@ export default function AddWorkoutView({
   addExercise: (exercise: Exercise) => void;
   removeExercise: (name: string) => void;
 }) {
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <Grid container spacing={2} sx={{ width: "100%", height: "100%", p: 2 }}>
       {/* Selected Workout */}
@@ -106,18 +109,28 @@ export default function AddWorkoutView({
                 ))}
               </Select>
               {/* Search field */}
-              <TextField
-                variant="standard"
-                sx={{ width: "100%" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  search(searchQuery);
                 }}
-                onChange={search}
-              />
+              >
+                <TextField
+                  variant="standard"
+                  sx={{ width: "100%" }}
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton type="submit">
+                          <Search />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </form>
             </Stack>
           </Container>
           {/* Search results */}
@@ -135,7 +148,7 @@ export default function AddWorkoutView({
                         <Typography variant="h6" noWrap>
                           {result.name}
                         </Typography>
-                        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                        <Stack direction="row" spacing={0.5} useFlexGap flexWrap="wrap" sx={{ p: 0 }}>
                           {result.difficulty && (
                             <Chip color="secondary" size="small" label={result.difficulty.toLocaleUpperCase()} />
                           )}
