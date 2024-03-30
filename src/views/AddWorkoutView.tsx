@@ -33,6 +33,7 @@ import {
 import { Exercise, ExerciseType } from "../features/workouts/workoutsSlice";
 import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
 import { ChangeEvent, useState } from "react";
+import { toFriendlyString } from "../helpers";
 
 export default function AddWorkoutView({
   includeSetsReps,
@@ -139,11 +140,11 @@ export default function AddWorkoutView({
                 {/* Filter by type */}
                 <Select variant="standard" value={selectedType || "all"} onChange={setType}>
                   <MenuItem key={1} value={"all"}>
-                    ALL
+                    All
                   </MenuItem>
                   {types.map((type) => (
                     <MenuItem key={type} value={type}>
-                      {type.replace("_", " ").toLocaleUpperCase()}
+                      {toFriendlyString(type)}
                     </MenuItem>
                   ))}
                 </Select>
@@ -212,21 +213,13 @@ export default function AddWorkoutView({
                                 sx={{ pb: 1, filter: isAdded ? "grayscale(1)" : "none" }}
                               >
                                 {result.difficulty && (
-                                  <Chip color="secondary" size="small" label={result.difficulty.toLocaleUpperCase()} />
+                                  <Chip color="secondary" size="small" label={toFriendlyString(result.difficulty)} />
                                 )}
                                 {result.type && (
-                                  <Chip
-                                    color="success"
-                                    size="small"
-                                    label={result.type.replace("_", " ").toLocaleUpperCase()}
-                                  />
+                                  <Chip color="success" size="small" label={toFriendlyString(result.type)} />
                                 )}
                                 {result.muscle && (
-                                  <Chip
-                                    color="error"
-                                    size="small"
-                                    label={result.muscle.replace("_", " ").toLocaleUpperCase()}
-                                  />
+                                  <Chip color="error" size="small" label={toFriendlyString(result.muscle)} />
                                 )}
                               </Stack>
                               <Typography
