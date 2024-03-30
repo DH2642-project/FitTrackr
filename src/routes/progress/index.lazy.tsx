@@ -1,10 +1,11 @@
 import {Grid } from "@mui/material";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import  WeightChart  from "../../components/Progress/WeightLossChart.tsx";
 import ActivityChart from "../../components/Progress/ActivityChart.tsx";
-import StrengthGoalChart from "../../components/Progress/StrengthGoalChart.tsx";
+import GoalChart from "../../components/Progress/GoalChart.tsx";
 import { setCurrentGoal } from "../../features/goals/goalsReducer.ts";
 import { useDispatch } from "react-redux";
+import { TotalView } from "../../components/Progress/TotalView.tsx";
+import CalendarChart from "../../components/Progress/CalendarChart.tsx";
 
 export const Route = createLazyFileRoute("/progress/")({
   component: ProgressPresenter,
@@ -37,67 +38,55 @@ export function generateRandomData() {
   return data;
 };
 
-// Random monthly data
-const generateMonthlyData = () => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
-
-  const startDate = new Date(year, month, 1);
-  const endDate = new Date(year, month + 1, 0); // Last day of the month
-
-  const data = [];
-
-  for (
-    let date = startDate;
-    date <= endDate;
-    date.setDate(date.getDate() + 1)
-  ) {
-    const dateString = date.toISOString().slice(0, 10); // Format: YYYY-MM-DD
-    const strength = Math.floor(Math.random() * 120); // Random strength minutes
-    const cardio = Math.floor(Math.random() * 120); // Random cardio minutes
-
-    data.push({ date: dateString, strength, cardio });
-  }
+const generateWeeklyData = () => {
+  
+  const data = [
+    { week: 1, completedWorkouts: 5 },
+    { week: 2, completedWorkouts: 4 },
+    { week: 3, completedWorkouts: 3 },
+    { week: 4, completedWorkouts: 7 },
+  ];
+  
 
   return data;
 };
 
-
 export function ProgressPresenter() {
-    const weightLossData = generateRandomData();
-    const monthlyData = generateMonthlyData();
-    const dispatch = useDispatch();
+  const weightLossData = generateRandomData();
+  const weeklyData = generateWeeklyData(); // Use weekly data instead of monthly data
+  const dispatch = useDispatch();
 
-    const updateGoalSelection = (id: string) => {
-        dispatch(setCurrentGoal(id));
-    };
+  const updateGoalSelection = (id: string) => {
+    dispatch(setCurrentGoal(id));
+  };
 
-    return (
-      <>
-        <Grid container spacing={4} sx={{ padding: "30px" }}>
-          <Grid item xs={6}>
-            <WeightChart
-              data={weightLossData}
-              title={"Weight loss"}
-              progress={65}
-            ></WeightChart>
-          </Grid>
-          <Grid item xs={6}>
-            <ActivityChart
-              data={monthlyData}
-              title={"Monthly activity"}
-            ></ActivityChart>
-          </Grid>
-          <Grid item xs={6}>
-            <StrengthGoalChart
-              data={weightLossData}
-              title={"Weight loss"}
-                progress={65}
-                onGoalSelection={updateGoalSelection}
-            ></StrengthGoalChart>
+  return (
+    <>
+      <Grid container spacing={4} sx={{ padding: "30px" }}>
+        <Grid item xs={6}>
+          <GoalChart onGoalSelection={updateGoalSelection}></GoalChart>
+        </Grid>
+
+        <Grid item xs={6}>
+          <Grid container spacing={4}>
+            <Grid item xs={6}>
+              <TotalView title={"Total distance (km)"} value={"55"}></TotalView>
+            </Grid>
+            <Grid item xs={6}>
+              <TotalView title={"Total workouts"} value={"7"}></TotalView>
+            </Grid>
+            <Grid item xs={12}>
+              <ActivityChart
+                data={weeklyData}
+                title={"Weekly activity"}
+              ></ActivityChart>
+            </Grid>
           </Grid>
         </Grid>
-      </>
-    );
+        <Grid item xs={8}>
+          <CalendarChart></CalendarChart>
+        </Grid>
+      </Grid>
+    </>
+  );
 }

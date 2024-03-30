@@ -64,15 +64,7 @@ export function Goals() {
     dispatch(removeGoal(id));
   }
 
-  let formMetric;
-
-  if (goalType === "Cardio") {
-    formMetric = "mm:ss";
-  } else if (goalType === "Weight") {
-    formMetric = "kg";
-  } else {
-    formMetric = "kg";
-  }
+  
   // mock data
   const cardioExercises = ["Run", "Swim", "Walk"]
   const strengthExercises = ["Pushups", "Situps", "Squat"];
@@ -95,7 +87,6 @@ export function Goals() {
             onStartingPointChange={updateStartingPoint}
             onEndGoalChange={updateEndGoal}
             onUpdateGoalType={updateGoalType}
-            goalMetric={formMetric}
             exercises={exercises}
           />
         </DialogContent>
