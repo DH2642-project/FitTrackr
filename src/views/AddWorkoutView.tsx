@@ -1,5 +1,8 @@
-import { CheckCircle, Remove, Search } from "@mui/icons-material";
+import { CheckCircle, ExpandMore, Remove, Search } from "@mui/icons-material";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Badge,
   Button,
   Card,
@@ -282,6 +285,8 @@ export default function AddWorkoutView({
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 350,
+            maxHeight: "90vh",
+            overflowY: "auto",
             boxShadow: 24,
             p: 4,
           }}
@@ -289,6 +294,10 @@ export default function AddWorkoutView({
           <Typography variant="h5" gutterBottom>
             {result?.name}
           </Typography>
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMore />}>Instructions</AccordionSummary>
+            <AccordionDetails>{result?.instructions}</AccordionDetails>
+          </Accordion>
           <FormGroup>
             <FormControlLabel
               control={<Switch checked={includeSetsReps} onChange={setIncludeSetsReps} />}
