@@ -6,19 +6,21 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Theme,
   Toolbar,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 
 export default function Sidebar({
-  isMobile,
   pages,
 }: {
-  isMobile: boolean;
   pages: { path: string; text: string; icon: JSX.Element; disabled?: boolean }[];
 }) {
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (

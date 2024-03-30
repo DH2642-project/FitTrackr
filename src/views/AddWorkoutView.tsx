@@ -8,7 +8,6 @@ import {
   Chip,
   CircularProgress,
   Container,
-  Divider,
   FormControlLabel,
   FormGroup,
   Grid,
@@ -78,13 +77,15 @@ export default function AddWorkoutView({
 
   return (
     <>
-      <Grid container spacing={2} sx={{ width: "100%", height: "100%", p: 2 }}>
+      <Grid container spacing={1} sx={{ width: "100%", height: "100%", p: "0.5rem 0rem 0.5rem 0.5rem" }}>
         {/* Selected Workout */}
         <Grid item md={3} xs={12}>
           <Card>
             <CardContent>
-              <Typography variant="h6">New workout</Typography>
-              <Typography variant="subtitle1">
+              <Typography variant="h5" align="center">
+                New workout
+              </Typography>
+              <Typography variant="subtitle1" align="center">
                 {new Date().toLocaleDateString(undefined, {
                   weekday: "short",
                   month: "long",
@@ -92,7 +93,6 @@ export default function AddWorkoutView({
                   year: "numeric",
                 })}
               </Typography>
-              <Divider sx={{ my: 1 }} />
               <List disablePadding>
                 {exercises.map((exercise) => (
                   <ListItem
@@ -172,7 +172,7 @@ export default function AddWorkoutView({
               </Stack>
             </Container>
             {/* Search results */}
-            <Container sx={{ py: 2, height: "100%" }}>
+            <Container sx={{ p: { xs: 1, md: 2 }, height: "100%" }}>
               {searchLoading ? (
                 <FullscreenCircularProgress />
               ) : searchResults.length == 0 ? (
@@ -180,7 +180,7 @@ export default function AddWorkoutView({
                   No exercises found
                 </Typography>
               ) : (
-                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, md: 8 }} sx={{ pb: 1 }}>
+                <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, md: 8 }} sx={{ pb: 1 }}>
                   {searchResults.map((result) => {
                     const isAdded = exercises.some((e) => e.name === result.name);
                     return (

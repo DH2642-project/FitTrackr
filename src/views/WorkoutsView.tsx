@@ -35,12 +35,12 @@ export default function WorkoutsView({
 
   return (
     <>
-      <Container sx={{ py: 2, width: "100%", height: "100%" }}>
+      <Container sx={{ p: { xs: 1, md: 2 }, width: "100%", height: "100%" }}>
         <Typography variant="h4" align="center" gutterBottom>
           My Workouts
         </Typography>
         {workoutsLoading && <FullscreenCircularProgress />}
-        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+        <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
           {!workoutsLoading && sortedWorkouts.length > 0 ? (
             sortedWorkouts.map((workout) => (
               <Grid key={workout.key} item xs={4} sm={4} md={4}>
@@ -68,7 +68,8 @@ export default function WorkoutsView({
                       sx={{
                         position: "relative",
                         overflow: "auto",
-                        height: "12rem",
+                        height: { xs: "", sm: "11.5rem" },
+                        maxHeight: { xs: "11.5rem", sm: "" },
                         mb: 1,
                       }}
                     >
