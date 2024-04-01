@@ -56,7 +56,7 @@ export function ProgressPresenter() {
   const goals = useSelector((state: RootState) => state.goals);
   const weeklyData = generateWeeklyData(); 
   const dispatch = useDispatch();
-
+  
   const updateGoalSelection = (id: string) => {
     dispatch(setCurrentGoal(id));
   };

@@ -20,11 +20,9 @@ import {
   addGoal,
   removeGoal,
   setExercise,
-  setCurrentGoal,
 } from "../../features/goals/goalsReducer";
 import { CurrentGoalsView } from "../../components/Goals/CurrentGoalsView";
 import { GoalFormView } from "../../components/Goals/GoalFormView";
-import { RootState } from "../../store";
 import { useState } from "react";
 
 export const Route = createLazyFileRoute("/goals/")({
@@ -32,7 +30,6 @@ export const Route = createLazyFileRoute("/goals/")({
 });
 
 export function Goals() {
-  const goalType = useSelector((state: RootState) => state.goals.goalType);
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);

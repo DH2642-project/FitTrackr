@@ -52,6 +52,7 @@ const goalsSlice = createSlice({
             state.exercise = action.payload;
         },
         setGoalType: (state, action: PayloadAction<string>) => {
+            state.exercise = ''
             state.goalType = action.payload;
         },
         setStartingPoint: (state, action: PayloadAction<string>) => {
@@ -82,6 +83,8 @@ const goalsSlice = createSlice({
             state.goals.push(newGoal);
             state.currentGoal = newGoal;
             state.progress = progress;
+            state.exercise = ''
+            state.goalType = ''
             
         }, removeGoal: (state, action: PayloadAction<string>) => {
             state.goals = state.goals.filter(goal => goal.id !== action.payload);
