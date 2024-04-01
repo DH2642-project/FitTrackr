@@ -9,14 +9,13 @@ import {
 } from "recharts";
 import { Card, Typography, Grid, Select, MenuItem, SelectChangeEvent, CardContent } from "@mui/material";
 import GoalProgressChart from "./GoalProgressChart";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
 
 
 const GoalChart: React.FC<{
   onGoalSelection: any;
-}> = ({onGoalSelection }) => {
-  const goals = useSelector((state: RootState) => state.goals);
+  goals: any;
+}> = ({onGoalSelection, goals }) => {
+  
   
 
   function handleGoalCange(evt: SelectChangeEvent<string>) {
@@ -35,7 +34,7 @@ const GoalChart: React.FC<{
               value={goals.currentGoal?.id || ""}
               onChange={handleGoalCange}
             >
-              {goals.goals.map((goal) => (
+              {goals.goals.map((goal : any) => (
                 <MenuItem key={goal.id} value={goal.id}>
                   {goal.description}
                 </MenuItem>

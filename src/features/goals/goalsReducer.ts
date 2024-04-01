@@ -65,13 +65,14 @@ const goalsSlice = createSlice({
             const excercise = state.exercise; 
             const goalType = state.goalType; 
             const startingPoint = state.startingPoint;
-            const endGoal = state.endGoal;    
+            const endGoal = state.endGoal;  
+            const progress = Math.floor(Math.random() * 101);
 
             const newGoal: Goal = {
                 id: uuidv4(),
                 description,
                 excercise,
-                progress: Math.floor(Math.random() * 101),
+                progress: progress,
                 goalType,
                 startingPoint,
                 endGoal,
@@ -79,8 +80,9 @@ const goalsSlice = createSlice({
             };
 
             state.goals.push(newGoal);
-            state.goalType = '';
-            state.exercise = '';
+            state.currentGoal = newGoal;
+            state.progress = progress;
+            
         }, removeGoal: (state, action: PayloadAction<string>) => {
             state.goals = state.goals.filter(goal => goal.id !== action.payload);
         }, setCurrentGoal: (state, action: PayloadAction<string>) => {

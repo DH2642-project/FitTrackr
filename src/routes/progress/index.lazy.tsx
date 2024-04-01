@@ -3,9 +3,10 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import ActivityChart from "../../components/Progress/ActivityChart.tsx";
 import GoalChart from "../../components/Progress/GoalChart.tsx";
 import { setCurrentGoal } from "../../features/goals/goalsReducer.ts";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TotalView } from "../../components/Progress/TotalView.tsx";
 import CalendarChart from "../../components/Progress/CalendarChart.tsx";
+import { RootState } from "../../store.ts";
 
 export const Route = createLazyFileRoute("/progress/")({
   component: ProgressPresenter,
@@ -52,8 +53,8 @@ const generateWeeklyData = () => {
 };
 
 export function ProgressPresenter() {
-  const weightLossData = generateRandomData();
-  const weeklyData = generateWeeklyData(); // Use weekly data instead of monthly data
+  const goals = useSelector((state: RootState) => state.goals);
+  const weeklyData = generateWeeklyData(); 
   const dispatch = useDispatch();
 
   const updateGoalSelection = (id: string) => {
@@ -63,9 +64,11 @@ export function ProgressPresenter() {
   return (
     <>
       <Grid container spacing={4} sx={{ padding: "30px" }}>
-        <Grid item xs={6}>
-          <GoalChart onGoalSelection={updateGoalSelection}></GoalChart>
-        </Grid>
+        {goals.goals.length > 0 && ( 
+          <Grid item xs={6}>
+            <GoalChart onGoalSelection={updateGoalSelection} goals={goals} ></GoalChart>
+          </Grid>
+        )}
 
         <Grid item xs={6}>
           <Grid container spacing={4}>

@@ -20,6 +20,7 @@ import {
   addGoal,
   removeGoal,
   setExercise,
+  setCurrentGoal,
 } from "../../features/goals/goalsReducer";
 import { CurrentGoalsView } from "../../components/Goals/CurrentGoalsView";
 import { GoalFormView } from "../../components/Goals/GoalFormView";
