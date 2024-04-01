@@ -22,7 +22,7 @@ interface Goal {
 interface GoalsState {
     goals: Goal[];
     description: string;
-    exercise: string;
+    currentExercise: string;
     progress: number;
     goalType: string;
     startingPoint: string;
@@ -33,13 +33,19 @@ interface GoalsState {
 const initialState: GoalsState = {
     goals: [],
     description: '',
-    exercise: '',
+    currentExercise: "Run",
     progress: 0,
-    goalType: '',
+    goalType: "Cardio",
     startingPoint: '',
     endGoal: '',
     currentGoal: null
 };
+
+
+// mock data
+const cardioExercises = ["Run", "Swim", "Walk"]
+const strengthExercises = ["Pushups", "Situps", "Squat"];
+export const allExercises = { cardio: cardioExercises, strength: strengthExercises }
 
 const goalsSlice = createSlice({
     name: 'goals',
@@ -49,10 +55,15 @@ const goalsSlice = createSlice({
             state.description = action.payload;
         },
         setExercise: (state, action: PayloadAction<string>) => {
-            state.exercise = action.payload;
+            state.currentExercise = action.payload;
         },
         setGoalType: (state, action: PayloadAction<string>) => {
-            state.exercise = ''
+            state.currentExercise = "Run"
+            if (action.payload === "Cardio") {
+                state.currentExercise = cardioExercises[0];
+            } else {
+                state.currentExercise = strengthExercises[0];
+            }
             state.goalType = action.payload;
         },
         setStartingPoint: (state, action: PayloadAction<string>) => {
@@ -63,7 +74,7 @@ const goalsSlice = createSlice({
         },
         addGoal: (state) => {
             const description = state.description; 
-            const excercise = state.exercise; 
+            const excercise = state.currentExercise; 
             const goalType = state.goalType; 
             const startingPoint = state.startingPoint;
             const endGoal = state.endGoal;  
@@ -83,8 +94,8 @@ const goalsSlice = createSlice({
             state.goals.push(newGoal);
             state.currentGoal = newGoal;
             state.progress = progress;
-            state.exercise = ''
-            state.goalType = ''
+            state.currentExercise = "Run"
+            state.goalType = "Cardio"
             
         }, removeGoal: (state, action: PayloadAction<string>) => {
             state.goals = state.goals.filter(goal => goal.id !== action.payload);
@@ -95,7 +106,7 @@ const goalsSlice = createSlice({
             if (foundGoal) {
                 state.currentGoal = foundGoal;
                 state.description = foundGoal.description
-                state.exercise = foundGoal.excercise
+                state.currentExercise = foundGoal.excercise
                 state.progress = foundGoal.progress
                 state.goalType = foundGoal.goalType
             } else {

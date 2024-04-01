@@ -2,15 +2,15 @@ import React from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
 
 
-const GoalProgressChart: React.FC<{ value: number }> = ({ value }) => {
-    const circleSize = 200;
+const GoalProgressChart: React.FC<{ value: number , circleSize: number}> = ({ value , circleSize}) => {
+    
     const data = [{ value }];
   return (
     <RadialBarChart
       width={circleSize}
       height={circleSize}
-      innerRadius="60%"
-      outerRadius="80%"
+      innerRadius="80%"
+      outerRadius="100%"
       data={data}
       startAngle={90}
       endAngle={-270}

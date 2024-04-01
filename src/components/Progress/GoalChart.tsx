@@ -16,8 +16,6 @@ const GoalChart: React.FC<{
   goals: any;
 }> = ({onGoalSelection, goals }) => {
   
-  
-
   function handleGoalCange(evt: SelectChangeEvent<string>) {
     onGoalSelection(evt.target.value);
   }
@@ -27,29 +25,25 @@ const GoalChart: React.FC<{
       <CardContent>
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <Typography variant="h6"> Goal: </Typography>
+            <Typography variant="h6"> Select goal: </Typography>
           </Grid>
           <Grid item xs={6}>
             <Select
               value={goals.currentGoal?.id || ""}
               onChange={handleGoalCange}
             >
-              {goals.goals.map((goal : any) => (
+              {goals.goals.map((goal: any) => (
                 <MenuItem key={goal.id} value={goal.id}>
                   {goal.description}
                 </MenuItem>
               ))}
             </Select>
           </Grid>
-        </Grid>
-        <Grid container justifyContent="center" alignItems="center" spacing={2}>
           <Grid item xs={6}>
-            <Typography variant="h4" textAlign="center">
-              {goals.exercise}
-            </Typography>
+            <Typography variant="h6"> Progress: </Typography>
           </Grid>
           <Grid item xs={6}>
-            <GoalProgressChart value={goals.progress} />
+            <GoalProgressChart value={goals.progress} circleSize={75} />
           </Grid>
         </Grid>
 

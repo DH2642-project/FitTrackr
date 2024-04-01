@@ -1,11 +1,7 @@
 import { Grid, Typography, TextField, SelectChangeEvent, MenuItem, Select } from "@mui/material";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
 
 export function GoalFormView(props: any) {
 
-  const goalType = useSelector((state: RootState) => state.goals.goalType);
-  const exercise = useSelector((state: RootState) => state.goals.exercise);
 
 function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
   props.onDescriptionChange(evt.target.value);
@@ -27,8 +23,7 @@ function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
     props.onExerciseChange(evt.target.value);
   }
     
-  const exerciseOptions =
-    goalType === "Cardio" ? props.exercises.cardio : props.exercises.strength;
+  
   return (
     <Grid container spacing={2}>
       <Grid item xs={6}>
@@ -36,7 +31,7 @@ function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
       </Grid>
       <Grid item xs={6}>
         <Select
-          value={goalType}
+          value={props.goalType}
           onChange={handleSelectChange}
           defaultValue="Cardio"
         >
@@ -46,14 +41,14 @@ function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
         </Select>
       </Grid>
 
-      {goalType !== "Weight" && (
+      {props.goalType !== "Weight" && (
         <>
           <Grid item xs={6}>
             <Typography variant="h6"> Exercise: </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Select value={exercise} onChange={handleExerciseChange}>
-              {exerciseOptions.map((option: string, index: number) => (
+            <Select value={props.exercise} onChange={handleExerciseChange}>
+              {props.exerciseOptions.map((option: string, index: number) => (
                 <MenuItem key={index} value={option}>
                   {option}
                 </MenuItem>

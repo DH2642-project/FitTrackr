@@ -22,7 +22,7 @@ export function CurrentGoalsView(props: any) {
                </Grid>
 
                <Grid item xs={3}>
-                 <GoalProgressChart value={goal.progress}></GoalProgressChart>
+                 <GoalProgressChart value={goal.progress} circleSize={150}></GoalProgressChart>
                </Grid>
              </Grid>
 

@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Stack,
 } from "@mui/material";
 
 
@@ -20,10 +21,12 @@ import {
   addGoal,
   removeGoal,
   setExercise,
+  allExercises,
 } from "../../features/goals/goalsReducer";
 import { CurrentGoalsView } from "../../components/Goals/CurrentGoalsView";
 import { GoalFormView } from "../../components/Goals/GoalFormView";
 import { useState } from "react";
+import { RootState } from "../../store";
 
 export const Route = createLazyFileRoute("/goals/")({
   component: Goals,
@@ -34,7 +37,7 @@ export function Goals() {
 
   const [open, setOpen] = useState(false);
 
-  const updateGoalType = (type : string) => {
+  const updateGoalType = (type: string) => {
     dispatch(setGoalType(type));
   };
 
@@ -62,30 +65,35 @@ export function Goals() {
     dispatch(removeGoal(id));
   }
 
+  const goals = useSelector((state: RootState) => state.goals);
   
-  // mock data
-  const cardioExercises = ["Run", "Swim", "Walk"]
-  const strengthExercises = ["Pushups", "Situps", "Squat"];
-  const exercises = { cardio: cardioExercises, strength: strengthExercises }
-  
+  let exerciseOptions;
+  if (goals.goalType === "Cardio") {
+    exerciseOptions = allExercises.cardio;
+  } else {
+    exerciseOptions = allExercises.strength
+  }
+    
   return (
-    <Container>
+    <Stack sx={{ margin: "30px" }} spacing={2}>
+      <Typography variant="h4">My goals</Typography>
+      <CurrentGoalsView onDeleteGoal={deleteGoal}></CurrentGoalsView>
       <Button variant="contained" onClick={() => setOpen(true)}>
         Create new goal
       </Button>
-      <Typography variant="h5">My goals</Typography>
-      <CurrentGoalsView onDeleteGoal={deleteGoal}></CurrentGoalsView>
 
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Add New Goal</DialogTitle>
         <DialogContent>
           <GoalFormView
+            goalType={goals.goalType}
+            exercise={goals.currentExercise}
             onDescriptionChange={updateDescription}
             onExerciseChange={updateExercise}
             onStartingPointChange={updateStartingPoint}
             onEndGoalChange={updateEndGoal}
             onUpdateGoalType={updateGoalType}
-            exercises={exercises}
+            exerciseOptions={exerciseOptions}
           />
         </DialogContent>
         <DialogActions>
@@ -93,6 +101,6 @@ export function Goals() {
           <Button onClick={handleSubmit}>Add goal</Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </Stack>
   );
 }
