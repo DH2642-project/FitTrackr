@@ -64,8 +64,9 @@ function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
       <Grid item xs={6}>
         <TextField
           id="outlined-basic"
-          label=""
+          label="Describe your goal"
           variant="outlined"
+          required
           onChange={handleDescriptionChange}
         />
       </Grid>
@@ -74,8 +75,11 @@ function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
       </Grid>
       <Grid item xs={6}>
         <TextField
+          label={props.metric}
+          type="number"
           id="outlined-basic"
           variant="outlined"
+          required
           onChange={handleStartingPointChange}
         />
       </Grid>
@@ -84,8 +88,11 @@ function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
       </Grid>
       <Grid item xs={6}>
         <TextField
+          label={props.metric}
+          type="number"
           id="outlined-basic"
           variant="outlined"
+          required
           onChange={handleEndGoalChange}
         />
       </Grid>

@@ -17,6 +17,7 @@ interface Goal {
     startingPoint: string;
     endGoal: string;
     storedValues: Data[]
+    metric: string
 }
 
 interface GoalsState {
@@ -27,7 +28,8 @@ interface GoalsState {
     goalType: string;
     startingPoint: string;
     endGoal: string;
-    currentGoal: Goal | null
+    currentGoal: Goal | null;
+    metric: string;
 }
 
 const initialState: GoalsState = {
@@ -38,7 +40,8 @@ const initialState: GoalsState = {
     goalType: "Cardio",
     startingPoint: '',
     endGoal: '',
-    currentGoal: null
+    currentGoal: null,
+    metric: 'minutes'
 };
 
 
@@ -61,8 +64,12 @@ const goalsSlice = createSlice({
             state.currentExercise = "Run"
             if (action.payload === "Cardio") {
                 state.currentExercise = cardioExercises[0];
-            } else {
+                state.metric = "minutes"
+            } else if (action.payload === "Strength") {
                 state.currentExercise = strengthExercises[0];
+                state.metric = "kg / reps"
+            } else {
+                state.metric = "kg"
             }
             state.goalType = action.payload;
         },
@@ -79,6 +86,7 @@ const goalsSlice = createSlice({
             const startingPoint = state.startingPoint;
             const endGoal = state.endGoal;  
             const progress = Math.floor(Math.random() * 101);
+            const metric = state.metric
 
             const newGoal: Goal = {
                 id: uuidv4(),
@@ -88,7 +96,8 @@ const goalsSlice = createSlice({
                 goalType,
                 startingPoint,
                 endGoal,
-                storedValues: generateRandomData()
+                storedValues: generateRandomData(),
+                metric,
             };
 
             state.goals.push(newGoal);
@@ -96,6 +105,9 @@ const goalsSlice = createSlice({
             state.progress = progress;
             state.currentExercise = "Run"
             state.goalType = "Cardio"
+            state.description = ""
+            state.startingPoint = ""
+            state.endGoal = ""
             
         }, removeGoal: (state, action: PayloadAction<string>) => {
             state.goals = state.goals.filter(goal => goal.id !== action.payload);
@@ -109,6 +121,7 @@ const goalsSlice = createSlice({
                 state.currentExercise = foundGoal.excercise
                 state.progress = foundGoal.progress
                 state.goalType = foundGoal.goalType
+                state.metric = foundGoal.metric
             } else {
                 state.currentGoal = null; 
             }

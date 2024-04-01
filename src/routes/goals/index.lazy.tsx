@@ -94,6 +94,7 @@ export function Goals() {
             onEndGoalChange={updateEndGoal}
             onUpdateGoalType={updateGoalType}
             exerciseOptions={exerciseOptions}
+            metric={goals.metric}
           />
         </DialogContent>
         <DialogActions>

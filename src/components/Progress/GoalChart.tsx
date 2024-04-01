@@ -55,7 +55,7 @@ const GoalChart: React.FC<{
             <XAxis dataKey="date" />
             <YAxis
               label={{
-                value: "Weight (kg)",
+                value: goals.currentGoal.metric,
                 angle: -90,
                 position: "insideLeft",
               }}
