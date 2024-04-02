@@ -94,7 +94,6 @@ export function ProgressPresenter() {
                 data={weeklyData}
                 title="Weekly activity"
                 legend="Week"
-                xAxisLabel=""
                 yAxisLabel="Completed workouts"
               ></ActivityChart>
             </Grid>

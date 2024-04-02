@@ -15,13 +15,11 @@ export function ActivityChart({
   data,
   title,
   legend,
-  xAxisLabel,
   yAxisLabel,
 }: {
   data: BarChartData[];
   title: string;
   legend: string;
-  xAxisLabel: string;
   yAxisLabel: string;
 }) {
   return (
