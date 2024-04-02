@@ -2,13 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
-  Container,
-  Typography,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Stack,
 } from "@mui/material";
 
@@ -37,7 +31,7 @@ export function Goals() {
 
   const [open, setOpen] = useState(false);
 
-  const updateGoalType = (type: string) => {
+  function updateGoalType(type: string){
     dispatch(setGoalType(type));
   };
 
@@ -49,10 +43,10 @@ export function Goals() {
     dispatch(setExercise(exercise));
   }
 
-  function updateStartingPoint(startingPoint: string) {
+  function updateStartingPoint(startingPoint: number) {
     dispatch(setStartingPoint(startingPoint));
   }
-  function updateEndGoal(endGoal: string) {
+  function updateEndGoal(endGoal: number) {
     dispatch(setEndGoal(endGoal));
   }
 

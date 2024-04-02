@@ -1,31 +1,54 @@
 import { Grid, Typography, TextField, SelectChangeEvent, MenuItem, Select, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 
-export function GoalFormView(props: any) {
-
-
-function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
-  props.onDescriptionChange(evt.target.value);
-}
+export function GoalFormView({
+  open,
+  setOpen,
+  goalType,
+  exercise,
+  onDescriptionChange,
+  onExerciseChange,
+  onStartingPointChange,
+  onEndGoalChange,
+  onUpdateGoalType,
+  exerciseOptions,
+  metric,
+  handleSubmit,
+}: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  goalType: string;
+  exercise: string;
+  onDescriptionChange: (description: string) => void;
+  onExerciseChange: (exercise: string) => void;
+  onStartingPointChange: (startingPoint: number) => void;
+  onEndGoalChange: (endGoal: number) => void;
+  onUpdateGoalType: (type: string) => void;
+  exerciseOptions: string[];
+  metric: string;
+  handleSubmit: () => void
+}) {
+  function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
+    onDescriptionChange(evt.target.value);
+  }
 
   function handleStartingPointChange(evt: React.ChangeEvent<HTMLInputElement>) {
-    props.onStartingPointChange(evt.target.value);
-  };
+    onStartingPointChange(parseFloat(evt.target.value));
+  }
 
-  function handleEndGoalChange(evt: React.ChangeEvent<HTMLInputElement>){
-    props.onEndGoalChange(evt.target.value);
-  };
+  function handleEndGoalChange(evt: React.ChangeEvent<HTMLInputElement>) {
+    onEndGoalChange(parseFloat(evt.target.value));
+  }
 
   function handleSelectChange(evt: SelectChangeEvent<string>) {
-    props.onUpdateGoalType(evt.target.value)
+    onUpdateGoalType(evt.target.value);
   }
 
   function handleExerciseChange(evt: SelectChangeEvent<string>) {
-    props.onExerciseChange(evt.target.value);
+    onExerciseChange(evt.target.value);
   }
-    
-  
+
   return (
-    <Dialog open={props.open} onClose={() => props.setOpen(false)}>
+    <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>Add New Goal</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
@@ -34,7 +57,7 @@ function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
           </Grid>
           <Grid item xs={6}>
             <Select
-              value={props.goalType}
+              value={goalType}
               onChange={handleSelectChange}
               defaultValue="Cardio"
             >
@@ -44,20 +67,18 @@ function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
             </Select>
           </Grid>
 
-          {props.goalType !== "Weight" && (
+          {goalType !== "Weight" && (
             <>
               <Grid item xs={6}>
                 <Typography variant="h6"> Exercise: </Typography>
               </Grid>
               <Grid item xs={6}>
-                <Select value={props.exercise} onChange={handleExerciseChange}>
-                  {props.exerciseOptions.map(
-                    (option: string, index: number) => (
-                      <MenuItem key={index} value={option}>
-                        {option}
-                      </MenuItem>
-                    )
-                  )}
+                <Select value={exercise} onChange={handleExerciseChange}>
+                  {exerciseOptions.map((option: string, index: number) => (
+                    <MenuItem key={index} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
                 </Select>
               </Grid>
             </>
@@ -80,7 +101,7 @@ function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
           </Grid>
           <Grid item xs={6}>
             <TextField
-              label={props.metric}
+              label={metric}
               type="number"
               id="outlined-basic"
               variant="outlined"
@@ -93,7 +114,7 @@ function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
           </Grid>
           <Grid item xs={6}>
             <TextField
-              label={props.metric}
+              label={metric}
               type="number"
               id="outlined-basic"
               variant="outlined"
@@ -104,8 +125,8 @@ function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => props.setOpen(false)}>Cancel</Button>
-        <Button onClick={() => props.handleSubmit()}>Add goal</Button>
+        <Button onClick={() => setOpen(false)}>Cancel</Button>
+        <Button onClick={() => handleSubmit()}>Add goal</Button>
       </DialogActions>
     </Dialog>
   );

@@ -1,10 +1,7 @@
-import React from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
 
-
-const GoalProgressChart: React.FC<{ value: number , circleSize: number}> = ({ value , circleSize}) => {
-    
-    const data = [{ value }];
+export function GoalProgressChart({ value, circleSize }: { value: number; circleSize: number}){
+     const data = [{ value }];
   return (
     <RadialBarChart
       width={circleSize}
@@ -30,4 +27,4 @@ const GoalProgressChart: React.FC<{ value: number , circleSize: number}> = ({ va
   );
 };
 
-export default GoalProgressChart;
+

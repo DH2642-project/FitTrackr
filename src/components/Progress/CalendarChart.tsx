@@ -12,7 +12,7 @@ const value = [
   { date: "2016/12/08", count: 3 },
 ];
 
-const CalendarChart = () => {
+export function CalendarChart(){
     return (
       <Card sx={{ borderRadius: 4 }}>
         <CardContent>

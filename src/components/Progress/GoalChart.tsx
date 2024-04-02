@@ -1,4 +1,3 @@
-import React from "react";
 import {
   LineChart,
   Line,
@@ -8,14 +7,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Card, Typography, Grid, Select, MenuItem, SelectChangeEvent, CardContent } from "@mui/material";
-import GoalProgressChart from "./GoalProgressChart";
+import { GoalProgressChart } from "./GoalProgressChart";
+import { GoalsState } from "../../features/goals/goalsReducer";
 
 
-const GoalChart: React.FC<{
-  onGoalSelection: any;
-  goals: any;
-}> = ({onGoalSelection, goals }) => {
-  
+export function GoalChart({ onGoalSelection, goals }: {
+  onGoalSelection: (id: string) => void;
+goals: GoalsState}) {
   function handleGoalCange(evt: SelectChangeEvent<string>) {
     onGoalSelection(evt.target.value);
   }
@@ -55,7 +53,7 @@ const GoalChart: React.FC<{
             <XAxis dataKey="date" />
             <YAxis
               label={{
-                value: goals.currentGoal.metric,
+                value: goals.currentGoal?.metric,
                 angle: -90,
                 position: "insideLeft",
               }}

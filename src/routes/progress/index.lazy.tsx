@@ -1,8 +1,8 @@
 import {Grid } from "@mui/material";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import ActivityChart from "../../components/Progress/ActivityChart.tsx";
+import { ActivityChart } from "../../components/Progress/ActivityChart.tsx";
 import GoalChart from "../../components/Progress/GoalChart.tsx";
-import { setCurrentGoal } from "../../features/goals/goalsReducer.ts";
+import { GoalData, setCurrentGoal } from "../../features/goals/goalsReducer.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { TotalView } from "../../components/Progress/TotalView.tsx";
 import CalendarChart from "../../components/Progress/CalendarChart.tsx";
@@ -13,16 +13,13 @@ export const Route = createLazyFileRoute("/progress/")({
 });
 
 
-interface Data {
-  date: string;
-  value: number;
-}
+
 // Random weright loss data
 export function generateRandomData() {
   const startDate = new Date(2024, 0, 1); // January 1, 2024
   const endDate = new Date(); // Current date
 
-  const data: Data[] = [];
+  const data: GoalData[] = [];
   let currentDate = new Date(startDate);
 
   while (currentDate <= endDate) {
@@ -39,16 +36,17 @@ export function generateRandomData() {
   return data;
 };
 
-const generateWeeklyData = () => {
-  
-  const data = [
-    { week: 1, completedWorkouts: 5 },
-    { week: 2, completedWorkouts: 4 },
-    { week: 3, completedWorkouts: 3 },
-    { week: 4, completedWorkouts: 7 },
+export type BarChartData = {
+  x: number,
+  y: number
+}
+function generateWeeklyData(): BarChartData[] {
+  const data : BarChartData[] = [
+    { x: 1, y: 5 },
+    { x: 2, y: 4 },
+    { x: 3, y: 3 },
+    { x: 4, y: 7 },
   ];
-  
-
   return data;
 };
 
@@ -64,9 +62,12 @@ export function ProgressPresenter() {
   return (
     <>
       <Grid container spacing={4} sx={{ padding: "30px" }}>
-        {goals.goals.length > 0 && ( 
+        {goals.goals.length > 0 && (
           <Grid item xs={6}>
-            <GoalChart onGoalSelection={updateGoalSelection} goals={goals} ></GoalChart>
+            <GoalChart
+              onGoalSelection={updateGoalSelection}
+              goals={goals}
+            ></GoalChart>
           </Grid>
         )}
 
@@ -81,7 +82,10 @@ export function ProgressPresenter() {
             <Grid item xs={12}>
               <ActivityChart
                 data={weeklyData}
-                title={"Weekly activity"}
+                title="Weekly activity"
+                legend="Week"
+                xAxisLabel=""
+                yAxisLabel="Completed workouts"
               ></ActivityChart>
             </Grid>
           </Grid>

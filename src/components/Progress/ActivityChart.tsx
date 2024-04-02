@@ -8,11 +8,21 @@ import {
   ResponsiveContainer
 } from "recharts";
 import {Card, CardContent, Typography} from "@mui/material";
+import { BarChartData } from "../../routes/progress/index.lazy";
 
-const ActivityChart: React.FC<{ data: any[]; title: string }> = ({
+export function ActivityChart({
   data,
   title,
-}) => {
+  legend,
+  xAxisLabel,
+  yAxisLabel,
+}: {
+  data: BarChartData[];
+  title: string;
+  legend: string;
+  xAxisLabel: string;
+  yAxisLabel: string;
+}) {
   return (
     <Card sx={{ borderRadius: 4 }}>
       <CardContent>
@@ -24,24 +34,21 @@ const ActivityChart: React.FC<{ data: any[]; title: string }> = ({
             data={data}
             margin={{ top: 30, right: 30, left: 30, bottom: 30 }}
           >
-            <XAxis dataKey="week" />
+            <XAxis dataKey="x" />
             <YAxis
               label={{
-                value: "Completed Workouts",
+                value: yAxisLabel,
                 angle: -90,
                 position: "insideLeft",
               }}
             />
             <YAxis />
             <Tooltip />
-            <Legend />
-
-            <Bar dataKey="completedWorkouts" fill="#ff7f0e" />
+            <Legend formatter={() => legend} />
+            <Bar dataKey="y" fill="#ff7f0e" />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
   );
 };
-
-export default ActivityChart;
