@@ -41,9 +41,10 @@ export function CurrentGoalsView(props: any) {
     const goals = useSelector(
         (state: RootState) => state.goals.goals
     );
-    return (
-        <Stack spacing={2}>
-            {goals.map(currentGoalCardCB)}
-        </Stack>
-    )
+  return (
+    <>
+      <Typography variant="h4">My goals</Typography>
+      <Stack spacing={2}>{goals.map(currentGoalCardCB)}</Stack>
+    </>
+  );
 }

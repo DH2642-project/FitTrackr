@@ -76,32 +76,24 @@ export function Goals() {
     
   return (
     <Stack sx={{ margin: "30px" }} spacing={2}>
-      <Typography variant="h4">My goals</Typography>
       <CurrentGoalsView onDeleteGoal={deleteGoal}></CurrentGoalsView>
+      <GoalFormView
+        open={open}
+        setOpen={setOpen}
+        goalType={goals.goalType}
+        exercise={goals.currentExercise}
+        onDescriptionChange={updateDescription}
+        onExerciseChange={updateExercise}
+        onStartingPointChange={updateStartingPoint}
+        onEndGoalChange={updateEndGoal}
+        onUpdateGoalType={updateGoalType}
+        exerciseOptions={exerciseOptions}
+        metric={goals.metric}
+        handleSubmit={handleSubmit}
+      />
       <Button variant="contained" onClick={() => setOpen(true)}>
         Create new goal
       </Button>
-
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Add New Goal</DialogTitle>
-        <DialogContent>
-          <GoalFormView
-            goalType={goals.goalType}
-            exercise={goals.currentExercise}
-            onDescriptionChange={updateDescription}
-            onExerciseChange={updateExercise}
-            onStartingPointChange={updateStartingPoint}
-            onEndGoalChange={updateEndGoal}
-            onUpdateGoalType={updateGoalType}
-            exerciseOptions={exerciseOptions}
-            metric={goals.metric}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={handleSubmit}>Add goal</Button>
-        </DialogActions>
-      </Dialog>
     </Stack>
   );
 }
