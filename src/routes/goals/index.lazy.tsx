@@ -19,7 +19,7 @@ import {
 } from "../../features/goals/goalsReducer";
 import { CurrentGoalsView } from "../../components/Goals/CurrentGoalsView";
 import { GoalFormView } from "../../components/Goals/GoalFormView";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RootState } from "../../store";
 
 export const Route = createLazyFileRoute("/goals/")({
@@ -67,6 +67,16 @@ export function Goals() {
   } else {
     exerciseOptions = allExercises.strength
   }
+
+   const [isAddButtonDisabled, setIsButtonDisabled] = useState(true);
+
+   useEffect(() => {
+     if (goals.description && goals.startingPoint && goals.endGoal) {
+       setIsButtonDisabled(false);
+     } else {
+       setIsButtonDisabled(true);
+     }
+   }, [goals.description, goals.startingPoint, goals.endGoal]);
     
   return (
     <Stack sx={{ margin: "30px" }} spacing={2}>
@@ -84,6 +94,7 @@ export function Goals() {
         exerciseOptions={exerciseOptions}
         metric={goals.metric}
         handleSubmit={handleSubmit}
+        isAddButtonDisabled={isAddButtonDisabled}
       />
       <Button variant="contained" onClick={() => setOpen(true)}>
         Create new goal

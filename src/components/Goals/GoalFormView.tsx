@@ -1,4 +1,6 @@
 import { Grid, Typography, TextField, SelectChangeEvent, MenuItem, Select, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { useEffect, useState } from "react";
+import { GoalsState } from "../../features/goals/goalsReducer";
 
 export function GoalFormView({
   open,
@@ -13,6 +15,7 @@ export function GoalFormView({
   exerciseOptions,
   metric,
   handleSubmit,
+  isAddButtonDisabled,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -25,7 +28,8 @@ export function GoalFormView({
   onUpdateGoalType: (type: string) => void;
   exerciseOptions: string[];
   metric: string;
-  handleSubmit: () => void
+  handleSubmit: () => void;
+  isAddButtonDisabled: boolean;
 }) {
   function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
     onDescriptionChange(evt.target.value);
@@ -126,7 +130,9 @@ export function GoalFormView({
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setOpen(false)}>Cancel</Button>
-        <Button onClick={() => handleSubmit()}>Add goal</Button>
+        <Button onClick={() => handleSubmit()} disabled={isAddButtonDisabled}>
+          Add goal
+        </Button>
       </DialogActions>
     </Dialog>
   );
