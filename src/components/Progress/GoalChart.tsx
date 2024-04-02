@@ -9,6 +9,7 @@ import {
 import { Card, Typography, Grid, Select, MenuItem, SelectChangeEvent, CardContent } from "@mui/material";
 import { GoalProgressChart } from "./GoalProgressChart";
 import { GoalsState } from "../../features/goals/goalsReducer";
+import theme from "../../theme";
 
 
 export function GoalChart({ onGoalSelection, goals }: {
@@ -22,8 +23,11 @@ goals: GoalsState}) {
     <Card sx={{ borderRadius: 4 }}>
       <CardContent>
         <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h4"> Goals</Typography>
+          </Grid>
           <Grid item xs={6}>
-            <Typography variant="h6"> Select goal: </Typography>
+            <Typography variant="h6"> Select a goal: </Typography>
           </Grid>
           <Grid item xs={6}>
             <Select
@@ -63,7 +67,7 @@ goals: GoalsState}) {
             <Line
               type="monotone"
               dataKey="value"
-              stroke="#ff7f0e"
+              stroke={theme.palette.primary.main}
               strokeWidth={3}
               activeDot={{ r: 8 }}
               dot={false}

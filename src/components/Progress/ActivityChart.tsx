@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import {Card, CardContent, Typography} from "@mui/material";
 import { BarChartData } from "../../routes/progress/index.lazy";
+import theme from "../../theme";
 
 export function ActivityChart({
   data,
@@ -45,7 +46,7 @@ export function ActivityChart({
             <YAxis />
             <Tooltip />
             <Legend formatter={() => legend} />
-            <Bar dataKey="y" fill="#ff7f0e" />
+            <Bar dataKey="y" fill={theme.palette.primary.main} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

@@ -13,7 +13,6 @@ export const Route = createLazyFileRoute("/progress/")({
 });
 
 
-
 // Random weright loss data
 export function generateRandomData() {
   const startDate = new Date(2024, 0, 1); // January 1, 2024
@@ -49,6 +48,17 @@ function generateWeeklyData(): BarChartData[] {
   ];
   return data;
 };
+
+const calendarData = [
+  { date: "2024/01/11", count: 2 },
+  { date: "2024/04/12", count: 2 },
+  { date: "2024/05/01", count: 1 },
+  { date: "2024/05/02", count: 3 },
+  { date: "2024/05/03", count: 1 },
+  { date: "2024/05/04", count: 1 },
+  { date: "2024/05/08", count: 2 },
+  { date: "2024/12/08", count: 3 },
+];
 
 export function ProgressPresenter() {
   const goals = useSelector((state: RootState) => state.goals);
@@ -90,8 +100,14 @@ export function ProgressPresenter() {
             </Grid>
           </Grid>
         </Grid>
+        <Grid item xs={4}>
+          <TotalView
+            title={"Total weight lifted (kg)"}
+            value={"163"}
+          ></TotalView>
+        </Grid>
         <Grid item xs={8}>
-          <CalendarChart></CalendarChart>
+          <CalendarChart data={calendarData}></CalendarChart>
         </Grid>
       </Grid>
     </>

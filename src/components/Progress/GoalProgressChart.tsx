@@ -1,4 +1,5 @@
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
+import theme from "../../theme";
 
 export function GoalProgressChart({ value, circleSize }: { value: number; circleSize: number}){
      const data = [{ value }];
@@ -17,7 +18,7 @@ export function GoalProgressChart({ value, circleSize }: { value: number; circle
         background
         dataKey="value"
         cornerRadius={circleSize / 2}
-        fill="#ff7f0e"
+        fill={theme.palette.primary.main}
         label={{
           position: "center",
           formatter: (value: number) => `${value}%`,

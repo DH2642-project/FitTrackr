@@ -1,6 +1,5 @@
 import { Grid, Typography, TextField, SelectChangeEvent, MenuItem, Select, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { useEffect, useState } from "react";
-import { GoalsState } from "../../features/goals/goalsReducer";
+
 
 export function GoalFormView({
   open,
