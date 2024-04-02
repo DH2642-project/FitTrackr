@@ -17,7 +17,9 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const WorkoutsIndexLazyImport = createFileRoute('/workouts/')()
+const ProgressIndexLazyImport = createFileRoute('/progress/')()
 const ProfileIndexLazyImport = createFileRoute('/profile/')()
+const GoalsIndexLazyImport = createFileRoute('/goals/')()
 const AddWorkoutIndexLazyImport = createFileRoute('/add-workout/')()
 const IndexIndexLazyImport = createFileRoute('/_index/')()
 
@@ -30,10 +32,22 @@ const WorkoutsIndexLazyRoute = WorkoutsIndexLazyImport.update({
   import('./routes/workouts/index.lazy').then((d) => d.Route),
 )
 
+const ProgressIndexLazyRoute = ProgressIndexLazyImport.update({
+  path: '/progress/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/progress/index.lazy').then((d) => d.Route),
+)
+
 const ProfileIndexLazyRoute = ProfileIndexLazyImport.update({
   path: '/profile/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/profile/index.lazy').then((d) => d.Route))
+
+const GoalsIndexLazyRoute = GoalsIndexLazyImport.update({
+  path: '/goals/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/goals/index.lazy').then((d) => d.Route))
 
 const AddWorkoutIndexLazyRoute = AddWorkoutIndexLazyImport.update({
   path: '/add-workout/',
@@ -59,8 +73,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AddWorkoutIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/goals/': {
+      preLoaderRoute: typeof GoalsIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/profile/': {
       preLoaderRoute: typeof ProfileIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/progress/': {
+      preLoaderRoute: typeof ProgressIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/workouts/': {
@@ -75,7 +97,9 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexIndexLazyRoute,
   AddWorkoutIndexLazyRoute,
+  GoalsIndexLazyRoute,
   ProfileIndexLazyRoute,
+  ProgressIndexLazyRoute,
   WorkoutsIndexLazyRoute,
 ])
 
