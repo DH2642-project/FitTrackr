@@ -105,6 +105,15 @@ function getWeekNumber(date: Date): number {
 }
 
 function getMuscleGroupsData(workouts: Workout[]) {
+  let totalSets = 0;
+  workouts.forEach((workout) => {
+    workout.exercises.forEach((exercise) => {
+      if (exercise.sets) {
+        totalSets += exercise.sets;
+      }
+    });
+  });
+
   const muscleGroupsData: { [key: string]: number } = {};
   workouts.forEach((workout) => {
     workout.exercises.forEach((exercise) => {
@@ -118,7 +127,10 @@ function getMuscleGroupsData(workouts: Workout[]) {
 
   const result: { name: string; value: number }[] = [];
   for (const muscle in muscleGroupsData) {
-    result.push({ name: muscle, value: muscleGroupsData[muscle] });
+    result.push({
+      name: muscle,
+      value: parseFloat(((muscleGroupsData[muscle] / totalSets) * 100).toFixed(2)),
+    });
   }
   return result;
 }
