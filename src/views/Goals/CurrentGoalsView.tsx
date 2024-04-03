@@ -1,12 +1,20 @@
-import { Grid,Button, Card, Stack, Typography, CardContent } from "@mui/material";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import {
+  Grid,
+  Button,
+  Card,
+  Stack,
+  Typography,
+  CardContent,
+} from "@mui/material";
 import { GoalProgressChart } from "../Progress/GoalProgressChart";
+import { Goal } from "../../features/goals/goalsReducer";
 
 export function CurrentGoalsView({
   onDeleteGoal,
+  goals,
 }: {
   onDeleteGoal: (id: string) => void;
+  goals: Goal[];
 }) {
   function currentGoalCardCB(goal: any) {
     return (
@@ -15,7 +23,7 @@ export function CurrentGoalsView({
           <Grid container spacing={2}>
             <Grid item xs={9}>
               <Typography variant="h4">{goal.description}</Typography>
-              <Typography variant="body1">Type: {goal.goalType}</Typography>          
+              <Typography variant="body1">Type: {goal.goalType}</Typography>
               {goal.goalType !== "Weight" && (
                 <Typography variant="body1">
                   Exercise: {goal.exercise}
@@ -47,7 +55,7 @@ export function CurrentGoalsView({
       </Card>
     );
   }
-  const goals = useSelector((state: RootState) => state.goals.goals);
+
   return (
     <>
       <Typography variant="h4">My goals</Typography>

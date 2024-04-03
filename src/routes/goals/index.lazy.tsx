@@ -1,11 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Button,
-  Stack,
-} from "@mui/material";
-
+import { Button, Stack } from "@mui/material";
 
 import {
   setDescription,
@@ -31,9 +27,9 @@ export function Goals() {
 
   const [open, setOpen] = useState(false);
 
-  function updateGoalType(type: string){
+  function updateGoalType(type: string) {
     dispatch(setGoalType(type));
-  };
+  }
 
   function updateDescription(description: string) {
     dispatch(setDescription(description));
@@ -60,27 +56,30 @@ export function Goals() {
   }
 
   const goals = useSelector((state: RootState) => state.goals);
-  
+
   let exerciseOptions;
   if (goals.goalType === "Cardio") {
     exerciseOptions = allExercises.cardio;
   } else {
-    exerciseOptions = allExercises.strength
+    exerciseOptions = allExercises.strength;
   }
 
-   const [isAddButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isAddButtonDisabled, setIsButtonDisabled] = useState(true);
 
-   useEffect(() => {
-     if (goals.description && goals.startingPoint && goals.endGoal) {
-       setIsButtonDisabled(false);
-     } else {
-       setIsButtonDisabled(true);
-     }
-   }, [goals.description, goals.startingPoint, goals.endGoal]);
-    
+  useEffect(() => {
+    if (goals.description && goals.startingPoint && goals.endGoal) {
+      setIsButtonDisabled(false);
+    } else {
+      setIsButtonDisabled(true);
+    }
+  }, [goals.description, goals.startingPoint, goals.endGoal]);
+
   return (
     <Stack sx={{ margin: "30px" }} spacing={2}>
-      <CurrentGoalsView onDeleteGoal={deleteGoal}></CurrentGoalsView>
+      <CurrentGoalsView
+        goals={goals.goals}
+        onDeleteGoal={deleteGoal}
+      ></CurrentGoalsView>
       <GoalFormView
         open={open}
         setOpen={setOpen}

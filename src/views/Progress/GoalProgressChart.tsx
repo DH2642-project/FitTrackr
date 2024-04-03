@@ -1,8 +1,14 @@
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
 import theme from "../../theme";
 
-export function GoalProgressChart({ value, circleSize }: { value: number; circleSize: number}){
-     const data = [{ value }];
+export function GoalProgressChart({
+  value,
+  circleSize,
+}: {
+  value: number;
+  circleSize: number;
+}) {
+  const data = [{ value }];
   return (
     <RadialBarChart
       width={circleSize}
@@ -26,6 +32,4 @@ export function GoalProgressChart({ value, circleSize }: { value: number; circle
       />
     </RadialBarChart>
   );
-};
-
-
+}

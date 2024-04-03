@@ -5,9 +5,9 @@ import {
   YAxis,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from "recharts";
-import {Card, CardContent, Typography} from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 
 import theme from "../../theme";
 
@@ -17,7 +17,7 @@ export function ActivityChart({
   legend,
   yAxisLabel,
 }: {
-    data: { x: number;  y:number}[];
+  data: { x: number; y: number }[];
   title: string;
   legend: string;
   yAxisLabel: string;
@@ -50,4 +50,4 @@ export function ActivityChart({
       </CardContent>
     </Card>
   );
-};
+}

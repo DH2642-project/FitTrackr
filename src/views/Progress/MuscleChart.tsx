@@ -1,5 +1,12 @@
 import { Card, CardContent, Typography } from "@mui/material";
-import { PieChart, Pie, ResponsiveContainer, Tooltip, Legend, Cell } from "recharts";
+import {
+  PieChart,
+  Pie,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+  Cell,
+} from "recharts";
 import theme from "../../theme";
 
 export function MuscleChart({
@@ -30,7 +37,6 @@ export function MuscleChart({
     "#ffeda0", // light yellow
   ];
 
-  
   return (
     <Card sx={{ borderRadius: 4 }}>
       <CardContent>
@@ -50,7 +56,7 @@ export function MuscleChart({
               fill={theme.palette.primary.main}
               label
             >
-              {data.map((entry, index) => (
+              {data.map((_, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={COLORS[index % COLORS.length]}
