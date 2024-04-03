@@ -6,14 +6,12 @@ import {
   setEndGoal,
   setGoalType,
   setStartingPoint,
-  removeGoal,
   setExercise,
   allExercises,
   addGoalDb,
   fetchGoals,
   deleteGoalDb,
   resetToDefaultState,
-  setCurrentGoal,
 } from "../../features/goals/goalsReducer";
 import { CurrentGoalsView } from "../../views/Goals/CurrentGoalsView";
 import { GoalFormView } from "../../views/Goals/GoalFormView";

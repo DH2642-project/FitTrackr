@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from 'uuid'; 
 import { generateRandomData } from '../../routes/progress/index.lazy';
 import { auth, database } from "../../firebase";
 import { child, get, push, ref, set } from "firebase/database";
