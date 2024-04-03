@@ -17,8 +17,8 @@ import {
   setExercise,
   allExercises,
 } from "../../features/goals/goalsReducer";
-import { CurrentGoalsView } from "../../components/Goals/CurrentGoalsView";
-import { GoalFormView } from "../../components/Goals/GoalFormView";
+import { CurrentGoalsView } from "../../views/Goals/CurrentGoalsView";
+import { GoalFormView } from "../../views/Goals/GoalFormView";
 import { useEffect, useState } from "react";
 import { RootState } from "../../store";
 

@@ -8,7 +8,7 @@ import {
   ResponsiveContainer
 } from "recharts";
 import {Card, CardContent, Typography} from "@mui/material";
-import { BarChartData } from "../../routes/progress/index.lazy";
+
 import theme from "../../theme";
 
 export function ActivityChart({
@@ -17,7 +17,7 @@ export function ActivityChart({
   legend,
   yAxisLabel,
 }: {
-  data: BarChartData[];
+    data: { x: number;  y:number}[];
   title: string;
   legend: string;
   yAxisLabel: string;
