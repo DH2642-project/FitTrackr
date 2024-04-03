@@ -15,7 +15,7 @@ export function CurrentGoalsView({
           <Grid container spacing={2}>
             <Grid item xs={9}>
               <Typography variant="h4">{goal.description}</Typography>
-              <Typography variant="body1">Type: {goal.goalType}</Typography>
+              <Typography variant="body1">Type: {goal.goalType}</Typography>          
               {goal.goalType !== "Weight" && (
                 <Typography variant="body1">
                   Exercise: {goal.exercise}

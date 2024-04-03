@@ -11,7 +11,7 @@ export type GoalData = {
 export type Goal = {
     id: string;
     description: string;
-    excercise: string;
+    exercise: string;
     progress: number;
     goalType: string;
     startingPoint: number;
@@ -81,17 +81,18 @@ const goalsSlice = createSlice({
         },
         addGoal: (state) => {
             const description = state.description; 
-            const excercise = state.currentExercise; 
+            const exercise = state.currentExercise; 
             const goalType = state.goalType; 
             const startingPoint = state.startingPoint;
             const endGoal = state.endGoal;  
             const progress = Math.floor(Math.random() * 101);
-            const metric = state.metric
+            const metric = state.metric;
+            
 
             const newGoal: Goal = {
                 id: uuidv4(),
                 description,
-                excercise,
+                exercise,
                 progress: progress,
                 goalType,
                 startingPoint,
@@ -99,7 +100,7 @@ const goalsSlice = createSlice({
                 storedValues: generateRandomData(),
                 metric,
             };
-
+            
             state.goals.push(newGoal);
             state.currentGoal = newGoal;
             state.progress = progress;
@@ -118,7 +119,7 @@ const goalsSlice = createSlice({
             if (foundGoal) {
                 state.currentGoal = foundGoal;
                 state.description = foundGoal.description
-                state.currentExercise = foundGoal.excercise
+                state.currentExercise = foundGoal.exercise
                 state.progress = foundGoal.progress
                 state.goalType = foundGoal.goalType
                 state.metric = foundGoal.metric

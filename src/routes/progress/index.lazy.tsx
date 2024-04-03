@@ -1,4 +1,4 @@
-import {Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ActivityChart } from "../../views/Progress/ActivityChart.tsx";
 import GoalChart from "../../views/Progress/GoalChart.tsx";
@@ -8,6 +8,7 @@ import { TotalView } from "../../views/Progress/TotalView.tsx";
 import CalendarChart from "../../views/Progress/CalendarChart.tsx";
 import { RootState } from "../../store.ts";
 import { Workout } from "../../features/workouts/workoutsSlice.ts";
+import MuscleChart from "../../views/Progress/MuscleChart.tsx";
 
 export const Route = createLazyFileRoute("/progress/")({
   component: ProgressPresenter,
@@ -59,11 +60,10 @@ function getCalendarData(
   for (const date in calendarMap) {
     calendarData.push({ date, count: calendarMap[date] });
   }
-  console.log(calendarData)
   return calendarData;
 }
 
-function getWeightlifted(workouts: Workout[])  {
+function getWeightlifted(workouts: Workout[]) {
   const dummyWeight = 10
   let weight = 0
   workouts.forEach((workout) => {
@@ -78,7 +78,7 @@ function getWeightlifted(workouts: Workout[])  {
   return weight
 }
 
-function getWorkoutsPerWeek(workouts: Workout[]): { x: number;  y: number}[] {
+function getWorkoutsPerWeek(workouts: Workout[]): { x: number; y: number }[] {
   const workoutsPerWeek: { [week: number]: number } = {};
 
   workouts.forEach((workout) => {
@@ -87,7 +87,7 @@ function getWorkoutsPerWeek(workouts: Workout[]): { x: number;  y: number}[] {
       const weekNumber = getWeekNumber(date);
       workoutsPerWeek[weekNumber] = (workoutsPerWeek[weekNumber] || 0) + 1;
     }
-    
+
   });
 
   const data: { x: number; y: number }[] = Object.keys(workoutsPerWeek).map(
@@ -102,22 +102,43 @@ function getWorkoutsPerWeek(workouts: Workout[]): { x: number;  y: number}[] {
 
 function getWeekNumber(date: Date): number {
   const oneJan = new Date(date.getFullYear(), 0, 1);
-  const millisecsInDay = 86400000; 
+  const millisecsInDay = 86400000;
   return Math.ceil(
     ((date.getTime() - oneJan.getTime()) / millisecsInDay +
       oneJan.getDay() +
       1) /
-      7
+    7
   );
 }
 
+function getMuscleGroupsData(workouts: Workout[]) {
+  const muscleGroupsData: { [key: string]: number } = {};
+  workouts.forEach((workout) => {
+    workout.exercises.forEach((exercise) => {
+      
+      if (exercise.muscle) {
+        
+        if (!muscleGroupsData[exercise.muscle]) {
+          muscleGroupsData[exercise.muscle] = 1;
+        } else
+          muscleGroupsData[exercise.muscle] += 1;
+      }
+    })
+  })
+
+  const result: { name: string; value: number }[] = [];
+  for (const muscle in muscleGroupsData) {
+      result.push({ name: muscle, value: muscleGroupsData[muscle] });
+  }
+  return result
+}
 
 export function ProgressPresenter() {
   const goals = useSelector((state: RootState) => state.goals);
   const workouts = useSelector((state: RootState) => state.workouts.workouts);
-   
+
   const dispatch = useDispatch();
-  
+
   const updateGoalSelection = (id: string) => {
     dispatch(setCurrentGoal(id));
   };
@@ -125,6 +146,7 @@ export function ProgressPresenter() {
   const calendarData = getCalendarData(workouts)
   const totalWeight = getWeightlifted(workouts)
   const weeklyData = getWorkoutsPerWeek(workouts);
+  const muscleGroupsData = getMuscleGroupsData(workouts);
 
   return (
     <>
@@ -144,16 +166,21 @@ export function ProgressPresenter() {
               <TotalView title={"Total distance (km)"} value={"55"}></TotalView>
             </Grid>
             <Grid item xs={6}>
-              <TotalView title={"Total workouts"} value={workouts.length}></TotalView>
+              <TotalView
+                title={"Total workouts"}
+                value={workouts.length}
+              ></TotalView>
             </Grid>
-            <Grid item xs={12}>
-              <ActivityChart
-                data={weeklyData}
-                title="Weekly activity"
-                legend="Week"
-                yAxisLabel="Completed workouts"
-              ></ActivityChart>
-            </Grid>
+            {workouts.length > 0 && (
+              <Grid item xs={12}>
+                <ActivityChart
+                  data={weeklyData}
+                  title="Weekly activity"
+                  legend="Week"
+                  yAxisLabel="Completed workouts"
+                ></ActivityChart>
+              </Grid>
+            )}
           </Grid>
         </Grid>
         <Grid item xs={4}>
@@ -165,6 +192,11 @@ export function ProgressPresenter() {
         <Grid item xs={8}>
           <CalendarChart data={calendarData}></CalendarChart>
         </Grid>
+        {workouts.length > 0 && (
+          <Grid item xs={6}>
+            <MuscleChart data={muscleGroupsData}></MuscleChart>
+          </Grid>
+        )}
       </Grid>
     </>
   );
