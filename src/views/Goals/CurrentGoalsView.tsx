@@ -13,12 +13,12 @@ export function CurrentGoalsView({
   onDeleteGoal,
   goals,
 }: {
-  onDeleteGoal: (id: string) => void;
+  onDeleteGoal: (key: string) => Promise<void>;
   goals: Goal[];
 }) {
   function currentGoalCardCB(goal: any) {
     return (
-      <Card key={goal.id} sx={{ borderRadius: 4 }}>
+      <Card key={goal.key} sx={{ borderRadius: 4 }}>
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={9}>
@@ -47,7 +47,7 @@ export function CurrentGoalsView({
             type="button"
             variant="contained"
             color="error"
-            onClick={() => onDeleteGoal(goal.id)}
+            onClick={() => onDeleteGoal(goal.key)}
           >
             Delete
           </Button>

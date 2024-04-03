@@ -16,7 +16,7 @@ import {
   CardContent,
 } from "@mui/material";
 import { GoalProgressChart } from "./GoalProgressChart";
-import { GoalsState } from "../../features/goals/goalsReducer";
+import { Goal, GoalsState } from "../../features/goals/goalsReducer";
 import theme from "../../theme";
 
 export function GoalChart({
@@ -42,11 +42,11 @@ export function GoalChart({
           </Grid>
           <Grid item xs={6}>
             <Select
-              value={goals.currentGoal?.id || ""}
+              value={goals.currentGoal?.key || ''}
               onChange={handleGoalCange}
             >
-              {goals.goals.map((goal: any) => (
-                <MenuItem key={goal.id} value={goal.id}>
+              {goals.goals.map((goal: Goal) => (
+                <MenuItem key={goal.key} value={goal.key}>
                   {goal.description}
                 </MenuItem>
               ))}
