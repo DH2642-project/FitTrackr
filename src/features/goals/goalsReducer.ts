@@ -1,6 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from 'uuid'; 
 import { generateRandomData } from '../../routes/progress/index.lazy';
+import { auth, database } from "../../firebase";
+import { child, get, push, ref, set } from "firebase/database";
 
 
 export type GoalData = {
@@ -11,13 +13,14 @@ export type GoalData = {
 export type Goal = {
     id: string;
     description: string;
-    excercise: string;
+    exercise: string;
     progress: number;
     goalType: string;
     startingPoint: number;
     endGoal: number;
     storedValues: GoalData[]
     metric: string
+    key? : string
 }
 
 export interface GoalsState {
@@ -28,8 +31,10 @@ export interface GoalsState {
     goalType: string;
     startingPoint: number;
     endGoal: number;
-    currentGoal: Goal | null;
+    currentGoal?: Goal | null;
     metric: string;
+    goalStatus: string
+    goalError?: boolean
 }
 
 const initialState: GoalsState = {
@@ -40,8 +45,8 @@ const initialState: GoalsState = {
     goalType: "Cardio",
     startingPoint: 0,
     endGoal: 0,
-    currentGoal: null,
-    metric: 'minutes'
+    metric: 'minutes',
+    goalStatus: 'idle'
 };
 
 
@@ -49,6 +54,47 @@ const initialState: GoalsState = {
 const cardioExercises = ["Run", "Swim", "Walk"]
 const strengthExercises = ["Pushups", "Situps", "Squat"];
 export const allExercises = { cardio: cardioExercises, strength: strengthExercises }
+
+export const addGoalDb = createAsyncThunk("goals/addGoalDb", async (_, thunkAPI) => {
+
+    const state = thunkAPI.getState() as { goals: GoalsState };
+    
+    const userId = auth.currentUser?.uid;
+    try {
+        const snapshot = await push(ref(database, `goals/${userId}`), {
+            description:  state.goals.description,
+            exercise: state.goals.currentExercise,
+            progress: Math.floor(Math.random() * 101),
+            goalType: state.goals.goalType,
+            startingPoint: state.goals.startingPoint,
+            endGoal: state.goals.endGoal,
+            storedValues: generateRandomData(),
+            metric: state.goals.metric
+        });
+        return snapshot.key;
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error);
+    }    
+});
+
+export const fetchGoals = createAsyncThunk("goals/fetchGoals", async () => {
+    const userId = auth.currentUser?.uid;
+    const snapshot = await get(child(ref(database), `goals/${userId}`));
+    if (snapshot.exists()) {
+        const goals = Object.entries(snapshot.val() as Record<string, Goal>).map(([key, value]) => ({
+            ...value,
+            key,
+        }));
+        return goals
+    } else {
+        return [];
+    }
+});
+
+export const deleteGoalDb = createAsyncThunk("goals/deleteGoalDb", async (key: string) => {
+    const userId = auth.currentUser?.uid;
+    set(ref(database, `goals/${userId}/${key}`), null);
+});
 
 const goalsSlice = createSlice({
     name: 'goals',
@@ -79,57 +125,65 @@ const goalsSlice = createSlice({
         setEndGoal: (state, action: PayloadAction<number>) => {
             state.endGoal = action.payload;
         },
-        addGoal: (state) => {
-            const description = state.description; 
-            const excercise = state.currentExercise; 
-            const goalType = state.goalType; 
-            const startingPoint = state.startingPoint;
-            const endGoal = state.endGoal;  
-            const progress = Math.floor(Math.random() * 101);
-            const metric = state.metric
-
-            const newGoal: Goal = {
-                id: uuidv4(),
-                description,
-                excercise,
-                progress: progress,
-                goalType,
-                startingPoint,
-                endGoal,
-                storedValues: generateRandomData(),
-                metric,
-            };
-
-            state.goals.push(newGoal);
-            state.currentGoal = newGoal;
-            state.progress = progress;
+        removeGoal: (state, action: PayloadAction<string>) => {
+            state.goals = state.goals.filter(goal => goal.id !== action.payload);
+        },
+        resetToDefaultState: (state) => {
             state.currentExercise = "Run"
             state.goalType = "Cardio"
             state.description = ""
             state.startingPoint = 0
             state.endGoal = 0
-            
-        }, removeGoal: (state, action: PayloadAction<string>) => {
-            state.goals = state.goals.filter(goal => goal.id !== action.payload);
-        }, setCurrentGoal: (state, action: PayloadAction<string>) => {
-            const goalId = action.payload;
-            const foundGoal = state.goals.find(goal => goal.id === goalId);
-
-            if (foundGoal) {
-                state.currentGoal = foundGoal;
-                state.description = foundGoal.description
-                state.currentExercise = foundGoal.excercise
-                state.progress = foundGoal.progress
-                state.goalType = foundGoal.goalType
-                state.metric = foundGoal.metric
-            } else {
-                state.currentGoal = null; 
-            }
         },
+        setCurrentGoal: (state, action: PayloadAction<string>) => {
+            const goalKey = action.payload;
+            if (goalKey) {
+                const foundGoal = state.goals.find(goal => goal.key === goalKey);
+                if (foundGoal) {
+                    state.currentGoal = foundGoal;
+                    state.description = foundGoal.description
+                    state.currentExercise = foundGoal.exercise
+                    state.progress = foundGoal.progress
+                    state.goalType = foundGoal.goalType
+                    state.metric = foundGoal.metric
+                } else {
+                    state.currentGoal = null;
+                }
+            } else {
+                if (state.goals.length > 0) {
+                    state.currentGoal = state.goals[0]
+                }
+            }
+        }
         
-    },
+    }, extraReducers: (builder) => {
+        builder
+            .addCase(addGoalDb.pending, (state) => {
+                state.goalStatus = "loading";
+            })
+            .addCase(addGoalDb.fulfilled, (state) => {
+                state.goalStatus = "idle";
+            })
+            .addCase(addGoalDb.rejected, (state) => {
+                state.goalError = true;
+                state.goalStatus = "idle";
+            })
+            .addCase(fetchGoals.pending, (state) => {
+                    state.goalStatus = "loading";
+                })
+            .addCase(fetchGoals.fulfilled, (state, action: PayloadAction<Goal[]>) => {
+                    state.goalStatus = "idle";
+                    state.goals = action.payload;
+            })
+            .addCase(deleteGoalDb.pending, (state) => {
+                state.goalStatus = "loading";
+            })
+            .addCase(deleteGoalDb.fulfilled, (state) => {
+                state.goalStatus = "idle";
+            });
+    }
 });
 
-export const { setDescription, setExercise, setGoalType, setStartingPoint, setEndGoal, addGoal, removeGoal, setCurrentGoal } = goalsSlice.actions;
+export const { setDescription, setExercise, setGoalType, setStartingPoint, setEndGoal, removeGoal, setCurrentGoal, resetToDefaultState } = goalsSlice.actions;
 
 export default goalsSlice.reducer;

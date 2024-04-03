@@ -1,39 +1,37 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Button,
-  Stack,
-} from "@mui/material";
-
-
+import { Button, Stack } from "@mui/material";
 import {
   setDescription,
   setEndGoal,
   setGoalType,
   setStartingPoint,
-  addGoal,
   removeGoal,
   setExercise,
   allExercises,
+  addGoalDb,
+  fetchGoals,
+  deleteGoalDb,
+  resetToDefaultState,
+  setCurrentGoal,
 } from "../../features/goals/goalsReducer";
-import { CurrentGoalsView } from "../../components/Goals/CurrentGoalsView";
-import { GoalFormView } from "../../components/Goals/GoalFormView";
+import { CurrentGoalsView } from "../../views/Goals/CurrentGoalsView";
+import { GoalFormView } from "../../views/Goals/GoalFormView";
 import { useEffect, useState } from "react";
-import { RootState } from "../../store";
+import { AppDispatch,RootState } from "../../store";
 
 export const Route = createLazyFileRoute("/goals/")({
   component: Goals,
 });
 
 export function Goals() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [open, setOpen] = useState(false);
 
-  function updateGoalType(type: string){
+  function updateGoalType(type: string) {
     dispatch(setGoalType(type));
-  };
+  }
 
   function updateDescription(description: string) {
     dispatch(setDescription(description));
@@ -50,37 +48,58 @@ export function Goals() {
     dispatch(setEndGoal(endGoal));
   }
 
-  function handleSubmit() {
-    dispatch(addGoal());
+  async function handleAddGoal() {
+    const response = await dispatch(addGoalDb());
+    if (response.meta.requestStatus === "rejected") {
+      console.log("Error adding goal.");
+    } 
+    dispatch(fetchGoals());
+    dispatch(resetToDefaultState());
     setOpen(false);
   }
 
-  function deleteGoal(id: string) {
-    dispatch(removeGoal(id));
+  async function deleteGoal(key: string) {
+    const response = await dispatch(deleteGoalDb(key));
+    if (response.meta.requestStatus === "rejected") {
+      console.log("Error adding goal.");
+    } 
+    dispatch(fetchGoals());
   }
 
   const goals = useSelector((state: RootState) => state.goals);
-  
+
   let exerciseOptions;
   if (goals.goalType === "Cardio") {
     exerciseOptions = allExercises.cardio;
   } else {
-    exerciseOptions = allExercises.strength
+    exerciseOptions = allExercises.strength;
   }
 
-   const [isAddButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isAddButtonDisabled, setIsButtonDisabled] = useState(true);
 
-   useEffect(() => {
-     if (goals.description && goals.startingPoint && goals.endGoal) {
-       setIsButtonDisabled(false);
-     } else {
-       setIsButtonDisabled(true);
-     }
-   }, [goals.description, goals.startingPoint, goals.endGoal]);
-    
+  useEffect(() => {
+    if (goals.description && goals.startingPoint && goals.endGoal) {
+      setIsButtonDisabled(false);
+    } else {
+      setIsButtonDisabled(true);
+    }
+  }, [goals.description, goals.startingPoint, goals.endGoal]);
+
+  useEffect(() => {
+    // Fetch workouts from database
+    try {
+      dispatch(fetchGoals());
+    } catch (error) {
+      console.log("Error fetching goals. Try again later.", "error");
+    }
+  }, [dispatch]);
+
   return (
     <Stack sx={{ margin: "30px" }} spacing={2}>
-      <CurrentGoalsView onDeleteGoal={deleteGoal}></CurrentGoalsView>
+      <CurrentGoalsView
+        goals={goals.goals}
+        onDeleteGoal={deleteGoal}
+      ></CurrentGoalsView>
       <GoalFormView
         open={open}
         setOpen={setOpen}
@@ -93,7 +112,7 @@ export function Goals() {
         onUpdateGoalType={updateGoalType}
         exerciseOptions={exerciseOptions}
         metric={goals.metric}
-        handleSubmit={handleSubmit}
+        handleSubmit={handleAddGoal}
         isAddButtonDisabled={isAddButtonDisabled}
       />
       <Button variant="contained" onClick={() => setOpen(true)}>

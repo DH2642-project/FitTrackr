@@ -6,15 +6,26 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Card, Typography, Grid, Select, MenuItem, SelectChangeEvent, CardContent } from "@mui/material";
+import {
+  Card,
+  Typography,
+  Grid,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  CardContent,
+} from "@mui/material";
 import { GoalProgressChart } from "./GoalProgressChart";
-import { GoalsState } from "../../features/goals/goalsReducer";
+import { Goal, GoalsState } from "../../features/goals/goalsReducer";
 import theme from "../../theme";
 
-
-export function GoalChart({ onGoalSelection, goals }: {
+export function GoalChart({
+  onGoalSelection,
+  goals,
+}: {
   onGoalSelection: (id: string) => void;
-goals: GoalsState}) {
+  goals: GoalsState;
+}) {
   function handleGoalCange(evt: SelectChangeEvent<string>) {
     onGoalSelection(evt.target.value);
   }
@@ -31,11 +42,11 @@ goals: GoalsState}) {
           </Grid>
           <Grid item xs={6}>
             <Select
-              value={goals.currentGoal?.id || ""}
+              value={goals.currentGoal?.key || ''}
               onChange={handleGoalCange}
             >
-              {goals.goals.map((goal: any) => (
-                <MenuItem key={goal.id} value={goal.id}>
+              {goals.goals.map((goal: Goal) => (
+                <MenuItem key={goal.key} value={goal.key}>
                   {goal.description}
                 </MenuItem>
               ))}
@@ -77,6 +88,4 @@ goals: GoalsState}) {
       </CardContent>
     </Card>
   );
-};
-
-export default GoalChart;
+}
