@@ -15,6 +15,7 @@ import {
 import { Workout } from "../features/workouts/workoutsSlice";
 import { LocalFireDepartment } from "@mui/icons-material";
 import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
+import WorkoutsCard from "../components/WorkoutsCard";
 
 export default function WorkoutsView({
   workouts,
@@ -40,68 +41,13 @@ export default function WorkoutsView({
           My Workouts
         </Typography>
         {workoutsLoading && <FullscreenCircularProgress />}
+        <Typography variant="h5" align="left" gutterBottom>
+          Upcoming Workouts
+        </Typography>
         <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
           {!workoutsLoading && sortedWorkouts.length > 0 ? (
             sortedWorkouts.map((workout) => (
-              <Grid key={workout.key} item xs={4} sm={4} md={4}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h5" gutterBottom lineHeight={1}>
-                      {workout.date
-                        ? new Date(workout.date as string).toLocaleDateString(undefined, {
-                            weekday: "short",
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          })
-                        : "No date"}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      {workout.date
-                        ? new Date(workout.date as string).toLocaleTimeString(undefined, {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        : "No time"}
-                    </Typography>
-                    <List
-                      sx={{
-                        position: "relative",
-                        overflow: "auto",
-                        height: { xs: "", sm: "11.5rem" },
-                        maxHeight: { xs: "11.5rem", sm: "" },
-                        mb: 1,
-                      }}
-                    >
-                      {workout.exercises.map((exercise) => (
-                        <ListItem disablePadding key={exercise.name}>
-                          <ListItemText
-                            primary={<Typography lineHeight={1}>{exercise.name}</Typography>}
-                            secondary={
-                              exercise.sets ? (
-                                `${exercise.sets} sets, ${exercise.reps} reps`
-                              ) : (
-                                <em>Sets/reps omitted</em>
-                              )
-                            }
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
-                    <Tooltip
-                      title={<Typography variant="caption">*Assumes each exercise is 15 min</Typography>}
-                      placement="top"
-                    >
-                      <Chip icon={<LocalFireDepartment />} color="primary" label={`${workout.kcal} kcal*`} />
-                    </Tooltip>
-                  </CardContent>
-                  <CardActions>
-                    <Button color="error" onClick={() => deleteWorkout(workout.key!)}>
-                      Delete Workout
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
+              <WorkoutsCard key={workout.key} workout={workout} deleteWorkout={deleteWorkout} />
             ))
           ) : (
             <Grid item xs={12}>
