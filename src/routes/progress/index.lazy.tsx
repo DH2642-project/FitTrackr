@@ -2,13 +2,14 @@ import { Grid } from "@mui/material";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ActivityChart } from "../../views/Progress/ActivityChart.tsx";
 import { GoalChart } from "../../views/Progress/GoalChart.tsx";
-import { GoalData, setCurrentGoal } from "../../features/goals/goalsReducer.ts";
+import { GoalData, fetchGoals, setCurrentGoal } from "../../features/goals/goalsReducer.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { TotalView } from "../../views/Progress/TotalView.tsx";
 import { CalendarChart } from "../../views/Progress/CalendarChart.tsx";
-import { RootState } from "../../store.ts";
-import { Workout } from "../../features/workouts/workoutsSlice.ts";
+import { AppDispatch, RootState } from "../../store.ts";
+import { Workout, fetchWorkouts } from "../../features/workouts/workoutsSlice.ts";
 import MuscleChart from "../../views/Progress/MuscleChart.tsx";
+import { useEffect } from "react";
 
 export const Route = createLazyFileRoute("/progress/")({
   component: ProgressPresenter,
@@ -105,6 +106,15 @@ function getWeekNumber(date: Date): number {
 }
 
 function getMuscleGroupsData(workouts: Workout[]) {
+  let totalSets = 0;
+  workouts.forEach((workout) => {
+    workout.exercises.forEach((exercise) => {
+      if (exercise.sets) {
+        totalSets += exercise.sets;
+      }
+    });
+  });
+
   const muscleGroupsData: { [key: string]: number } = {};
   workouts.forEach((workout) => {
     workout.exercises.forEach((exercise) => {
@@ -118,7 +128,10 @@ function getMuscleGroupsData(workouts: Workout[]) {
 
   const result: { name: string; value: number }[] = [];
   for (const muscle in muscleGroupsData) {
-    result.push({ name: muscle, value: muscleGroupsData[muscle] });
+    result.push({
+      name: muscle,
+      value: parseFloat(((muscleGroupsData[muscle] / totalSets) * 100).toFixed(2)),
+    });
   }
   return result;
 }
@@ -127,11 +140,21 @@ export function ProgressPresenter() {
   const goals = useSelector((state: RootState) => state.goals);
   const workouts = useSelector((state: RootState) => state.workouts.workouts);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const updateGoalSelection = (id: string) => {
     dispatch(setCurrentGoal(id));
   };
+
+  useEffect(() => {
+    try {
+       dispatch(fetchGoals());
+       dispatch(fetchWorkouts());
+    } catch (error) {
+      console.log("Error fetching data")
+    }
+   
+  }, [dispatch]);
 
   const calendarData = getCalendarData(workouts);
   const totalWeight = getWeightlifted(workouts);

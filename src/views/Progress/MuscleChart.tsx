@@ -40,7 +40,7 @@ export function MuscleChart({
   return (
     <Card sx={{ borderRadius: 4 }}>
       <CardContent>
-        <Typography variant="h4">Sets per muscle</Typography>
+        <Typography variant="h4">Muscles worked</Typography>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Tooltip />
@@ -54,7 +54,9 @@ export function MuscleChart({
               innerRadius={60}
               outerRadius={80}
               fill={theme.palette.primary.main}
-              label
+              label={({ name, value }) =>
+                `${name} (${value}%)`
+              }
             >
               {data.map((_, index) => (
                 <Cell
