@@ -1,20 +1,16 @@
 import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Chip,
   Container,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Tooltip,
   Typography,
+  IconButton,
+  Collapse,
+  Box
 } from "@mui/material";
 import { Workout } from "../features/workouts/workoutsSlice";
-import { LocalFireDepartment } from "@mui/icons-material";
 import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
+import WorkoutsCard from "../components/WorkoutsCard";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useState } from "react";
 
 export default function WorkoutsView({
   workouts,
@@ -33,85 +29,94 @@ export default function WorkoutsView({
     return 0;
   });
 
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const previousWorkouts = sortedWorkouts.filter(workout => new Date(workout.date as string) < now);
+  const todaysWorkouts = sortedWorkouts.filter(workout => new Date(workout.date as string) >= now && new Date(workout.date as string) < tomorrow);
+  const upcomingWorkouts = sortedWorkouts.filter(workout => new Date(workout.date as string) >= tomorrow);
+
+  const [isPreviousWorkoutsExpanded, setIsPreviousWorkoutsExpanded] = useState(false);
+  const [isUpcomingWorkoutsExpanded, setIsUpcomingWorkoutsExpanded] = useState(false);
+
   return (
-    <>
-      <Container sx={{ p: { xs: 1, md: 2 }, width: "100%", height: "100%" }}>
-        <Typography variant="h4" align="center" gutterBottom>
-          My Workouts
+    <Container sx={{ p: { xs: 1, md: 2 }, width: "100%", height: "100%" }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        My Workouts
+      </Typography>
+      {workoutsLoading && <FullscreenCircularProgress />}
+      <Typography variant="h5" align="left" gutterBottom>
+        Today's Workouts
+      </Typography>
+      <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+        {!workoutsLoading && todaysWorkouts.length > 0 ? (
+          todaysWorkouts.map((workout) => (
+            <WorkoutsCard key={workout.key} workout={workout} deleteWorkout={deleteWorkout} />
+          ))
+        ) : (
+          <Grid item xs={12}>
+            <Typography variant="h6" align="left">
+              There are no workout scheduled for today
+            </Typography>
+          </Grid>
+        )}
+      </Grid>
+      
+      <Box sx={{mt: 3}}>
+        <Typography variant="h5" align="left" gutterBottom>
+          Upcoming Workouts
+          <IconButton
+            onClick={() => setIsUpcomingWorkoutsExpanded(!isUpcomingWorkoutsExpanded)}
+            aria-expanded={isUpcomingWorkoutsExpanded}
+            aria-label="show more">
+            <ExpandMoreIcon />
+          </IconButton>
         </Typography>
-        {workoutsLoading && <FullscreenCircularProgress />}
-        <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-          {!workoutsLoading && sortedWorkouts.length > 0 ? (
-            sortedWorkouts.map((workout) => (
-              <Grid key={workout.key} item xs={4} sm={4} md={4}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h5" gutterBottom lineHeight={1}>
-                      {workout.date
-                        ? new Date(workout.date as string).toLocaleDateString(undefined, {
-                            weekday: "short",
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          })
-                        : "No date"}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      {workout.date
-                        ? new Date(workout.date as string).toLocaleTimeString(undefined, {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        : "No time"}
-                    </Typography>
-                    <List
-                      sx={{
-                        position: "relative",
-                        overflow: "auto",
-                        height: { xs: "", sm: "11.5rem" },
-                        maxHeight: { xs: "11.5rem", sm: "" },
-                        mb: 1,
-                      }}
-                    >
-                      {workout.exercises.map((exercise) => (
-                        <ListItem disablePadding key={exercise.name}>
-                          <ListItemText
-                            primary={<Typography lineHeight={1}>{exercise.name}</Typography>}
-                            secondary={
-                              exercise.sets ? (
-                                `${exercise.sets} sets, ${exercise.reps} reps`
-                              ) : (
-                                <em>Sets/reps omitted</em>
-                              )
-                            }
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
-                    <Tooltip
-                      title={<Typography variant="caption">*Assumes each exercise is 15 min</Typography>}
-                      placement="top"
-                    >
-                      <Chip icon={<LocalFireDepartment />} color="primary" label={`${workout.kcal} kcal*`} />
-                    </Tooltip>
-                  </CardContent>
-                  <CardActions>
-                    <Button color="error" onClick={() => deleteWorkout(workout.key!)}>
-                      Delete Workout
-                    </Button>
-                  </CardActions>
-                </Card>
+        <Collapse in={isUpcomingWorkoutsExpanded}>
+          <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            {!workoutsLoading && upcomingWorkouts.length > 0 ? (
+              upcomingWorkouts.map((workout) => (
+                <WorkoutsCard key={workout.key} workout={workout} deleteWorkout={deleteWorkout} />
+              ))
+            ) : (
+              <Grid item xs={12}>
+                <Typography variant="h6" align="left">
+                  There are no upcoming workouts
+                </Typography>
               </Grid>
+            )}
+          </Grid>
+        </Collapse>
+      </Box>
+      
+      <Box sx={{mt: 3}}>
+        <Typography variant="h5" align="left" gutterBottom>
+          Previous Workouts
+          <IconButton
+            onClick={() => setIsPreviousWorkoutsExpanded(!isPreviousWorkoutsExpanded)}
+            aria-expanded={isPreviousWorkoutsExpanded}
+            aria-label="show more">
+            <ExpandMoreIcon />
+          </IconButton>
+        </Typography>
+        <Collapse in={isPreviousWorkoutsExpanded}>
+        <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          {!workoutsLoading && previousWorkouts.length > 0 ? (
+            previousWorkouts.map((workout) => (
+              <WorkoutsCard key={workout.key} workout={workout} deleteWorkout={deleteWorkout} />
             ))
           ) : (
             <Grid item xs={12}>
-              <Typography variant="h5" align="center">
-                No workouts found
+              <Typography variant="h6" align="left">
+                There are no previous workouts
               </Typography>
             </Grid>
           )}
         </Grid>
-      </Container>
-    </>
+        </Collapse>
+      </Box>
+    </Container>
   );
 }

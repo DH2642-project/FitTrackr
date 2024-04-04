@@ -20,6 +20,7 @@ export interface AddWorkoutState {
 const initialState: AddWorkoutState = {
   workout: {
     exercises: [],
+    date: new Date().toISOString(),
   },
   workoutStatus: "idle",
   searchName: "",
@@ -54,7 +55,7 @@ export const addWorkout = createAsyncThunk("addWorkout/addWorkout", async (_, th
   try {
     const snapshot = await push(ref(database, `workouts/${userId}`), {
       ...state.addWorkout.workout,
-      date: new Date().toISOString(),
+      date: state.addWorkout.workout.date,
       kcal: await state.addWorkout.workout.exercises.reduce(
         async (acc, exercise) => (await acc) + (await getKcalCB(exercise)),
         Promise.resolve(0)
@@ -113,6 +114,9 @@ export const addWorkoutSlice = createSlice({
     setSearchResults: (state, action: PayloadAction<Exercise[]>) => {
       state.searchResults = action.payload;
     },
+    setDate: (state, action: PayloadAction<string>) => {
+      state.workout.date = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -140,7 +144,7 @@ export const addWorkoutSlice = createSlice({
   },
 });
 
-export const { addExercise, removeExercise, clearExercises, setSearchName, setSearchType, setSearchResults } =
+export const { addExercise, removeExercise, clearExercises, setSearchName, setSearchType, setSearchResults, setDate } =
   addWorkoutSlice.actions;
 
 export default addWorkoutSlice.reducer;
