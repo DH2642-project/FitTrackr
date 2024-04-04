@@ -13,6 +13,7 @@ import {
   searchExercises,
   setSearchType,
   setSearchName,
+  setDate,
 } from "../../features/addWorkout/addWorkoutSlice";
 
 export const Route = createLazyFileRoute("/add-workout/")({
@@ -83,6 +84,10 @@ export function AddWorkoutPresenter() {
     }
   }
 
+  function handleSetDate(date: string) {
+    dispatch(setDate(date));
+  }
+
   useEffect(() => {
     if (addWorkoutState.searchResults.length === 0 && addWorkoutState.searchName === "") {
       try {
@@ -127,6 +132,8 @@ export function AddWorkoutPresenter() {
         exercises={addWorkoutState.workout.exercises}
         addExercise={handleAddExercise}
         removeExercise={handleRemoveExercise}
+        date={addWorkoutState.workout.date || new Date().toISOString()}
+        setDate={handleSetDate}
       />
       <CustomSnackbar
         snackbarOpen={snackbarOpen}

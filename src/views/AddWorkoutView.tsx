@@ -31,11 +31,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Exercise, ExerciseType } from "../features/workouts/workoutsSlice";
-import { setDate } from "../features/addWorkout/addWorkoutSlice";
 import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
 import { ChangeEvent, useState } from "react";
 import { toFriendlyString } from "../helpers";
-import { useDispatch } from "react-redux";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
+import dayjs from "dayjs";
 
 export default function AddWorkoutView({
   includeSetsReps,
@@ -57,6 +59,8 @@ export default function AddWorkoutView({
   exercises,
   addExercise,
   removeExercise,
+  date,
+  setDate,
 }: {
   includeSetsReps: boolean;
   setIncludeSetsReps: (event: ChangeEvent<HTMLInputElement>, checked: boolean) => void;
@@ -77,14 +81,15 @@ export default function AddWorkoutView({
   exercises: Exercise[];
   addExercise: (exercise: Exercise) => void;
   removeExercise: (name: string) => void;
+  date: string;
+  setDate: (date: string) => void;
 }) {
   const [addModal, setAddModal] = useState(false);
   const [result, setResult] = useState<Exercise | null>(null);
-  const dispatch = useDispatch();
 
   return (
     <>
-      <Grid container spacing={1} sx={{ width: "100%", height: "100%", p: "0.5rem 0rem 0.5rem 0.5rem" }}>
+      <Grid container spacing={1.5} sx={{ width: "100%", height: "100%", p: "0.75rem 0rem 0.75rem 0.75rem" }}>
         {/* Selected Workout */}
         <Grid item md={3} xs={12}>
           <Card>
@@ -93,15 +98,16 @@ export default function AddWorkoutView({
                 New workout
               </Typography>
               <Typography variant="subtitle1" align="center">
-                <input 
-                  type="datetime-local" 
-                  name="workout-date" 
-                  id="workout-date" 
-                  defaultValue={
-                    new Date().toISOString().slice(0, 16)
-                  }
-                  onChange={(e) => dispatch(setDate(e.target.value))}
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    name="workout-date"
+                    ampm={false}
+                    defaultValue={dayjs(new Date(date).toISOString())}
+                    onChange={(newValue) => {
+                      if (newValue) setDate(newValue.toISOString());
+                    }}
+                  />
+                </LocalizationProvider>
               </Typography>
               <List disablePadding>
                 {exercises.map((exercise) => (
@@ -284,7 +290,7 @@ export default function AddWorkoutView({
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 350,
-            maxHeight: "90vh",
+            maxHeight: "80vh",
             overflowY: "auto",
             boxShadow: 24,
             p: 4,
