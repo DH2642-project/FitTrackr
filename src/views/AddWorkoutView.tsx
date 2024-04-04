@@ -31,9 +31,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Exercise, ExerciseType } from "../features/workouts/workoutsSlice";
+import { setDate } from "../features/addWorkout/addWorkoutSlice";
 import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
 import { ChangeEvent, useState } from "react";
 import { toFriendlyString } from "../helpers";
+import { useDispatch } from "react-redux";
 
 export default function AddWorkoutView({
   includeSetsReps,
@@ -78,6 +80,7 @@ export default function AddWorkoutView({
 }) {
   const [addModal, setAddModal] = useState(false);
   const [result, setResult] = useState<Exercise | null>(null);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -90,12 +93,15 @@ export default function AddWorkoutView({
                 New workout
               </Typography>
               <Typography variant="subtitle1" align="center">
-                {new Date().toLocaleDateString(undefined, {
-                  weekday: "short",
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+                <input 
+                  type="datetime-local" 
+                  name="workout-date" 
+                  id="workout-date" 
+                  defaultValue={
+                    new Date().toISOString().slice(0, 16)
+                  }
+                  onChange={(e) => dispatch(setDate(e.target.value))}
+                />
               </Typography>
               <List disablePadding>
                 {exercises.map((exercise) => (
