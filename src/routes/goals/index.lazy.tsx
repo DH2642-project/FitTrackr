@@ -54,6 +54,7 @@ export function Goals() {
     dispatch(fetchGoals());
     dispatch(resetToDefaultState());
     setOpen(false);
+    
   }
 
   async function deleteGoal(key: string) {

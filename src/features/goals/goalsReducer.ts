@@ -124,9 +124,6 @@ const goalsSlice = createSlice({
         setEndGoal: (state, action: PayloadAction<number>) => {
             state.endGoal = action.payload;
         },
-        removeGoal: (state, action: PayloadAction<string>) => {
-            state.goals = state.goals.filter(goal => goal.id !== action.payload);
-        },
         resetToDefaultState: (state) => {
             state.currentExercise = "Run"
             state.goalType = "Cardio"
@@ -136,7 +133,7 @@ const goalsSlice = createSlice({
         },
         setCurrentGoal: (state, action: PayloadAction<string>) => {
             const goalKey = action.payload;
-            if (goalKey) {
+            
                 const foundGoal = state.goals.find(goal => goal.key === goalKey);
                 if (foundGoal) {
                     state.currentGoal = foundGoal;
@@ -148,11 +145,7 @@ const goalsSlice = createSlice({
                 } else {
                     state.currentGoal = null;
                 }
-            } else {
-                if (state.goals.length > 0) {
-                    state.currentGoal = state.goals[0]
-                }
-            }
+            
         }
         
     }, extraReducers: (builder) => {
@@ -173,6 +166,10 @@ const goalsSlice = createSlice({
             .addCase(fetchGoals.fulfilled, (state, action: PayloadAction<Goal[]>) => {
                     state.goalStatus = "idle";
                     state.goals = action.payload;
+                    if (state.goals.length > 0) {
+                        state.currentGoal = state.goals[0]
+                        state.progress = state.currentGoal.progress
+                    }
             })
             .addCase(deleteGoalDb.pending, (state) => {
                 state.goalStatus = "loading";
@@ -183,6 +180,6 @@ const goalsSlice = createSlice({
     }
 });
 
-export const { setDescription, setExercise, setGoalType, setStartingPoint, setEndGoal, removeGoal, setCurrentGoal, resetToDefaultState } = goalsSlice.actions;
+export const { setDescription, setExercise, setGoalType, setStartingPoint, setEndGoal, setCurrentGoal, resetToDefaultState } = goalsSlice.actions;
 
 export default goalsSlice.reducer;
