@@ -42,12 +42,6 @@ function RootPresenter() {
     { text: "Add Workout", path: "/add-workout", icon: <Add /> },
     { text: "My Workouts", path: "/workouts", icon: <FitnessCenter /> },
     { text: "Goals", path: "/goals", icon: <Flag /> },
-    {
-      text: "Schedule",
-      path: "/schedule",
-      icon: <EventNote />,
-      disabled: true,
-    },
     { text: "Progress", path: "/progress", icon: <DonutLarge /> },
     { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
   ]
