@@ -1,6 +1,6 @@
 # FitTrackr
 
-> A web application where users can set goals for their fitness and health and track their progress over time. Users should be able to create and log their own workout sessions and meals. User data is visualized through various types of graphs. Examples of data that can be visualized include weight loss over time and running distance for each week of the past month.
+> A web application where users can set goals for their fitness and health and track their progress over time. Users should be able to create and log their own workout sessions and meals. User data is visualized through various types of graphs.
 
 # Development
 
