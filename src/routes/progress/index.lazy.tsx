@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from "../../store.ts";
 import { Workout, fetchWorkouts } from "../../features/workouts/workoutsSlice.ts";
 import MuscleChart from "../../views/Progress/MuscleChart.tsx";
 import { useEffect } from "react";
+import { getWeekNumber } from "../../helpers.ts";
 
 export const Route = createLazyFileRoute("/progress/")({
   component: ProgressPresenter,
@@ -92,17 +93,6 @@ function getWorkoutsPerWeek(workouts: Workout[]): { x: number; y: number }[] {
   );
 
   return data;
-}
-
-function getWeekNumber(date: Date): number {
-  const oneJan = new Date(date.getFullYear(), 0, 1);
-  const millisecsInDay = 86400000;
-  return Math.ceil(
-    ((date.getTime() - oneJan.getTime()) / millisecsInDay +
-      oneJan.getDay() +
-      1) /
-      7
-  );
 }
 
 function getMuscleGroupsData(workouts: Workout[]) {
