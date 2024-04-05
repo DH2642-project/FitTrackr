@@ -49,6 +49,7 @@ When all of the above are implemented, a user evaluation of the platform needs t
   - Hosting
 - [Tanstack Router](https://tanstack.com/router/latest/docs/framework/react/quick-start)
 - Redux with [Redux Toolkit](https://redux-toolkit.js.org/tutorials/quick-start)
+- [Recharts](https://recharts.org/)
 
 ## File structure
 
