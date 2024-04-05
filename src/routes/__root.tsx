@@ -8,7 +8,6 @@ import { useAuthState } from "react-firebase-hooks/auth"
 import {
   Add,
   DonutLarge,
-  EventNote,
   FitnessCenter,
   Flag,
   Home,
