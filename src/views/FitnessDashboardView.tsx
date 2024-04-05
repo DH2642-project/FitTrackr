@@ -111,14 +111,21 @@ export function FitnessDashboard({
 
   const caloriesMax = Math.max(caloriesPerDayThisWeek, caloriesPerDayLastWeek)
 
-  const scheduledWorkouts = workouts.filter((workout) => {
-    const workoutDate = workout.date ? new Date(workout.date) : null
-    if (!workoutDate) return false
-    return (
-      workoutDate > new Date() &&
-      workoutDate < new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)
+  const scheduledWorkouts = workouts
+    .filter((workout) => {
+      const workoutDate = workout.date ? new Date(workout.date) : null
+      if (!workoutDate) return false
+      return (
+        workoutDate > new Date() &&
+        workoutDate < new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)
+      )
+    })
+    .sort(
+      (a, b) =>
+        (a.date ? new Date(a.date).getTime() : 0) -
+        (b.date ? new Date(b.date).getTime() : 0)
     )
-  })
+    .slice(0, 5)
 
   return (
     <Container sx={{ paddingY: 2 }}>

@@ -27,7 +27,7 @@ export function ScheduleCard({ workouts }: { workouts: Workout[] }) {
           Schedule
         </Typography>
         <Typography variant="body2">
-          Workouts scheduled for the week.
+          Scheduled workouts in the next 7 days.
         </Typography>
 
         <List disablePadding>
