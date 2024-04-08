@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import firebase from "firebase/compat/app";
 import { UserProfile } from "../main";
+import { Logout } from "@mui/icons-material";
 
 export default function LoggedInView({
   user,
@@ -93,7 +94,7 @@ export default function LoggedInView({
       <Typography variant="body2" mb={1} textAlign="center">
         You are logged in as <b>{email}</b>.
       </Typography>
-      <Button variant="contained" color="error" onClick={signOut} disabled={signOutLoading}>
+      <Button variant="outlined" startIcon={<Logout />} color="error" onClick={signOut} disabled={signOutLoading}>
         {signOutLoading ? "Signing out..." : "Sign out"}
       </Button>
     </>
