@@ -47,7 +47,7 @@ export const addWorkout = createAsyncThunk("addWorkout/addWorkout", async (_, th
     if (data.length === 0) {
       return estimate;
     }
-    return data[0].calories_per_hour * 0.25; // assume 15 minutes
+    return data[0].calories_per_hour * 0.125; // assume 7.5 minutes
   }
 
   const state = thunkAPI.getState() as { addWorkout: AddWorkoutState };

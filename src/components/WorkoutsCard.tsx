@@ -1,5 +1,17 @@
-import { Grid, Card, CardContent, Typography, List, ListItem, ListItemText, Tooltip, Chip, CardActions, Button } from '@mui/material';
-import { LocalFireDepartment } from '@mui/icons-material';
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Tooltip,
+  Chip,
+  CardActions,
+  Button,
+} from "@mui/material";
+import { LocalFireDepartment } from "@mui/icons-material";
 import { Workout } from "../features/workouts/workoutsSlice";
 
 interface WorkoutCardProps {
@@ -42,21 +54,12 @@ const WorkoutsCard: React.FC<WorkoutCardProps> = ({ workout, deleteWorkout }) =>
             <ListItem disablePadding key={exercise.name}>
               <ListItemText
                 primary={<Typography lineHeight={1}>{exercise.name}</Typography>}
-                secondary={
-                  exercise.sets ? (
-                    `${exercise.sets} sets, ${exercise.reps} reps`
-                  ) : (
-                    <em>Sets/reps omitted</em>
-                  )
-                }
+                secondary={exercise.sets ? `${exercise.sets} sets, ${exercise.reps} reps` : <em>Sets/reps omitted</em>}
               />
             </ListItem>
           ))}
         </List>
-        <Tooltip
-          title={<Typography variant="caption">*Assumes each exercise is 15 min</Typography>}
-          placement="top"
-        >
+        <Tooltip title={<Typography variant="caption">*Assumes each exercise is 7.5 min</Typography>} placement="top">
           <Chip icon={<LocalFireDepartment />} color="primary" label={`${workout.kcal} kcal*`} />
         </Tooltip>
       </CardContent>
