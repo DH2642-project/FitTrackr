@@ -6,6 +6,7 @@ import {
   Badge,
   Button,
   Card,
+  CardActionArea,
   CardActions,
   CardContent,
   Chip,
@@ -222,64 +223,71 @@ export default function AddWorkoutView({
                               width: "100%",
                             }}
                           >
-                            <CardContent>
-                              <Typography variant="h5" gutterBottom lineHeight={1}>
-                                {result.name}
-                              </Typography>
-                              <Stack
-                                direction="row"
-                                spacing={0.5}
-                                useFlexGap
-                                flexWrap="wrap"
-                                sx={{ pb: 1, filter: isAdded ? "grayscale(1)" : "none" }}
-                              >
-                                {result.difficulty && (
-                                  <Chip color="secondary" size="small" label={toFriendlyString(result.difficulty)} />
-                                )}
-                                {result.type && (
-                                  <Chip color="success" size="small" label={toFriendlyString(result.type)} />
-                                )}
-                                {result.muscle && (
-                                  <Chip color="error" size="small" label={toFriendlyString(result.muscle)} />
-                                )}
-                              </Stack>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                sx={{
-                                  overflow: "hidden",
-                                  display: "-webkit-box",
-                                  WebkitBoxOrient: "vertical",
-                                  WebkitLineClamp: 3,
-                                }}
-                                title={result.instructions}
-                              >
-                                {result.instructions}
-                              </Typography>
-                            </CardContent>
-                            <CardActions>
-                              {isAdded ? (
-                                <Button
-                                  color="error"
-                                  onClick={() => {
-                                    removeExercise(result.name);
-                                  }}
+                            <CardActionArea
+                              onClick={() => {
+                                setResult(result);
+                                setAddModal(true);
+                              }}
+                            >
+                              <CardContent>
+                                <Typography variant="h5" gutterBottom lineHeight={1}>
+                                  {result.name}
+                                </Typography>
+                                <Stack
+                                  direction="row"
+                                  spacing={0.5}
+                                  useFlexGap
+                                  flexWrap="wrap"
+                                  sx={{ pb: 1, filter: isAdded ? "grayscale(1)" : "none" }}
                                 >
-                                  Remove from workout
-                                </Button>
-                              ) : (
-                                <Button
-                                  color="primary"
-                                  disabled={isAdded}
-                                  onClick={() => {
-                                    setResult(result);
-                                    setAddModal(true);
+                                  {result.difficulty && (
+                                    <Chip color="secondary" size="small" label={toFriendlyString(result.difficulty)} />
+                                  )}
+                                  {result.type && (
+                                    <Chip color="success" size="small" label={toFriendlyString(result.type)} />
+                                  )}
+                                  {result.muscle && (
+                                    <Chip color="error" size="small" label={toFriendlyString(result.muscle)} />
+                                  )}
+                                </Stack>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  sx={{
+                                    overflow: "hidden",
+                                    display: "-webkit-box",
+                                    WebkitBoxOrient: "vertical",
+                                    WebkitLineClamp: 3,
                                   }}
+                                  title={result.instructions}
                                 >
-                                  Add to workout
-                                </Button>
-                              )}
-                            </CardActions>
+                                  {result.instructions}
+                                </Typography>
+                              </CardContent>
+                              <CardActions>
+                                {isAdded ? (
+                                  <Button
+                                    color="error"
+                                    onClick={() => {
+                                      removeExercise(result.name);
+                                    }}
+                                  >
+                                    Remove from workout
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    color="primary"
+                                    disabled={isAdded}
+                                    onClick={() => {
+                                      setResult(result);
+                                      setAddModal(true);
+                                    }}
+                                  >
+                                    Add to workout
+                                  </Button>
+                                )}
+                              </CardActions>
+                            </CardActionArea>
                           </Card>
                         </Badge>
                       </Grid>
