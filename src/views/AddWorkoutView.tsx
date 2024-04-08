@@ -211,8 +211,17 @@ export default function AddWorkoutView({
                               }}
                             />
                           }
+                          sx={{
+                            width: "100%",
+                          }}
                         >
-                          <Card variant={isAdded ? "outlined" : "elevation"} elevation={isAdded ? 0 : 3}>
+                          <Card
+                            variant={isAdded ? "outlined" : "elevation"}
+                            elevation={isAdded ? 0 : 3}
+                            sx={{
+                              width: "100%",
+                            }}
+                          >
                             <CardContent>
                               <Typography variant="h5" gutterBottom lineHeight={1}>
                                 {result.name}
@@ -299,10 +308,12 @@ export default function AddWorkoutView({
           <Typography variant="h5" gutterBottom>
             {result?.name}
           </Typography>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMore />}>Instructions</AccordionSummary>
-            <AccordionDetails>{result?.instructions}</AccordionDetails>
-          </Accordion>
+          {result?.instructions && (
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMore />}>Instructions</AccordionSummary>
+              <AccordionDetails>{result.instructions}</AccordionDetails>
+            </Accordion>
+          )}
           <FormGroup>
             <FormControlLabel
               control={<Switch checked={includeSetsReps} onChange={setIncludeSetsReps} />}
