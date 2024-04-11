@@ -1,6 +1,27 @@
 {
   "rules": {
-    ".read": "now < 1713477600000",  // 2024-4-19
-    ".write": "now < 1713477600000",  // 2024-4-19
+    "goals": {
+      ".read": "false",
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
+    },
+    
+    "users": {
+      ".read": "false",
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
+    },
+    
+    "workouts": {
+      ".read": "false",
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
+    }
   }
 }
