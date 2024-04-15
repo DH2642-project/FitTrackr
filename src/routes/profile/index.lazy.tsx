@@ -49,6 +49,9 @@ export function ProfilePresenter() {
     if (!success) {
       showSnackbar("An error occurred while updating your profile.", "error");
     }
+    else {
+      showSnackbar("Gender has been updated!")
+    }
   }
 
   function handleSetWeight(event: React.ChangeEvent<HTMLInputElement>) {
@@ -58,6 +61,9 @@ export function ProfilePresenter() {
     });
     if (!success) {
       showSnackbar("An error occurred while updating your profile.", "error");
+    }
+    else {
+      showSnackbar("Weight has been updated!")
     }
   }
 
@@ -69,6 +75,9 @@ export function ProfilePresenter() {
     if (!success) {
       showSnackbar("An error occurred while updating your profile.", "error");
     }
+    else {
+      showSnackbar("Height has been updated!")
+    }
   }
 
   function handleSetAge(event: React.ChangeEvent<HTMLInputElement>) {
@@ -78,6 +87,9 @@ export function ProfilePresenter() {
     });
     if (!success) {
       showSnackbar("An error occurred while updating your profile.", "error");
+    }
+    else {
+      showSnackbar("Age has been updated!")
     }
   }
 
