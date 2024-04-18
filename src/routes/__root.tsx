@@ -11,7 +11,6 @@ import {
   FitnessCenter,
   Flag,
   Home,
-  Restaurant,
 } from "@mui/icons-material"
 import { ProfileAvatar } from "../components/ProfileAvatar"
 
@@ -29,7 +28,7 @@ const TanStackRouterDevtools =
       )
 
 function RootPresenter() {
-  const [, loading] = useAuthState(auth)
+  const [user, loading] = useAuthState(auth)
 
   const pages = [
     {
@@ -37,13 +36,13 @@ function RootPresenter() {
       path: "/profile",
       icon: <ProfileAvatar />,
     },
-    { text: "Overview", path: "/", icon: <Home /> },
-    { text: "Add Workout", path: "/add-workout", icon: <Add /> },
-    { text: "My Workouts", path: "/workouts", icon: <FitnessCenter /> },
-    { text: "Goals", path: "/goals", icon: <Flag /> },
-    { text: "Progress", path: "/progress", icon: <DonutLarge /> },
-    { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
-  ]
+    { text: "Overview", path: "/", icon: <Home />, disabled: !user },
+    { text: "Add Workout", path: "/add-workout", icon: <Add />, disabled: !user },
+    { text: "My Workouts", path: "/workouts", icon: <FitnessCenter />, disabled: !user },
+    { text: "Goals", path: "/goals", icon: <Flag />, disabled: !user },
+    { text: "Progress", path: "/progress", icon: <DonutLarge />, disabled: !user },
+    // { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: !user },
+  ] 
 
   return (
     <>
