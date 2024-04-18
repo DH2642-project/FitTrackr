@@ -2,129 +2,19 @@ import { Grid } from "@mui/material";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ActivityChart } from "../../views/Progress/ActivityChart.tsx";
 import { GoalChart } from "../../views/Progress/GoalChart.tsx";
-import { GoalData, fetchGoals, setCurrentGoal } from "../../features/goals/goalsReducer.ts";
+import { fetchGoals, setCurrentGoal } from "../../features/goals/goalsReducer.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { TotalView } from "../../views/Progress/TotalView.tsx";
 import { CalendarChart } from "../../views/Progress/CalendarChart.tsx";
 import { AppDispatch, RootState } from "../../store.ts";
-import { Workout, fetchWorkouts } from "../../features/workouts/workoutsSlice.ts";
+import { fetchWorkouts } from "../../features/workouts/workoutsSlice.ts";
 import MuscleChart from "../../views/Progress/MuscleChart.tsx";
 import { useEffect } from "react";
-import { getWeekNumber } from "../../helpers.ts";
+import { getCalendarData, getMuscleGroupsData, getWeightlifted, getWorkoutsPerWeek } from "../../utils/progressUtils.tsx";
 
 export const Route = createLazyFileRoute("/progress/")({
   component: ProgressPresenter,
 });
-
-// Random weight loss data
-export function generateRandomData() {
-  const startDate = new Date(2024, 0, 1);
-  const endDate = new Date();
-
-  const data: GoalData[] = [];
-  const currentDate = new Date(startDate);
-
-  while (currentDate <= endDate) {
-    const randomWeight = Math.random() * 10 + 65;
-    data.push({
-      date: currentDate.toISOString().slice(0, 10),
-      value: randomWeight,
-    });
-    currentDate.setDate(
-      currentDate.getDate() + Math.floor(Math.random() * 5) + 1
-    );
-  }
-  return data;
-}
-
-function getCalendarData(
-  workouts: Workout[]
-): { date: string; count: number }[] {
-  const calendarMap: { [date: string]: number } = {};
-
-  workouts.forEach((workout) => {
-    if (workout.date) {
-      const date = workout.date.split("T")[0];
-      if (calendarMap[date]) {
-        calendarMap[date]++;
-      } else {
-        calendarMap[date] = 1;
-      }
-    }
-  });
-
-  const calendarData: { date: string; count: number }[] = [];
-  for (const date in calendarMap) {
-    calendarData.push({ date, count: calendarMap[date] });
-  }
-  return calendarData;
-}
-
-function getWeightlifted(workouts: Workout[]) {
-  const dummyWeight = 10;
-  let weight = 0;
-  workouts.forEach((workout) => {
-    const exercises = workout.exercises;
-    exercises.forEach((e) => {
-      if (e.sets && e.reps) {
-        weight += e.sets * e.reps * dummyWeight;
-      }
-    });
-  });
-  return weight;
-}
-
-function getWorkoutsPerWeek(workouts: Workout[]): { x: number; y: number }[] {
-  const workoutsPerWeek: { [week: number]: number } = {};
-
-  workouts.forEach((workout) => {
-    if (workout.date) {
-      const date = new Date(workout.date);
-      const weekNumber = getWeekNumber(date);
-      workoutsPerWeek[weekNumber] = (workoutsPerWeek[weekNumber] || 0) + 1;
-    }
-  });
-
-  const data: { x: number; y: number }[] = Object.keys(workoutsPerWeek).map(
-    (week) => ({
-      x: parseInt(week),
-      y: workoutsPerWeek[parseInt(week)],
-    })
-  );
-
-  return data;
-}
-
-function getMuscleGroupsData(workouts: Workout[]) {
-  let totalSets = 0;
-  workouts.forEach((workout) => {
-    workout.exercises.forEach((exercise) => {
-      if (exercise.sets) {
-        totalSets += exercise.sets;
-      }
-    });
-  });
-
-  const muscleGroupsData: { [key: string]: number } = {};
-  workouts.forEach((workout) => {
-    workout.exercises.forEach((exercise) => {
-      if (exercise.muscle) {
-        if (!muscleGroupsData[exercise.muscle]) {
-          muscleGroupsData[exercise.muscle] = exercise.sets || 0;
-        } else muscleGroupsData[exercise.muscle] += exercise.sets || 0;
-      }
-    });
-  });
-
-  const result: { name: string; value: number }[] = [];
-  for (const muscle in muscleGroupsData) {
-    result.push({
-      name: muscle,
-      value: parseFloat(((muscleGroupsData[muscle] / totalSets) * 100).toFixed(2)),
-    });
-  }
-  return result;
-}
 
 export function ProgressPresenter() {
   const goals = useSelector((state: RootState) => state.goals);
