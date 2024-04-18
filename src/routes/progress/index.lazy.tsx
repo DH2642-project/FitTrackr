@@ -22,7 +22,7 @@ export function generateRandomData() {
   const endDate = new Date();
 
   const data: GoalData[] = [];
-  let currentDate = new Date(startDate);
+  const currentDate = new Date(startDate);
 
   while (currentDate <= endDate) {
     const randomWeight = Math.random() * 10 + 65;

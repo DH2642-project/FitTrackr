@@ -1,6 +1,11 @@
 import { Card, CardContent, Typography } from "@mui/material";
 
-export function TotalView(props: any) {
+interface TotalViewProps {
+  title: string;
+  value: number | string;
+}
+
+export function TotalView(props: TotalViewProps) {
   return (
     <Card sx={{ borderRadius: 4 }}>
       <CardContent>
