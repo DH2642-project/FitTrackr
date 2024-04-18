@@ -10,6 +10,7 @@ import {
   Toolbar,
   Typography,
   useMediaQuery,
+  Tooltip,
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
@@ -77,22 +78,28 @@ export default function Sidebar({
         </Toolbar>
         <List>
           {pages.map((page, index) => (
-            <ListItemButton
-              key={index}
-              component={Link}
-              to={page.path}
-              sx={{
-                borderRadius: "30px",
-                "&.active": {
-                  backgroundColor: "primary.main",
-                },
-              }}
-              disabled={page.disabled}
-              onClick={() => setSidebarOpen(false)} // close mobile sidebar on click
-            >
-              <ListItemIcon>{page.icon}</ListItemIcon>
-              <ListItemText primary={<Typography variant="h6">{page.text}</Typography>} />
-            </ListItemButton>
+            <div>
+              <Tooltip title={page.disabled ? "You need to sign in to access this page." : ""} arrow>
+                <span>
+                  <ListItemButton
+                    key={index}
+                    component={Link}
+                    to={page.path}
+                    sx={{
+                      borderRadius: "30px",
+                      "&.active": {
+                        backgroundColor: "primary.main",
+                      },
+                    }}
+                    disabled={page.disabled}
+                    onClick={() => setSidebarOpen(false)} // close mobile sidebar on click
+                  >
+                    <ListItemIcon>{page.icon}</ListItemIcon>
+                    <ListItemText primary={<Typography variant="h6">{page.text}</Typography>} />
+                  </ListItemButton>
+                </span>
+              </Tooltip>
+            </div>
           ))}
         </List>
       </Drawer>
