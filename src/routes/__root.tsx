@@ -11,7 +11,6 @@ import {
   FitnessCenter,
   Flag,
   Home,
-  Restaurant,
 } from "@mui/icons-material"
 import { ProfileAvatar } from "../components/ProfileAvatar"
 
