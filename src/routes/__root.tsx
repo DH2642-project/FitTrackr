@@ -42,7 +42,7 @@ function RootPresenter() {
     { text: "My Workouts", path: "/workouts", icon: <FitnessCenter /> },
     { text: "Goals", path: "/goals", icon: <Flag /> },
     { text: "Progress", path: "/progress", icon: <DonutLarge /> },
-    { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
+    // { text: "Meals", path: "/meals", icon: <Restaurant />, disabled: true },
   ]
 
   return (
