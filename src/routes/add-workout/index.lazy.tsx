@@ -96,8 +96,7 @@ export function AddWorkoutPresenter() {
         showSnackbar("Error fetching exercises. Try again later.", "error");
       }
     }
-    // Fetch exercises from database
-  }, [dispatch]);
+  }, [dispatch, addWorkoutState.searchName, addWorkoutState.searchResults.length]);
 
   if (addWorkoutState.searchResults === undefined) {
     return (
