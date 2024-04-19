@@ -17,8 +17,9 @@ export interface AddWorkoutState {
   distance?: number
   time?: number
   weight?: number
-  reps: number
-  sets: number
+  reps?: number
+  sets?: number
+  addModal: boolean
 }
 
 // Define the initial state using that type
@@ -34,6 +35,10 @@ const initialState: AddWorkoutState = {
   searchStatus: "idle",
   sets: 3,
   reps: 10,
+  time: 0,
+  distance: 0,
+  weight: 0,
+  addModal: false
 };
 
 export const addWorkout = createAsyncThunk("addWorkout/addWorkout", async (_, thunkAPI) => {
