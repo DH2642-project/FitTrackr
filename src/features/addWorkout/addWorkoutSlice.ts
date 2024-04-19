@@ -14,6 +14,11 @@ export interface AddWorkoutState {
   searchError?: boolean;
   searchResults: Exercise[];
   searchStatus: string;
+  distance?: number
+  time?: number
+  weight?: number
+  reps: number
+  sets: number
 }
 
 // Define the initial state using that type
@@ -27,6 +32,8 @@ const initialState: AddWorkoutState = {
   searchType: "all",
   searchResults: [],
   searchStatus: "idle",
+  sets: 3,
+  reps: 10,
 };
 
 export const addWorkout = createAsyncThunk("addWorkout/addWorkout", async (_, thunkAPI) => {
@@ -117,6 +124,21 @@ export const addWorkoutSlice = createSlice({
     setDate: (state, action: PayloadAction<string>) => {
       state.workout.date = action.payload;
     },
+    setDistance: (state, action: PayloadAction<number>) => {
+      state.distance = action.payload;
+    },
+    setTime: (state, action: PayloadAction<number>) => {
+      state.time = action.payload;
+    },
+    setReps: (state, action: PayloadAction<number>) => {
+      state.reps = action.payload;
+    },
+    setSets: (state, action: PayloadAction<number>) => {
+      state.sets = action.payload;
+    }, 
+    setWeight: (state, action: PayloadAction<number>) => {
+      state.weight = action.payload;
+    }, 
   },
   extraReducers: (builder) => {
     builder
@@ -144,7 +166,7 @@ export const addWorkoutSlice = createSlice({
   },
 });
 
-export const { addExercise, removeExercise, clearExercises, setSearchName, setSearchType, setSearchResults, setDate } =
+export const { addExercise, removeExercise, clearExercises, setSearchName, setSearchType, setSearchResults, setDate, setDistance, setTime, setReps, setSets, setWeight } =
   addWorkoutSlice.actions;
 
 export default addWorkoutSlice.reducer;

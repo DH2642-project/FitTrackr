@@ -14,6 +14,11 @@ import {
   setSearchType,
   setSearchName,
   setDate,
+  setDistance,
+  setTime,
+  setWeight,
+  setSets,
+  setReps,
 } from "../../features/addWorkout/addWorkoutSlice";
 
 export const Route = createLazyFileRoute("/add-workout/")({
@@ -24,30 +29,25 @@ export function AddWorkoutPresenter() {
   const addWorkoutState = useSelector((state: RootState) => state.addWorkout);
   const dispatch = useDispatch<AppDispatch>();
 
-  const [distance, setDistance] = useState(0);
-  const [time, setTime] = useState(0);
-  const [weight, setWeight] = useState(0);
-  const [sets, setSets] = useState(3);
-  const [reps, setReps] = useState(10);
-
+  
   function handleSetDistance(distance: number) {
-    setDistance(distance);
+    dispatch(setDistance(distance));
   }
 
   function handleSetTime(time: number) {
-    setTime(time);
+    dispatch(setTime(time));
   }
 
   function handleSetWeight(weight : number) {
-    setWeight(weight);
+    dispatch(setWeight(weight));
   }
 
   function handleSetSets(_: Event, value: number | number[]) {
-    setSets(value as number);
+    dispatch(setSets(value as number));
   }
 
   function handleSetReps(_: Event, value: number | number[]) {
-    setReps(value as number);
+    dispatch(setReps(value as number));
   }
 
   // Snackbar state
@@ -78,6 +78,11 @@ export function AddWorkoutPresenter() {
   }
 
   function handleAddExercise(exercise: Exercise) {
+    const sets = addWorkoutState.sets
+    const reps = addWorkoutState.reps
+    const weight = addWorkoutState.weight
+    const distance = addWorkoutState.distance
+    const time = addWorkoutState.time
     dispatch(addExercise({ ...exercise, sets, reps, weight, distance, time }));
   }
 
@@ -125,9 +130,9 @@ export function AddWorkoutPresenter() {
         setDistance={handleSetDistance}
         setTime={handleSetTime}
         setWeight={handleSetWeight}
-        sets={sets}
+        sets={addWorkoutState.sets}
         setSets={handleSetSets}
-        reps={reps}
+        reps={addWorkoutState.reps}
         setReps={handleSetReps}
         types={ExerciseTypes}
         selectedType={addWorkoutState.searchType}
