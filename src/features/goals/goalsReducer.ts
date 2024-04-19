@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { generateRandomData } from '../../routes/progress/index.lazy';
+import { generateRandomData } from '../../utils/progressUtils';
 import { auth, database } from "../../firebase";
 import { child, get, push, ref, set } from "firebase/database";
 
@@ -19,7 +19,7 @@ export type Goal = {
     endGoal: number;
     storedValues: GoalData[]
     metric: string
-    key? : string
+    key : string
 }
 
 export interface GoalsState {

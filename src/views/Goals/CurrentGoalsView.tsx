@@ -16,7 +16,7 @@ export function CurrentGoalsView({
   onDeleteGoal: (key: string) => Promise<void>;
   goals: Goal[];
 }) {
-  function currentGoalCardCB(goal: any) {
+  function currentGoalCardCB(goal: Goal) {
     return (
       <Card key={goal.key} sx={{ borderRadius: 4 }}>
         <CardContent>

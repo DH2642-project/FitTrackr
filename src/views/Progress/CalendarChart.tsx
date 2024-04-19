@@ -27,5 +27,5 @@ export function CalendarChart({ data }: { data: { date: string;  count: number}[
         </CardContent>
       </Card>
     );
-};
+}
 export default CalendarChart;

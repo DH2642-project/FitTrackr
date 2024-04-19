@@ -24,15 +24,25 @@ interface WorkoutCardProps {
   deleteWorkout: (key: string) => void;
 }
 
+interface Exercise {
+  name: string;
+  sets?: number;
+  reps?: number;
+  difficulty?: string;
+  type?: string;
+  muscle?: string;
+  instructions?: string;
+}
+
 const WorkoutsCard: React.FC<WorkoutCardProps> = ({ workout, deleteWorkout }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [currentExercise, setCurrentExercise] = useState<any | null>(null);
+  const [currentExercise, setCurrentExercise] = useState<Exercise | null>(null);
   const handleClose = () => {
     setModalOpen(false);
     setCurrentExercise(null);
   };
 
-  const handleOpen = (exercise: any) => {
+  const handleOpen = (exercise: Exercise) => {
     console.log(exercise);
     setModalOpen(true);
     setCurrentExercise(exercise);

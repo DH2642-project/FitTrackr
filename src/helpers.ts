@@ -18,12 +18,12 @@ export function toFriendlyString(str: string): string {
  * @see https://weeknumber.com/how-to/javascript
  */
 export function getWeekNumber(date: Date): number {
-  var dateCopy = new Date(date.getTime())
+  const dateCopy = new Date(date.getTime())
   dateCopy.setHours(0, 0, 0, 0)
   // Thursday in current week decides the year.
   dateCopy.setDate(dateCopy.getDate() + 3 - ((dateCopy.getDay() + 6) % 7))
   // January 4 is always in week 1.
-  var week1 = new Date(dateCopy.getFullYear(), 0, 4)
+  const week1 = new Date(dateCopy.getFullYear(), 0, 4)
   // Adjust to Thursday in week 1 and count number of weeks from date to week1.
   return (
     1 +
