@@ -9,16 +9,6 @@ import {
 import { GoalProgressChart } from "../Progress/GoalProgressChart";
 import { Goal } from "../../features/goals/goalsReducer";
 
-interface Goal {
-  key: string;
-  description: string;
-  goalType: string;
-  exercise?: string;
-  startingPoint: string;
-  endGoal: string;
-  progress: number;
-}
-
 export function CurrentGoalsView({
   onDeleteGoal,
   goals,

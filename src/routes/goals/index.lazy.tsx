@@ -93,10 +93,12 @@ export function Goals() {
     }
   }, [dispatch]);
 
+  const filteredGoals = goals.goals.filter(goal => goal.key !== undefined);
+
   return (
     <Stack sx={{ margin: "30px" }} spacing={2}>
       <CurrentGoalsView
-        goals={goals.goals}
+        goals={filteredGoals}
         onDeleteGoal={deleteGoal}
       ></CurrentGoalsView>
       <GoalFormView
