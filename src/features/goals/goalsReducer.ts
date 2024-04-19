@@ -19,7 +19,7 @@ export type Goal = {
     endGoal: number;
     storedValues: GoalData[]
     metric: string
-    key? : string
+    key : string
 }
 
 export interface GoalsState {
