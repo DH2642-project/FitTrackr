@@ -24,12 +24,22 @@ export function AddWorkoutPresenter() {
   const addWorkoutState = useSelector((state: RootState) => state.addWorkout);
   const dispatch = useDispatch<AppDispatch>();
 
-  const [includeSetsReps, setIncludeSetsReps] = useState(true);
+  const [distance, setDistance] = useState(0);
+  const [time, setTime] = useState(0);
+  const [weight, setWeight] = useState(0);
   const [sets, setSets] = useState(3);
   const [reps, setReps] = useState(10);
 
-  function handleSetIncludeSetsReps(_: ChangeEvent<HTMLInputElement>, checked: boolean) {
-    setIncludeSetsReps(checked);
+  function handleSetDistance(distance: number) {
+    setDistance(distance);
+  }
+
+  function handleSetTime(time: number) {
+    setTime(time);
+  }
+
+  function handleSetWeight(weight : number) {
+    setWeight(weight);
   }
 
   function handleSetSets(_: Event, value: number | number[]) {
@@ -68,7 +78,7 @@ export function AddWorkoutPresenter() {
   }
 
   function handleAddExercise(exercise: Exercise) {
-    dispatch(addExercise(includeSetsReps ? { ...exercise, sets, reps } : exercise));
+    dispatch(addExercise({ ...exercise, sets, reps, weight, distance, time }));
   }
 
   function handleRemoveExercise(name: string) {
@@ -112,8 +122,9 @@ export function AddWorkoutPresenter() {
   return (
     <>
       <AddWorkoutView
-        includeSetsReps={includeSetsReps}
-        setIncludeSetsReps={handleSetIncludeSetsReps}
+        setDistance={handleSetDistance}
+        setTime={handleSetTime}
+        setWeight={handleSetWeight}
         sets={sets}
         setSets={handleSetSets}
         reps={reps}

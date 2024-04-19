@@ -12,8 +12,6 @@ import {
   Chip,
   CircularProgress,
   Container,
-  FormControlLabel,
-  FormGroup,
   Grid,
   IconButton,
   InputAdornment,
@@ -22,18 +20,18 @@ import {
   ListItemText,
   MenuItem,
   Modal,
+  OutlinedInput,
   Paper,
   Select,
   SelectChangeEvent,
   Slider,
   Stack,
-  Switch,
   TextField,
   Typography,
 } from "@mui/material";
 import { Exercise, ExerciseType } from "../features/workouts/workoutsSlice";
 import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { toFriendlyString } from "../helpers";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -41,8 +39,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/L
 import dayjs from "dayjs";
 
 export default function AddWorkoutView({
-  includeSetsReps,
-  setIncludeSetsReps,
+  setDistance,
+  setTime,
+  setWeight,
   sets,
   setSets,
   reps,
@@ -63,8 +62,9 @@ export default function AddWorkoutView({
   date,
   setDate,
 }: {
-  includeSetsReps: boolean;
-  setIncludeSetsReps: (event: ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+  setDistance: (distance: number) => void;
+  setTime: (time: number) => void;
+  setWeight: (weight: number) => void;
   sets: number;
   setSets: (event: Event, value: number | number[]) => void;
   reps: number;
@@ -90,7 +90,15 @@ export default function AddWorkoutView({
 
   return (
     <>
-      <Grid container spacing={1.5} sx={{ width: "100%", height: "100%", p: "0.75rem 0rem 0.75rem 0.75rem" }}>
+      <Grid
+        container
+        spacing={1.5}
+        sx={{
+          width: "100%",
+          height: "100%",
+          p: "0.75rem 0rem 0.75rem 0.75rem",
+        }}
+      >
         {/* Selected Workout */}
         <Grid item md={3} xs={12}>
           <Card>
@@ -116,15 +124,22 @@ export default function AddWorkoutView({
                     key={exercise.name}
                     disablePadding
                     secondaryAction={
-                      <IconButton edge="end" onClick={() => removeExercise(exercise.name)}>
+                      <IconButton
+                        edge="end"
+                        onClick={() => removeExercise(exercise.name)}
+                      >
                         <Remove />
                       </IconButton>
                     }
                   >
                     <ListItemText
-                      primary={<Typography lineHeight={1}>{exercise.name}</Typography>}
+                      primary={
+                        <Typography lineHeight={1}>{exercise.name}</Typography>
+                      }
                       secondary={
-                        exercise.sets ? `${exercise.sets} sets, ${exercise.reps} reps` : <em>Sets/reps omitted</em>
+                        exercise.type !== "cardio"
+                          ? `${exercise.sets} sets, ${exercise.reps} reps, ${exercise.weight} kg `
+                          : `${exercise.distance} km, ${exercise.time} minutes`
                       }
                     />
                   </ListItem>
@@ -133,7 +148,10 @@ export default function AddWorkoutView({
             </CardContent>
             <CardActions>
               {addWorkoutLoading ? (
-                <Button startIcon={<CircularProgress color="inherit" size={20} />} disabled>
+                <Button
+                  startIcon={<CircularProgress color="inherit" size={20} />}
+                  disabled
+                >
                   Loading...
                 </Button>
               ) : (
@@ -151,7 +169,11 @@ export default function AddWorkoutView({
             <Container sx={{ pt: 2 }}>
               <Stack direction="row" spacing={2}>
                 {/* Filter by type */}
-                <Select variant="standard" value={selectedType || "all"} onChange={setType}>
+                <Select
+                  variant="standard"
+                  value={selectedType || "all"}
+                  onChange={setType}
+                >
                   <MenuItem key={1} value={"all"}>
                     All
                   </MenuItem>
@@ -197,9 +219,16 @@ export default function AddWorkoutView({
                   No exercises found
                 </Typography>
               ) : (
-                <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, md: 8 }} sx={{ pb: 1 }}>
+                <Grid
+                  container
+                  spacing={{ xs: 1, md: 2 }}
+                  columns={{ xs: 4, md: 8 }}
+                  sx={{ pb: 1 }}
+                >
                   {searchResults.map((result) => {
-                    const isAdded = exercises.some((e) => e.name === result.name);
+                    const isAdded = exercises.some(
+                      (e) => e.name === result.name
+                    );
                     return (
                       <Grid item key={result.name} xs={4}>
                         <Badge
@@ -230,7 +259,11 @@ export default function AddWorkoutView({
                               }}
                             >
                               <CardContent>
-                                <Typography variant="h5" gutterBottom lineHeight={1}>
+                                <Typography
+                                  variant="h5"
+                                  gutterBottom
+                                  lineHeight={1}
+                                >
                                   {result.name}
                                 </Typography>
                                 <Stack
@@ -238,16 +271,33 @@ export default function AddWorkoutView({
                                   spacing={0.5}
                                   useFlexGap
                                   flexWrap="wrap"
-                                  sx={{ pb: 1, filter: isAdded ? "grayscale(1)" : "none" }}
+                                  sx={{
+                                    pb: 1,
+                                    filter: isAdded ? "grayscale(1)" : "none",
+                                  }}
                                 >
                                   {result.difficulty && (
-                                    <Chip color="secondary" size="small" label={toFriendlyString(result.difficulty)} />
+                                    <Chip
+                                      color="secondary"
+                                      size="small"
+                                      label={toFriendlyString(
+                                        result.difficulty
+                                      )}
+                                    />
                                   )}
                                   {result.type && (
-                                    <Chip color="success" size="small" label={toFriendlyString(result.type)} />
+                                    <Chip
+                                      color="success"
+                                      size="small"
+                                      label={toFriendlyString(result.type)}
+                                    />
                                   )}
                                   {result.muscle && (
-                                    <Chip color="error" size="small" label={toFriendlyString(result.muscle)} />
+                                    <Chip
+                                      color="error"
+                                      size="small"
+                                      label={toFriendlyString(result.muscle)}
+                                    />
                                   )}
                                 </Stack>
                                 <Typography
@@ -318,38 +368,70 @@ export default function AddWorkoutView({
           </Typography>
           {result?.instructions && (
             <Accordion>
-              <AccordionSummary expandIcon={<ExpandMore />}>Instructions</AccordionSummary>
+              <AccordionSummary expandIcon={<ExpandMore />}>
+                Instructions
+              </AccordionSummary>
               <AccordionDetails>{result.instructions}</AccordionDetails>
             </Accordion>
           )}
-          <FormGroup>
-            <FormControlLabel
-              control={<Switch checked={includeSetsReps} onChange={setIncludeSetsReps} />}
-              label="Include sets/reps"
-            />
-          </FormGroup>
-          <Typography variant="subtitle1">Sets</Typography>
-          <Slider
-            disabled={!includeSetsReps}
-            value={sets}
-            onChange={setSets}
-            step={1}
-            marks
-            min={1}
-            max={8}
-            valueLabelDisplay="on"
-          />
-          <Typography variant="subtitle1">Reps</Typography>
-          <Slider
-            disabled={!includeSetsReps}
-            value={reps}
-            onChange={setReps}
-            step={1}
-            marks
-            min={1}
-            max={20}
-            valueLabelDisplay="on"
-          />
+          {result?.type === "cardio" ? (
+            <>
+              <Typography variant="subtitle1">Distance</Typography>
+              <OutlinedInput
+                endAdornment={
+                  <InputAdornment position="end">km</InputAdornment>
+                }
+                onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
+                  setDistance(parseFloat(evt.target.value))
+                }
+                type="number"
+              />
+              <Typography variant="subtitle1">Time</Typography>
+              <OutlinedInput
+                endAdornment={
+                  <InputAdornment position="end">minutes</InputAdornment>
+                }
+                onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
+                  setTime(parseFloat(evt.target.value))
+                }
+                type="number"
+              />
+            </>
+          ) : (
+            <>
+              <Typography variant="subtitle1">Sets</Typography>
+              <Slider
+                value={sets}
+                onChange={setSets}
+                step={1}
+                marks
+                min={1}
+                max={8}
+                valueLabelDisplay="on"
+              />
+              <Typography variant="subtitle1">Reps</Typography>
+              <Slider
+                value={reps}
+                onChange={setReps}
+                step={1}
+                marks
+                min={1}
+                max={20}
+                valueLabelDisplay="on"
+              />
+              <Typography variant="subtitle1">Weight</Typography>
+              <OutlinedInput
+                endAdornment={
+                  <InputAdornment position="end">kg</InputAdornment>
+                }
+                type="number"
+                onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
+                  setWeight(parseFloat(evt.target.value))
+                }
+              />
+            </>
+          )}
+
           <Button
             onClick={() => {
               addExercise(result!);
