@@ -10,7 +10,16 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
 } from "@mui/material";
+import { SearchBarView } from "../Workout/SearchBarView";
+import { Exercise, ExerciseType } from "../../features/workouts/workoutsSlice";
+import FullscreenCircularProgress from "../../components/FullscreenCircularProgress";
 
 export function GoalFormView({
   open,
@@ -22,28 +31,42 @@ export function GoalFormView({
   onStartingPointChange,
   onEndGoalChange,
   onUpdateGoalType,
-  exerciseOptions,
   metric,
   handleSubmit,
   isAddButtonDisabled,
+  selectedType,
+  setType,
+  types,
+  search,
+  searchLoading,
+  searchResults,
+  setName,
+  name,
+  exercises,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
-  goalType: string;
+  goalType: string | undefined;
   exercise: string;
   onDescriptionChange: (description: string) => void;
   onExerciseChange: (exercise: string) => void;
   onStartingPointChange: (startingPoint: number) => void;
   onEndGoalChange: (endGoal: number) => void;
   onUpdateGoalType: (type: string) => void;
-  exerciseOptions: string[];
   metric: string;
   handleSubmit: () => void;
   isAddButtonDisabled: boolean;
+  selectedType: ExerciseType | "all";
+  setType: (event: SelectChangeEvent) => void;
+  types: ExerciseType[];
+  search: () => void;
+  searchLoading: boolean;
+  searchResults: Exercise[];
+  setName: (name: string) => void;
+  name: string;
+  exercises: Exercise[];
 }) {
-  function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
-    onDescriptionChange(evt.target.value);
-  }
+  
 
   function handleStartingPointChange(evt: React.ChangeEvent<HTMLInputElement>) {
     onStartingPointChange(parseFloat(evt.target.value));
@@ -53,11 +76,10 @@ export function GoalFormView({
     onEndGoalChange(parseFloat(evt.target.value));
   }
 
-  function handleSelectChange(evt: SelectChangeEvent<string>) {
-    onUpdateGoalType(evt.target.value);
-  }
 
-  function handleExerciseChange(evt: SelectChangeEvent<string>) {
+  // Don't know how to set correct type
+  function handleExerciseChange(evt: any) {
+    console.log(evt.target)
     onExerciseChange(evt.target.value);
   }
 
@@ -66,50 +88,48 @@ export function GoalFormView({
       <DialogTitle>Add New Goal</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Typography variant="h6"> Type: </Typography>
+          <Grid item xs={12}>
+            <Typography variant="h6"> Select exercise: </Typography>
+            <SearchBarView
+              selectedType={selectedType}
+              setType={setType}
+              types={types}
+              search={search}
+              setName={setName}
+              name={name}
+            ></SearchBarView>
           </Grid>
-          <Grid item xs={6}>
-            <Select
-              value={goalType}
-              onChange={handleSelectChange}
-              defaultValue="Cardio"
-            >
-              <MenuItem value="Cardio">Cardio</MenuItem>
-              <MenuItem value="Weight">Weight</MenuItem>
-              <MenuItem value="Strength">Strength</MenuItem>
-            </Select>
+          <Grid container>
+            {searchLoading ? (
+              <FullscreenCircularProgress />
+            ) : searchResults.length == 0 ? (
+              <Grid item xs={12}>
+                <Typography variant="h6" align="center">
+                  No exercises found
+                </Typography>
+              </Grid>
+            ) : (
+              <Grid container>
+                <FormControl>
+                  <RadioGroup
+                    onChange={handleExerciseChange}
+                  >
+                    {searchResults.map((result: Exercise, index: number) => {
+                      return (
+                        <FormControlLabel 
+                            key = {index}
+                            value={result.name}
+                            control={<Radio />}
+                            label={result.name}
+                          />
+                      );
+                    })}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+            )}
           </Grid>
 
-          {goalType !== "Weight" && (
-            <>
-              <Grid item xs={6}>
-                <Typography variant="h6"> Exercise: </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Select value={exercise} onChange={handleExerciseChange}>
-                  {exerciseOptions.map((option: string, index: number) => (
-                    <MenuItem key={index} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Grid>
-            </>
-          )}
-
-          <Grid item xs={6}>
-            <Typography variant="h6"> Description: </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              id="outlined-basic"
-              label="Describe your goal"
-              variant="outlined"
-              required
-              onChange={handleDescriptionChange}
-            />
-          </Grid>
           <Grid item xs={6}>
             <Typography variant="h6"> Start: </Typography>
           </Grid>

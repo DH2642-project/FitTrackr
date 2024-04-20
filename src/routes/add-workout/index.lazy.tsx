@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import AddWorkoutView from "../../views/Workout/AddWorkoutView";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertColor, SelectChangeEvent } from "@mui/material";
 import { Exercise, ExerciseType, ExerciseTypes } from "../../features/workouts/workoutsSlice";
 import { useDispatch, useSelector } from "react-redux";

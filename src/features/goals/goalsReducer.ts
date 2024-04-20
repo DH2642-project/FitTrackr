@@ -14,7 +14,7 @@ export type Goal = {
     description: string;
     exercise: string;
     progress: number;
-    goalType: string;
+    goalType?: string;
     startingPoint: number;
     endGoal: number;
     storedValues: GoalData[]
@@ -27,7 +27,7 @@ export interface GoalsState {
     description: string;
     currentExercise: string;
     progress: number;
-    goalType: string;
+    goalType?: string;
     startingPoint: number;
     endGoal: number;
     currentGoal?: Goal | null;
@@ -39,9 +39,9 @@ export interface GoalsState {
 const initialState: GoalsState = {
     goals: [],
     description: '',
-    currentExercise: "Run",
+    currentExercise: "",
     progress: 0,
-    goalType: "Cardio",
+    goalType: "",
     startingPoint: 0,
     endGoal: 0,
     metric: 'minutes',
@@ -49,10 +49,7 @@ const initialState: GoalsState = {
 };
 
 
-// mock data
-const cardioExercises = ["Run", "Swim", "Walk"]
-const strengthExercises = ["Pushups", "Situps", "Squat"];
-export const allExercises = { cardio: cardioExercises, strength: strengthExercises }
+
 
 export const addGoalDb = createAsyncThunk("goals/addGoalDb", async (_, thunkAPI) => {
 
@@ -105,16 +102,14 @@ const goalsSlice = createSlice({
         setExercise: (state, action: PayloadAction<string>) => {
             state.currentExercise = action.payload;
         },
-        setGoalType: (state, action: PayloadAction<string>) => {
-            state.currentExercise = "Run"
-            if (action.payload === "Cardio") {
-                state.currentExercise = cardioExercises[0];
+        setGoalType: (state, action: PayloadAction<string | undefined>) => {
+            state.currentExercise = ""
+            if (action.payload === "cardio") {
+                state.currentExercise = "";
                 state.metric = "minutes"
-            } else if (action.payload === "Strength") {
-                state.currentExercise = strengthExercises[0];
+            }
+            else {
                 state.metric = "kg / reps"
-            } else {
-                state.metric = "kg"
             }
             state.goalType = action.payload;
         },
@@ -125,8 +120,8 @@ const goalsSlice = createSlice({
             state.endGoal = action.payload;
         },
         resetToDefaultState: (state) => {
-            state.currentExercise = "Run"
-            state.goalType = "Cardio"
+            state.currentExercise = ""
+            state.goalType = "cardio"
             state.description = ""
             state.startingPoint = 0
             state.endGoal = 0

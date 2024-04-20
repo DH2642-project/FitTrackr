@@ -1,4 +1,3 @@
-
 import {
   Container,
   Grid,
@@ -91,7 +90,6 @@ export default function AddWorkoutView({
         <Grid item md={9} xs={12} sx={{ minHeight: "100%" }}>
           {/* Search menu */}
           <Paper elevation={4} sx={{ width: "100%", height: "100%" }}>
-
             <SearchBarView
               selectedType={selectedType}
               setType={setType}

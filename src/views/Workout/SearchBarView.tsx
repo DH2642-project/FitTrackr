@@ -1,5 +1,14 @@
 import { Search } from "@mui/icons-material";
-import { Container, Stack, Select, MenuItem, TextField, InputAdornment, IconButton, SelectChangeEvent } from "@mui/material";
+import {
+  Container,
+  Stack,
+  Select,
+  MenuItem,
+  TextField,
+  InputAdornment,
+  IconButton,
+  SelectChangeEvent,
+} from "@mui/material";
 import { toFriendlyString } from "../../helpers";
 import { ExerciseType } from "../../features/workouts/workoutsSlice";
 
@@ -8,15 +17,15 @@ export function SearchBarView({
   setType,
   types,
   search,
-    setName,
+  setName,
   name,
 }: {
   selectedType: ExerciseType | "all";
   setType: (event: SelectChangeEvent) => void;
   types: ExerciseType[];
   search: () => void;
-        setName: (name: string) => void;
-  name: string
+  setName: (name: string) => void;
+  name: string;
 }) {
   return (
     <Container sx={{ pt: 2 }}>

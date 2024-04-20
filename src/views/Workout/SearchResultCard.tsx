@@ -1,5 +1,16 @@
 import { CheckCircle } from "@mui/icons-material";
-import { Badge, Button, Card, CardActionArea, CardActions, CardContent, Chip, Grid, Stack, Typography } from "@mui/material";
+import {
+  Badge,
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  Chip,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { toFriendlyString } from "../../helpers";
 import { Exercise } from "../../features/workouts/workoutsSlice";
 

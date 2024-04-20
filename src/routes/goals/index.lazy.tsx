@@ -1,13 +1,12 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Stack } from "@mui/material";
+import { Button, SelectChangeEvent, Stack } from "@mui/material";
 import {
   setDescription,
   setEndGoal,
   setGoalType,
   setStartingPoint,
   setExercise,
-  allExercises,
   addGoalDb,
   fetchGoals,
   deleteGoalDb,
@@ -17,6 +16,8 @@ import { CurrentGoalsView } from "../../views/Goals/CurrentGoalsView";
 import { GoalFormView } from "../../views/Goals/GoalFormView";
 import { useEffect, useState } from "react";
 import { AppDispatch,RootState } from "../../store";
+import { searchExercises, setSearchName, setSearchType } from "../../features/addWorkout/addWorkoutSlice";
+import { Exercise, ExerciseType, ExerciseTypes } from "../../features/workouts/workoutsSlice";
 
 export const Route = createLazyFileRoute("/goals/")({
   component: Goals,
@@ -67,22 +68,15 @@ export function Goals() {
 
   const goals = useSelector((state: RootState) => state.goals);
 
-  let exerciseOptions;
-  if (goals.goalType === "Cardio") {
-    exerciseOptions = allExercises.cardio;
-  } else {
-    exerciseOptions = allExercises.strength;
-  }
-
   const [isAddButtonDisabled, setIsButtonDisabled] = useState(true);
 
   useEffect(() => {
-    if (goals.description && goals.startingPoint && goals.endGoal) {
+    if (goals.startingPoint && goals.endGoal) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
     }
-  }, [goals.description, goals.startingPoint, goals.endGoal]);
+  }, [goals.startingPoint, goals.endGoal]);
 
   useEffect(() => {
     // Fetch workouts from database
@@ -93,8 +87,26 @@ export function Goals() {
     }
   }, [dispatch]);
 
-  const filteredGoals = goals.goals.filter(goal => goal.key !== undefined);
+  //CODE DUPLICATION!!!
+  const addWorkoutState = useSelector((state: RootState) => state.addWorkout);
+  function handleSetName(name: string) {
+    dispatch(setSearchName(name));
+  }
 
+  async function handleSearch() {
+    const response = await dispatch(searchExercises());
+
+    if (response.meta.requestStatus === "rejected") {
+      console.log("Error fetching exercises. Try again later.", "error");
+    }
+  }
+
+  function handleSetType(event: SelectChangeEvent) {
+    dispatch(setSearchType(event.target.value as ExerciseType | "all"));
+  }
+
+  const filteredGoals = goals.goals.filter(goal => goal.key !== undefined);
+  
   return (
     <Stack sx={{ margin: "30px" }} spacing={2}>
       <CurrentGoalsView
@@ -111,10 +123,18 @@ export function Goals() {
         onStartingPointChange={updateStartingPoint}
         onEndGoalChange={updateEndGoal}
         onUpdateGoalType={updateGoalType}
-        exerciseOptions={exerciseOptions}
         metric={goals.metric}
         handleSubmit={handleAddGoal}
         isAddButtonDisabled={isAddButtonDisabled}
+        selectedType={addWorkoutState.searchType}
+        setType={handleSetType}
+        types={ExerciseTypes}
+        search={handleSearch}
+        searchLoading={addWorkoutState.searchStatus !== "idle"}
+        searchResults={addWorkoutState.searchResults}
+        setName={handleSetName}
+        name={addWorkoutState.searchName}
+        exercises={addWorkoutState.workout.exercises}
       />
       <Button variant="contained" onClick={() => setOpen(true)}>
         Create new goal
