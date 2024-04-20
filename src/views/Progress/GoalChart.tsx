@@ -47,7 +47,7 @@ export function GoalChart({
             >
               {goals.goals.map((goal: Goal) => (
                 <MenuItem key={goal.key} value={goal.key}>
-                  {goal.description}
+                  {goal.exercise}
                 </MenuItem>
               ))}
             </Select>

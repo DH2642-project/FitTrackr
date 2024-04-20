@@ -24,9 +24,6 @@ export function CurrentGoalsView({
             <Grid item xs={9}>
               <Typography variant="h4">{goal.exercise}</Typography>
               <Typography variant="body1">Type: {goal.goalType}</Typography>
-              <Typography variant="body1">
-                Start: {goal.startingPoint}
-              </Typography>
               <Typography variant="body1">Goal: {goal.endGoal}</Typography>
             </Grid>
 

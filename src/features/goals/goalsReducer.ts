@@ -11,7 +11,6 @@ export type GoalData = {
 
 export type Goal = {
     id: string;
-    description: string;
     exercise: string;
     progress: number;
     goalType?: string;
@@ -24,7 +23,6 @@ export type Goal = {
 
 export interface GoalsState {
     goals: Goal[];
-    description: string;
     currentExercise: string;
     progress: number;
     goalType?: string;
@@ -38,7 +36,6 @@ export interface GoalsState {
 
 const initialState: GoalsState = {
     goals: [],
-    description: '',
     currentExercise: "",
     progress: 0,
     goalType: "",
@@ -49,8 +46,6 @@ const initialState: GoalsState = {
 };
 
 
-
-
 export const addGoalDb = createAsyncThunk("goals/addGoalDb", async (_, thunkAPI) => {
 
     const state = thunkAPI.getState() as { goals: GoalsState };
@@ -58,7 +53,6 @@ export const addGoalDb = createAsyncThunk("goals/addGoalDb", async (_, thunkAPI)
     const userId = auth.currentUser?.uid;
     try {
         const snapshot = await push(ref(database, `goals/${userId}`), {
-            description:  state.goals.description,
             exercise: state.goals.currentExercise,
             progress: Math.floor(Math.random() * 101),
             goalType: state.goals.goalType,
@@ -96,20 +90,15 @@ const goalsSlice = createSlice({
     name: 'goals',
     initialState,
     reducers: {
-        setDescription: (state, action: PayloadAction<string>) => {
-            state.description = action.payload;
-        },
         setExercise: (state, action: PayloadAction<string>) => {
             state.currentExercise = action.payload;
         },
         setGoalType: (state, action: PayloadAction<string | undefined>) => {
-            state.currentExercise = ""
             if (action.payload === "cardio") {
-                state.currentExercise = "";
                 state.metric = "minutes"
             }
             else {
-                state.metric = "kg / reps"
+                state.metric = "kg or reps"
             }
             state.goalType = action.payload;
         },
@@ -122,7 +111,6 @@ const goalsSlice = createSlice({
         resetToDefaultState: (state) => {
             state.currentExercise = ""
             state.goalType = "cardio"
-            state.description = ""
             state.startingPoint = 0
             state.endGoal = 0
         },
@@ -132,7 +120,6 @@ const goalsSlice = createSlice({
                 const foundGoal = state.goals.find(goal => goal.key === goalKey);
                 if (foundGoal) {
                     state.currentGoal = foundGoal;
-                    state.description = foundGoal.description
                     state.currentExercise = foundGoal.exercise
                     state.progress = foundGoal.progress
                     state.goalType = foundGoal.goalType
@@ -175,6 +162,6 @@ const goalsSlice = createSlice({
     }
 });
 
-export const { setDescription, setExercise, setGoalType, setStartingPoint, setEndGoal, setCurrentGoal, resetToDefaultState } = goalsSlice.actions;
+export const { setExercise, setGoalType, setStartingPoint, setEndGoal, setCurrentGoal, resetToDefaultState } = goalsSlice.actions;
 
 export default goalsSlice.reducer;

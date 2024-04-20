@@ -2,7 +2,6 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, SelectChangeEvent, Stack } from "@mui/material";
 import {
-  setDescription,
   setEndGoal,
   setGoalType,
   setStartingPoint,
@@ -32,17 +31,16 @@ export function Goals() {
     dispatch(setGoalType(type));
   }
 
-  function updateDescription(description: string) {
-    dispatch(setDescription(description));
-  }
-
-  function updateExercise(exercise: string) {
-    dispatch(setExercise(exercise));
+  function updateExercise(exercise: Exercise) {
+    console.log(exercise.name);
+    dispatch(setExercise(exercise.name));
+    dispatch(setGoalType(exercise.type));
   }
 
   function updateStartingPoint(startingPoint: number) {
     dispatch(setStartingPoint(startingPoint));
   }
+
   function updateEndGoal(endGoal: number) {
     dispatch(setEndGoal(endGoal));
   }
@@ -55,6 +53,7 @@ export function Goals() {
     dispatch(fetchGoals());
     dispatch(resetToDefaultState());
     setOpen(false);
+    console.log(goals)
     
   }
 
@@ -71,12 +70,12 @@ export function Goals() {
   const [isAddButtonDisabled, setIsButtonDisabled] = useState(true);
 
   useEffect(() => {
-    if (goals.startingPoint && goals.endGoal) {
+    if (goals.endGoal) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
     }
-  }, [goals.startingPoint, goals.endGoal]);
+  }, [goals.endGoal]);
 
   useEffect(() => {
     // Fetch workouts from database
@@ -118,7 +117,6 @@ export function Goals() {
         setOpen={setOpen}
         goalType={goals.goalType}
         exercise={goals.currentExercise}
-        onDescriptionChange={updateDescription}
         onExerciseChange={updateExercise}
         onStartingPointChange={updateStartingPoint}
         onEndGoalChange={updateEndGoal}

@@ -26,7 +26,6 @@ export function GoalFormView({
   setOpen,
   goalType,
   exercise,
-  onDescriptionChange,
   onExerciseChange,
   onStartingPointChange,
   onEndGoalChange,
@@ -48,8 +47,7 @@ export function GoalFormView({
   setOpen: (open: boolean) => void;
   goalType: string | undefined;
   exercise: string;
-  onDescriptionChange: (description: string) => void;
-  onExerciseChange: (exercise: string) => void;
+  onExerciseChange: (exercise: Exercise) => void;
   onStartingPointChange: (startingPoint: number) => void;
   onEndGoalChange: (endGoal: number) => void;
   onUpdateGoalType: (type: string) => void;
@@ -67,20 +65,13 @@ export function GoalFormView({
   exercises: Exercise[];
 }) {
   
-
-  function handleStartingPointChange(evt: React.ChangeEvent<HTMLInputElement>) {
-    onStartingPointChange(parseFloat(evt.target.value));
-  }
-
   function handleEndGoalChange(evt: React.ChangeEvent<HTMLInputElement>) {
     onEndGoalChange(parseFloat(evt.target.value));
   }
 
-
-  // Don't know how to set correct type
-  function handleExerciseChange(evt: any) {
-    console.log(evt.target)
-    onExerciseChange(evt.target.value);
+  //OK in view?
+  function handleExerciseChange(evt: React.ChangeEvent<HTMLInputElement>) {
+    onExerciseChange(JSON.parse(evt.target.value) as Exercise);
   }
 
   return (
@@ -118,31 +109,18 @@ export function GoalFormView({
                       return (
                         <FormControlLabel 
                             key = {index}
-                            value={result.name}
+                            value={JSON.stringify(result)}
                             control={<Radio />}
                             label={result.name}
                           />
                       );
                     })}
-                  </RadioGroup>
+                  </RadioGroup> 
                 </FormControl>
               </Grid>
             )}
           </Grid>
 
-          <Grid item xs={6}>
-            <Typography variant="h6"> Start: </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label={metric}
-              type="number"
-              id="outlined-basic"
-              variant="outlined"
-              required
-              onChange={handleStartingPointChange}
-            />
-          </Grid>
           <Grid item xs={6}>
             <Typography variant="h6"> Goal: </Typography>
           </Grid>
