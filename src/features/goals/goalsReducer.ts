@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { generateRandomData } from '../../utils/progressUtils';
 import { auth, database } from "../../firebase";
 import { child, get, push, ref, set } from "firebase/database";
-
 
 export type GoalData = {
     date: string;
@@ -18,7 +16,8 @@ export type Goal = {
     endGoal: number;
     storedValues: GoalData[]
     metric: string
-    key : string
+    distance?: number
+    key: string
 }
 
 export interface GoalsState {
@@ -32,6 +31,7 @@ export interface GoalsState {
     metric: string;
     goalStatus: string
     goalError?: boolean
+    distance? : number
 }
 
 const initialState: GoalsState = {
@@ -41,8 +41,8 @@ const initialState: GoalsState = {
     goalType: "",
     startingPoint: 0,
     endGoal: 0,
-    metric: 'minutes',
-    goalStatus: 'idle'
+    metric: 'kg or reps',
+    goalStatus: 'idle',
 };
 
 
@@ -52,6 +52,7 @@ export const addGoalDb = createAsyncThunk("goals/addGoalDb", async (_, thunkAPI)
     
     const userId = auth.currentUser?.uid;
     try {
+        
         const snapshot = await push(ref(database, `goals/${userId}`), {
             exercise: state.goals.currentExercise,
             progress: 0,
@@ -59,7 +60,8 @@ export const addGoalDb = createAsyncThunk("goals/addGoalDb", async (_, thunkAPI)
             startingPoint: state.goals.startingPoint,
             endGoal: state.goals.endGoal,
             storedValues: {},
-            metric: state.goals.metric
+            metric: state.goals.metric,
+            distance: state.goals.distance ?? 0
         });
         return snapshot.key;
     } catch (error) {
@@ -128,6 +130,9 @@ const goalsSlice = createSlice({
                     state.currentGoal = null;
                 }
             
+        },
+        setGoalDistance: (state, action: PayloadAction<number>) => {
+            state.distance = action.payload;
         }
         
     }, extraReducers: (builder) => {
@@ -162,6 +167,6 @@ const goalsSlice = createSlice({
     }
 });
 
-export const { setExercise, setGoalType, setStartingPoint, setEndGoal, setCurrentGoal, resetToDefaultState } = goalsSlice.actions;
+export const { setExercise, setGoalType, setStartingPoint, setEndGoal, setCurrentGoal, resetToDefaultState, setGoalDistance } = goalsSlice.actions;
 
 export default goalsSlice.reducer;

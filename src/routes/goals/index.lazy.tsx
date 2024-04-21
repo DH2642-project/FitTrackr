@@ -10,6 +10,7 @@ import {
   fetchGoals,
   deleteGoalDb,
   resetToDefaultState,
+  setGoalDistance,
 } from "../../features/goals/goalsReducer";
 import { CurrentGoalsView } from "../../views/Goals/CurrentGoalsView";
 import { GoalFormView } from "../../views/Goals/GoalFormView";
@@ -44,6 +45,10 @@ export function Goals() {
     dispatch(setEndGoal(endGoal));
   }
 
+  function handleSetDistance(distance: number) {
+    dispatch(setGoalDistance(distance));
+  }
+
   async function handleAddGoal() {
     const response = await dispatch(addGoalDb());
     if (response.meta.requestStatus === "rejected") {
@@ -58,7 +63,7 @@ export function Goals() {
   async function deleteGoal(key: string) {
     const response = await dispatch(deleteGoalDb(key));
     if (response.meta.requestStatus === "rejected") {
-      console.log("Error adding goal.");
+      console.log("Error deleting goal.");
     } 
     dispatch(fetchGoals());
   }
@@ -131,6 +136,7 @@ export function Goals() {
         setName={handleSetName}
         name={addWorkoutState.searchName}
         exercises={addWorkoutState.workout.exercises}
+        onDistanceChange={handleSetDistance}
       />
       <Button variant="contained" onClick={() => setOpen(true)}>
         Create new goal

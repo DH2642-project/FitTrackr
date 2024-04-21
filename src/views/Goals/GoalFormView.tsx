@@ -42,6 +42,7 @@ export function GoalFormView({
   setName,
   name,
   exercises,
+  onDistanceChange,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -63,8 +64,8 @@ export function GoalFormView({
   setName: (name: string) => void;
   name: string;
   exercises: Exercise[];
+  onDistanceChange: (distance: number) => void;
 }) {
-  
   function handleEndGoalChange(evt: React.ChangeEvent<HTMLInputElement>) {
     onEndGoalChange(parseFloat(evt.target.value));
   }
@@ -72,6 +73,10 @@ export function GoalFormView({
   //OK in view?
   function handleExerciseChange(evt: React.ChangeEvent<HTMLInputElement>) {
     onExerciseChange(JSON.parse(evt.target.value) as Exercise);
+  }
+
+  function handleDistanceChange(evt: React.ChangeEvent<HTMLInputElement>) {
+    onDistanceChange(parseFloat(evt.target.value));
   }
 
   return (
@@ -102,25 +107,39 @@ export function GoalFormView({
             ) : (
               <Grid container>
                 <FormControl>
-                  <RadioGroup
-                    onChange={handleExerciseChange}
-                  >
+                  <RadioGroup onChange={handleExerciseChange}>
                     {searchResults.map((result: Exercise, index: number) => {
                       return (
-                        <FormControlLabel 
-                            key = {index}
-                            value={JSON.stringify(result)}
-                            control={<Radio />}
-                            label={result.name}
-                          />
+                        <FormControlLabel
+                          key={index}
+                          value={JSON.stringify(result)}
+                          control={<Radio />}
+                          label={result.name}
+                        />
                       );
                     })}
-                  </RadioGroup> 
+                  </RadioGroup>
                 </FormControl>
               </Grid>
             )}
           </Grid>
-
+          {goalType === "cardio" && (
+            <>
+              <Grid item xs={6}>
+                <Typography variant="h6"> Distance: </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label={"km"}
+                  type="number"
+                  id="outlined-basic"
+                  variant="outlined"
+                  required
+                  onChange={handleDistanceChange}
+                />
+              </Grid>
+            </>
+          )}
           <Grid item xs={6}>
             <Typography variant="h6"> Goal: </Typography>
           </Grid>

@@ -77,20 +77,32 @@ export const addWorkout = createAsyncThunk("addWorkout/addWorkout", async (_, th
         Object.keys(goals).forEach(goalKey => {
           const goal = goals[goalKey];
           if (goal.exercise === workoutExercise.name) {
+            let value = 0
+            if (workoutExercise.weight) {
+              value = workoutExercise.weight
+            } else if (workoutExercise.time) {
+              workoutExercise.time
+              value =  workoutExercise.time
+            }
             const e = {
               date: state.addWorkout.workout.date?.split("T")[0],
-              value: workoutExercise.weight
+              value: value
             }
             
             if (goal.storedValues) {
               goal.storedValues.push(e)
+              
               if (workoutExercise.weight) {
-                goal.progress = ((workoutExercise?.weight - goal.startingPoint) / (goal.endGoal - goal.startingPoint) * 100).toFixed(2)
+                goal.progress = ((workoutExercise?.weight - goal.startingPoint) / (goal.endGoal - goal.startingPoint) * 100).toFixed(0)
+              } else if (workoutExercise.distance === goal.distance) {
+                if (workoutExercise?.time) {
+                  goal.progress = ((1 - (workoutExercise?.time - goal.endGoal) / (goal.startingPoint - goal.endGoal)) * 100).toFixed(0)
+                }
               }
               
             } else {
               goal.storedValues = [e]
-              goal.startingPoint = workoutExercise.weight
+              goal.startingPoint = value
             }
           }
         });
