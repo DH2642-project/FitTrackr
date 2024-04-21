@@ -42,7 +42,7 @@ export function GoalChart({
           </Grid>
           <Grid item xs={12}>
             <Select
-              value={goals.currentGoal?.key || ''}
+              value={goals.currentGoal?.key || ""}
               onChange={handleGoalCange}
             >
               {goals.goals.map((goal: Goal) => (
@@ -59,32 +59,35 @@ export function GoalChart({
             <GoalProgressChart value={goals.progress} circleSize={75} />
           </Grid>
         </Grid>
-
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart
-            data={goals.currentGoal?.storedValues}
-            margin={{ top: 30, right: 30, left: 30, bottom: 30 }}
-          >
-            <XAxis dataKey="date" />
-            <YAxis
-              label={{
-                value: goals.currentGoal?.metric,
-                angle: -90,
-                position: "insideLeft",
-              }}
-            />
-            <YAxis />
-            <Tooltip />
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke={theme.palette.primary.main}
-              strokeWidth={3}
-              activeDot={{ r: 8 }}
-              dot={false}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        {goals.currentGoal?.storedValues ? (
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart
+              data={goals.currentGoal?.storedValues}
+              margin={{ top: 30, right: 30, left: 30, bottom: 30 }}
+            >
+              <XAxis dataKey="date" />
+              <YAxis
+                label={{
+                  value: goals.currentGoal?.metric,
+                  angle: -90,
+                  position: "insideLeft",
+                }}
+              />
+              <YAxis />
+              <Tooltip />
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke={theme.palette.primary.main}
+                strokeWidth={3}
+                activeDot={{ r: 8 }}
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <Typography>No stored values for this goal</Typography>
+        )}
       </CardContent>
     </Card>
   );

@@ -1,6 +1,6 @@
 
 import { getWeekNumber } from "../helpers.ts";
-import { Exercise, Workout } from "../features/workouts/workoutsSlice.ts";
+import { Workout } from "../features/workouts/workoutsSlice.ts";
 import { GoalData } from "../features/goals/goalsReducer.ts";
 
 export function generateRandomData() {
@@ -58,6 +58,19 @@ export function getWeightlifted(workouts: Workout[]) {
     });
   });
   return weight;
+}
+
+export function getTotalDistance(workouts: Workout[]) {
+  let distance = 0;
+  workouts.forEach((workout) => {
+    const exercises = workout.exercises;
+    exercises.forEach((e) => {
+      if (e.distance) {
+        distance += e.distance;
+      }
+    });
+  });
+  return distance;
 }
 
 export function getWorkoutsPerWeek(workouts: Workout[]): { x: number; y: number }[] {

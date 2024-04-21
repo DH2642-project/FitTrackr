@@ -3,17 +3,13 @@ import {
   Typography,
   TextField,
   SelectChangeEvent,
-  MenuItem,
-  Select,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Container,
   FormControl,
   FormControlLabel,
-  FormLabel,
   Radio,
   RadioGroup,
 } from "@mui/material";
@@ -25,11 +21,8 @@ export function GoalFormView({
   open,
   setOpen,
   goalType,
-  exercise,
   onExerciseChange,
-  onStartingPointChange,
   onEndGoalChange,
-  onUpdateGoalType,
   metric,
   handleSubmit,
   isAddButtonDisabled,
@@ -41,17 +34,13 @@ export function GoalFormView({
   searchResults,
   setName,
   name,
-  exercises,
   onDistanceChange,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   goalType: string | undefined;
-  exercise: string;
   onExerciseChange: (exercise: Exercise) => void;
-  onStartingPointChange: (startingPoint: number) => void;
   onEndGoalChange: (endGoal: number) => void;
-  onUpdateGoalType: (type: string) => void;
   metric: string;
   handleSubmit: () => void;
   isAddButtonDisabled: boolean;
@@ -63,7 +52,6 @@ export function GoalFormView({
   searchResults: Exercise[];
   setName: (name: string) => void;
   name: string;
-  exercises: Exercise[];
   onDistanceChange: (distance: number) => void;
 }) {
   function handleEndGoalChange(evt: React.ChangeEvent<HTMLInputElement>) {

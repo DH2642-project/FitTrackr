@@ -41,7 +41,7 @@ const initialState: GoalsState = {
     goalType: "",
     startingPoint: 0,
     endGoal: 0,
-    metric: 'kg or reps',
+    metric: 'kg',
     goalStatus: 'idle',
 };
 
@@ -100,7 +100,7 @@ const goalsSlice = createSlice({
                 state.metric = "minutes"
             }
             else {
-                state.metric = "kg or reps"
+                state.metric = "kg"
             }
             state.goalType = action.payload;
         },

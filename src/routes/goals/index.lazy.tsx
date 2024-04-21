@@ -4,7 +4,6 @@ import { Button, SelectChangeEvent, Stack } from "@mui/material";
 import {
   setEndGoal,
   setGoalType,
-  setStartingPoint,
   setExercise,
   addGoalDb,
   fetchGoals,
@@ -28,18 +27,11 @@ export function Goals() {
 
   const [open, setOpen] = useState(false);
 
-  function updateGoalType(type: string) {
-    dispatch(setGoalType(type));
-  }
-
   function updateExercise(exercise: Exercise) {
     dispatch(setExercise(exercise.name));
     dispatch(setGoalType(exercise.type));
   }
 
-  function updateStartingPoint(startingPoint: number) {
-    dispatch(setStartingPoint(startingPoint));
-  }
 
   function updateEndGoal(endGoal: number) {
     dispatch(setEndGoal(endGoal));
@@ -119,11 +111,8 @@ export function Goals() {
         open={open}
         setOpen={setOpen}
         goalType={goals.goalType}
-        exercise={goals.currentExercise}
         onExerciseChange={updateExercise}
-        onStartingPointChange={updateStartingPoint}
         onEndGoalChange={updateEndGoal}
-        onUpdateGoalType={updateGoalType}
         metric={goals.metric}
         handleSubmit={handleAddGoal}
         isAddButtonDisabled={isAddButtonDisabled}
@@ -135,7 +124,6 @@ export function Goals() {
         searchResults={addWorkoutState.searchResults}
         setName={handleSetName}
         name={addWorkoutState.searchName}
-        exercises={addWorkoutState.workout.exercises}
         onDistanceChange={handleSetDistance}
       />
       <Button variant="contained" onClick={() => setOpen(true)}>

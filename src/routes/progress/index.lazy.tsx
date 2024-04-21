@@ -10,7 +10,7 @@ import { AppDispatch, RootState } from "../../store.ts";
 import { fetchWorkouts } from "../../features/workouts/workoutsSlice.ts";
 import MuscleChart from "../../views/Progress/MuscleChart.tsx";
 import { useEffect } from "react";
-import { getCalendarData, getMuscleGroupsData, getWeightlifted, getWorkoutsPerWeek } from "../../utils/progressUtils.tsx";
+import { getCalendarData, getMuscleGroupsData, getTotalDistance, getWeightlifted, getWorkoutsPerWeek } from "../../utils/progressUtils.tsx";
 
 export const Route = createLazyFileRoute("/progress/")({
   component: ProgressPresenter,
@@ -38,6 +38,7 @@ export function ProgressPresenter() {
 
   const calendarData = getCalendarData(workouts);
   const totalWeight = getWeightlifted(workouts);
+  const totalDistance = getTotalDistance(workouts);
   const weeklyData = getWorkoutsPerWeek(workouts);
   const muscleGroupsData = getMuscleGroupsData(workouts);
 
@@ -56,7 +57,10 @@ export function ProgressPresenter() {
         <Grid item xs={6}>
           <Grid container spacing={4}>
             <Grid item xs={6}>
-              <TotalView title={"Total distance (km)"} value={"55"}></TotalView>
+              <TotalView
+                title={"Total distance (km)"}
+                value={totalDistance}
+              ></TotalView>
             </Grid>
             <Grid item xs={6}>
               <TotalView

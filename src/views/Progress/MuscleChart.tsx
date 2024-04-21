@@ -54,9 +54,7 @@ export function MuscleChart({
               innerRadius={60}
               outerRadius={80}
               fill={theme.palette.primary.main}
-              label={({ name, value }) =>
-                `${name} (${value}%)`
-              }
+              label={({ value }) => `(${value}%)`}
             >
               {data.map((_, index) => (
                 <Cell
