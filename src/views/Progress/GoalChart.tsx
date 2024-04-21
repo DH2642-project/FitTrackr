@@ -37,10 +37,10 @@ export function GoalChart({
           <Grid item xs={12}>
             <Typography variant="h4"> Goals</Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Typography variant="h6"> Select a goal: </Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Select
               value={goals.currentGoal?.key || ''}
               onChange={handleGoalCange}

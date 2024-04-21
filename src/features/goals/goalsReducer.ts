@@ -54,11 +54,11 @@ export const addGoalDb = createAsyncThunk("goals/addGoalDb", async (_, thunkAPI)
     try {
         const snapshot = await push(ref(database, `goals/${userId}`), {
             exercise: state.goals.currentExercise,
-            progress: Math.floor(Math.random() * 101),
+            progress: 0,
             goalType: state.goals.goalType,
             startingPoint: state.goals.startingPoint,
             endGoal: state.goals.endGoal,
-            storedValues: generateRandomData(),
+            storedValues: {},
             metric: state.goals.metric
         });
         return snapshot.key;

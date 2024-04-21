@@ -43,7 +43,6 @@ const WorkoutsCard: React.FC<WorkoutCardProps> = ({ workout, deleteWorkout }) =>
   };
 
   const handleOpen = (exercise: Exercise) => {
-    console.log(exercise);
     setModalOpen(true);
     setCurrentExercise(exercise);
   }

@@ -1,6 +1,6 @@
 
 import { getWeekNumber } from "../helpers.ts";
-import { Workout } from "../features/workouts/workoutsSlice.ts";
+import { Exercise, Workout } from "../features/workouts/workoutsSlice.ts";
 import { GoalData } from "../features/goals/goalsReducer.ts";
 
 export function generateRandomData() {

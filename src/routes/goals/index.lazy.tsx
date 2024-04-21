@@ -32,7 +32,6 @@ export function Goals() {
   }
 
   function updateExercise(exercise: Exercise) {
-    console.log(exercise.name);
     dispatch(setExercise(exercise.name));
     dispatch(setGoalType(exercise.type));
   }
@@ -53,7 +52,6 @@ export function Goals() {
     dispatch(fetchGoals());
     dispatch(resetToDefaultState());
     setOpen(false);
-    console.log(goals)
     
   }
 

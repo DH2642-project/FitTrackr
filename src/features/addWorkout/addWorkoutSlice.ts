@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Exercise, ExerciseType, Workout } from "../workouts/workoutsSlice";
 import { auth, database } from "../../firebase";
-import { push, ref } from "firebase/database";
+import { child, get, push, ref, update } from "firebase/database";
 
 // Define a type for the slice state
 export interface AddWorkoutState {
@@ -65,6 +65,41 @@ export const addWorkout = createAsyncThunk("addWorkout/addWorkout", async (_, th
   const state = thunkAPI.getState() as { addWorkout: AddWorkoutState };
   const userId = auth.currentUser?.uid;
   try {
+    
+    // Update stored values and progress
+    const goalsSnapshot = await get(child(ref(database), `goals/${userId}`));
+    if (goalsSnapshot.exists()) {
+      const goals = goalsSnapshot.val();
+      
+      const exercises = state.addWorkout.workout.exercises
+      
+      for (const [_, workoutExercise] of Object.entries(exercises)) {
+        Object.keys(goals).forEach(goalKey => {
+          const goal = goals[goalKey];
+          if (goal.exercise === workoutExercise.name) {
+            const e = {
+              date: state.addWorkout.workout.date?.split("T")[0],
+              value: workoutExercise.weight
+            }
+            
+            if (goal.storedValues) {
+              goal.storedValues.push(e)
+              if (workoutExercise.weight) {
+                goal.progress = ((workoutExercise?.weight - goal.startingPoint) / (goal.endGoal - goal.startingPoint) * 100).toFixed(2)
+              }
+              
+            } else {
+              goal.storedValues = [e]
+              goal.startingPoint = workoutExercise.weight
+            }
+          }
+        });
+      }
+      await update(ref(database, `goals/${userId}`), goals);
+    }
+      
+    
+
     const snapshot = await push(ref(database, `workouts/${userId}`), {
       ...state.addWorkout.workout,
       date: state.addWorkout.workout.date,
