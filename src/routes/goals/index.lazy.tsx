@@ -15,7 +15,7 @@ import { CurrentGoalsView } from "../../views/Goals/CurrentGoalsView";
 import { GoalFormView } from "../../views/Goals/GoalFormView";
 import { useEffect, useState } from "react";
 import { AppDispatch,RootState } from "../../store";
-import { clearExercises, searchExercises, setSearchName, setSearchType } from "../../features/addWorkout/addWorkoutSlice";
+import { searchExercises, setSearchName, setSearchType } from "../../features/addWorkout/addWorkoutSlice";
 import { Exercise, ExerciseType, ExerciseTypes } from "../../features/workouts/workoutsSlice";
 
 export const Route = createLazyFileRoute("/goals/")({
