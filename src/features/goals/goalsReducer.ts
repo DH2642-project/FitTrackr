@@ -22,7 +22,7 @@ export type Goal = {
 
 export interface GoalsState {
     goals: Goal[];
-    currentExercise: string;
+    currentExercise?: string;
     progress: number;
     goalType?: string;
     startingPoint: number;
@@ -36,7 +36,6 @@ export interface GoalsState {
 
 const initialState: GoalsState = {
     goals: [],
-    currentExercise: "",
     progress: 0,
     goalType: "",
     startingPoint: 0,
@@ -111,8 +110,7 @@ const goalsSlice = createSlice({
             state.endGoal = action.payload;
         },
         resetToDefaultState: (state) => {
-            state.currentExercise = ""
-            state.goalType = "cardio"
+            state.currentExercise = undefined
             state.startingPoint = 0
             state.endGoal = 0
         },

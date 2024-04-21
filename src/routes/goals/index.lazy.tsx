@@ -65,12 +65,12 @@ export function Goals() {
   const [isAddButtonDisabled, setIsButtonDisabled] = useState(true);
 
   useEffect(() => {
-    if (goals.endGoal) {
+    if (goals.endGoal && goals.currentExercise) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
     }
-  }, [goals.endGoal]);
+  }, [goals.endGoal, goals.currentExercise]);
 
   useEffect(() => {
     // Fetch workouts from database

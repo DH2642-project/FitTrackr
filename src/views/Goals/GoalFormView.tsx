@@ -74,6 +74,8 @@ export function GoalFormView({
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h6"> Select exercise: </Typography>
+          </Grid>
+          <Grid item xs={12}>
             <SearchBarView
               selectedType={selectedType}
               setType={setType}
@@ -83,7 +85,7 @@ export function GoalFormView({
               name={name}
             ></SearchBarView>
           </Grid>
-          <Grid container>
+          <Grid item xs={12}>
             {searchLoading ? (
               <FullscreenCircularProgress />
             ) : searchResults.length == 0 ? (
@@ -93,7 +95,7 @@ export function GoalFormView({
                 </Typography>
               </Grid>
             ) : (
-              <Grid container>
+              <Grid item xs={12}>
                 <FormControl>
                   <RadioGroup onChange={handleExerciseChange}>
                     {searchResults.map((result: Exercise, index: number) => {
@@ -128,19 +130,23 @@ export function GoalFormView({
               </Grid>
             </>
           )}
-          <Grid item xs={6}>
-            <Typography variant="h6"> Goal: </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label={metric}
-              type="number"
-              id="outlined-basic"
-              variant="outlined"
-              required
-              onChange={handleEndGoalChange}
-            />
-          </Grid>
+          {searchResults.length !== 0 && (
+            <>
+              <Grid item xs={6}>
+                <Typography variant="h6"> Goal: </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label={metric}
+                  type="number"
+                  id="outlined-basic"
+                  variant="outlined"
+                  required
+                  onChange={handleEndGoalChange}
+                />
+              </Grid>
+            </>
+          )}
         </Grid>
       </DialogContent>
       <DialogActions>
