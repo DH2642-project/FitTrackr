@@ -22,17 +22,9 @@ export function CurrentGoalsView({
         <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={9}>
-              <Typography variant="h4">{goal.description}</Typography>
+              <Typography variant="h4">{goal.exercise}</Typography>
               <Typography variant="body1">Type: {goal.goalType}</Typography>
-              {goal.goalType !== "Weight" && (
-                <Typography variant="body1">
-                  Exercise: {goal.exercise}
-                </Typography>
-              )}
-              <Typography variant="body1">
-                Start: {goal.startingPoint}
-              </Typography>
-              <Typography variant="body1">Goal: {goal.endGoal}</Typography>
+              <Typography variant="body1">Goal: {goal.endGoal} {goal.metric}</Typography>
             </Grid>
 
             <Grid item xs={3}>

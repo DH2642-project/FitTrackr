@@ -50,6 +50,9 @@ export type Exercise = {
   equipment?: string;
   sets?: number;
   reps?: number;
+  weight?: number;
+  distance?: number;
+  time?: number;
 };
 
 export type Workout = {

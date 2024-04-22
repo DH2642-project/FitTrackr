@@ -47,17 +47,30 @@ export function getCalendarData(
 }
 
 export function getWeightlifted(workouts: Workout[]) {
-  const dummyWeight = 10;
+  
   let weight = 0;
   workouts.forEach((workout) => {
     const exercises = workout.exercises;
     exercises.forEach((e) => {
-      if (e.sets && e.reps) {
-        weight += e.sets * e.reps * dummyWeight;
+      if (e.sets && e.reps && e.weight) {
+        weight += e.sets * e.reps * e.weight;
       }
     });
   });
   return weight;
+}
+
+export function getTotalDistance(workouts: Workout[]) {
+  let distance = 0;
+  workouts.forEach((workout) => {
+    const exercises = workout.exercises;
+    exercises.forEach((e) => {
+      if (e.distance) {
+        distance += e.distance;
+      }
+    });
+  });
+  return distance;
 }
 
 export function getWorkoutsPerWeek(workouts: Workout[]): { x: number; y: number }[] {

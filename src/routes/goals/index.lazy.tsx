@@ -1,22 +1,22 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Stack } from "@mui/material";
+import { Button, SelectChangeEvent, Stack } from "@mui/material";
 import {
-  setDescription,
   setEndGoal,
   setGoalType,
-  setStartingPoint,
   setExercise,
-  allExercises,
   addGoalDb,
   fetchGoals,
   deleteGoalDb,
   resetToDefaultState,
+  setGoalDistance,
 } from "../../features/goals/goalsReducer";
 import { CurrentGoalsView } from "../../views/Goals/CurrentGoalsView";
 import { GoalFormView } from "../../views/Goals/GoalFormView";
 import { useEffect, useState } from "react";
 import { AppDispatch,RootState } from "../../store";
+import { searchExercises, setSearchName, setSearchType } from "../../features/addWorkout/addWorkoutSlice";
+import { Exercise, ExerciseType, ExerciseTypes } from "../../features/workouts/workoutsSlice";
 
 export const Route = createLazyFileRoute("/goals/")({
   component: Goals,
@@ -27,23 +27,18 @@ export function Goals() {
 
   const [open, setOpen] = useState(false);
 
-  function updateGoalType(type: string) {
-    dispatch(setGoalType(type));
+  function updateExercise(exercise: Exercise) {
+    dispatch(setExercise(exercise.name));
+    dispatch(setGoalType(exercise.type));
   }
 
-  function updateDescription(description: string) {
-    dispatch(setDescription(description));
-  }
 
-  function updateExercise(exercise: string) {
-    dispatch(setExercise(exercise));
-  }
-
-  function updateStartingPoint(startingPoint: number) {
-    dispatch(setStartingPoint(startingPoint));
-  }
   function updateEndGoal(endGoal: number) {
     dispatch(setEndGoal(endGoal));
+  }
+
+  function handleSetDistance(distance: number) {
+    dispatch(setGoalDistance(distance));
   }
 
   async function handleAddGoal() {
@@ -53,6 +48,7 @@ export function Goals() {
     } 
     dispatch(fetchGoals());
     dispatch(resetToDefaultState());
+    dispatch(setSearchName(""));
     setOpen(false);
     
   }
@@ -60,29 +56,22 @@ export function Goals() {
   async function deleteGoal(key: string) {
     const response = await dispatch(deleteGoalDb(key));
     if (response.meta.requestStatus === "rejected") {
-      console.log("Error adding goal.");
+      console.log("Error deleting goal.");
     } 
     dispatch(fetchGoals());
   }
 
   const goals = useSelector((state: RootState) => state.goals);
 
-  let exerciseOptions;
-  if (goals.goalType === "Cardio") {
-    exerciseOptions = allExercises.cardio;
-  } else {
-    exerciseOptions = allExercises.strength;
-  }
-
   const [isAddButtonDisabled, setIsButtonDisabled] = useState(true);
 
   useEffect(() => {
-    if (goals.description && goals.startingPoint && goals.endGoal) {
+    if (goals.endGoal && goals.currentExercise) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
     }
-  }, [goals.description, goals.startingPoint, goals.endGoal]);
+  }, [goals.endGoal, goals.currentExercise]);
 
   useEffect(() => {
     // Fetch workouts from database
@@ -93,8 +82,26 @@ export function Goals() {
     }
   }, [dispatch]);
 
-  const filteredGoals = goals.goals.filter(goal => goal.key !== undefined);
+  //CODE DUPLICATION!!!
+  const addWorkoutState = useSelector((state: RootState) => state.addWorkout);
+  function handleSetName(name: string) {
+    dispatch(setSearchName(name));
+  }
 
+  async function handleSearch() {
+    const response = await dispatch(searchExercises());
+
+    if (response.meta.requestStatus === "rejected") {
+      console.log("Error fetching exercises. Try again later.", "error");
+    }
+  }
+
+  function handleSetType(event: SelectChangeEvent) {
+    dispatch(setSearchType(event.target.value as ExerciseType | "all"));
+  }
+
+  const filteredGoals = goals.goals.filter(goal => goal.key !== undefined);
+  
   return (
     <Stack sx={{ margin: "30px" }} spacing={2}>
       <CurrentGoalsView
@@ -105,16 +112,20 @@ export function Goals() {
         open={open}
         setOpen={setOpen}
         goalType={goals.goalType}
-        exercise={goals.currentExercise}
-        onDescriptionChange={updateDescription}
         onExerciseChange={updateExercise}
-        onStartingPointChange={updateStartingPoint}
         onEndGoalChange={updateEndGoal}
-        onUpdateGoalType={updateGoalType}
-        exerciseOptions={exerciseOptions}
         metric={goals.metric}
         handleSubmit={handleAddGoal}
         isAddButtonDisabled={isAddButtonDisabled}
+        selectedType={addWorkoutState.searchType}
+        setType={handleSetType}
+        types={ExerciseTypes}
+        search={handleSearch}
+        searchLoading={addWorkoutState.searchStatus !== "idle"}
+        searchResults={addWorkoutState.searchResults}
+        setName={handleSetName}
+        name={addWorkoutState.searchName}
+        onDistanceChange={handleSetDistance}
       />
       <Button variant="contained" onClick={() => setOpen(true)}>
         Create new goal

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Exercise, ExerciseType, Workout } from "../workouts/workoutsSlice";
 import { auth, database } from "../../firebase";
-import { push, ref } from "firebase/database";
+import { child, get, push, ref, update } from "firebase/database";
 
 // Define a type for the slice state
 export interface AddWorkoutState {
@@ -14,6 +14,12 @@ export interface AddWorkoutState {
   searchError?: boolean;
   searchResults: Exercise[];
   searchStatus: string;
+  distance?: number
+  time?: number
+  weight?: number
+  reps?: number
+  sets?: number
+  addModal: boolean
 }
 
 // Define the initial state using that type
@@ -27,6 +33,12 @@ const initialState: AddWorkoutState = {
   searchType: "all",
   searchResults: [],
   searchStatus: "idle",
+  sets: 3,
+  reps: 10,
+  time: 0,
+  distance: 0,
+  weight: 0,
+  addModal: false
 };
 
 export const addWorkout = createAsyncThunk("addWorkout/addWorkout", async (_, thunkAPI) => {
@@ -53,6 +65,53 @@ export const addWorkout = createAsyncThunk("addWorkout/addWorkout", async (_, th
   const state = thunkAPI.getState() as { addWorkout: AddWorkoutState };
   const userId = auth.currentUser?.uid;
   try {
+    
+    // Update stored values and progress
+    const goalsSnapshot = await get(child(ref(database), `goals/${userId}`));
+    if (goalsSnapshot.exists()) {
+      const goals = goalsSnapshot.val();
+      
+      const exercises = state.addWorkout.workout.exercises
+      
+      for (const [_, workoutExercise] of Object.entries(exercises)) {
+        Object.keys(goals).forEach(goalKey => {
+          const goal = goals[goalKey];
+          if (goal.exercise === workoutExercise.name) {
+            let value = 0
+            if (workoutExercise.weight) {
+              value = workoutExercise.weight
+            } else if (workoutExercise.time) {
+              workoutExercise.time
+              value =  workoutExercise.time
+            }
+            const e = {
+              date: state.addWorkout.workout.date?.split("T")[0],
+              value: value
+            }
+            
+            if (goal.storedValues) {
+              goal.storedValues.push(e)
+              
+              if (workoutExercise.weight) {
+                goal.progress = ((workoutExercise?.weight - goal.startingPoint) / (goal.endGoal - goal.startingPoint) * 100).toFixed(0)
+              } else if (workoutExercise.distance === goal.distance) {
+                if (workoutExercise?.time) {
+                  goal.progress = ((1 - (workoutExercise?.time - goal.endGoal) / (goal.startingPoint - goal.endGoal)) * 100).toFixed(0)
+                }
+              }
+              
+            } else {
+              goal.storedValues = [e]
+              goal.startingPoint = value
+            }
+          }
+        });
+      }
+      await update(ref(database, `goals/${userId}`), goals);
+    }
+      
+    
+
     const snapshot = await push(ref(database, `workouts/${userId}`), {
       ...state.addWorkout.workout,
       date: state.addWorkout.workout.date,
@@ -117,6 +176,21 @@ export const addWorkoutSlice = createSlice({
     setDate: (state, action: PayloadAction<string>) => {
       state.workout.date = action.payload;
     },
+    setDistance: (state, action: PayloadAction<number>) => {
+      state.distance = action.payload;
+    },
+    setTime: (state, action: PayloadAction<number>) => {
+      state.time = action.payload;
+    },
+    setReps: (state, action: PayloadAction<number>) => {
+      state.reps = action.payload;
+    },
+    setSets: (state, action: PayloadAction<number>) => {
+      state.sets = action.payload;
+    }, 
+    setWeight: (state, action: PayloadAction<number>) => {
+      state.weight = action.payload;
+    }, 
   },
   extraReducers: (builder) => {
     builder
@@ -144,7 +218,7 @@ export const addWorkoutSlice = createSlice({
   },
 });
 
-export const { addExercise, removeExercise, clearExercises, setSearchName, setSearchType, setSearchResults, setDate } =
+export const { addExercise, removeExercise, clearExercises, setSearchName, setSearchType, setSearchResults, setDate, setDistance, setTime, setReps, setSets, setWeight } =
   addWorkoutSlice.actions;
 
 export default addWorkoutSlice.reducer;

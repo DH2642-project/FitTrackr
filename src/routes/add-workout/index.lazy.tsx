@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import AddWorkoutView from "../../views/AddWorkoutView";
-import { ChangeEvent, useEffect, useState } from "react";
+import AddWorkoutView from "../../views/Workout/AddWorkoutView";
+import { useEffect, useState } from "react";
 import { AlertColor, SelectChangeEvent } from "@mui/material";
 import { Exercise, ExerciseType, ExerciseTypes } from "../../features/workouts/workoutsSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +14,11 @@ import {
   setSearchType,
   setSearchName,
   setDate,
+  setDistance,
+  setTime,
+  setWeight,
+  setSets,
+  setReps,
 } from "../../features/addWorkout/addWorkoutSlice";
 
 export const Route = createLazyFileRoute("/add-workout/")({
@@ -24,20 +29,25 @@ export function AddWorkoutPresenter() {
   const addWorkoutState = useSelector((state: RootState) => state.addWorkout);
   const dispatch = useDispatch<AppDispatch>();
 
-  const [includeSetsReps, setIncludeSetsReps] = useState(true);
-  const [sets, setSets] = useState(3);
-  const [reps, setReps] = useState(10);
+  
+  function handleSetDistance(distance: number) {
+    dispatch(setDistance(distance));
+  }
 
-  function handleSetIncludeSetsReps(_: ChangeEvent<HTMLInputElement>, checked: boolean) {
-    setIncludeSetsReps(checked);
+  function handleSetTime(time: number) {
+    dispatch(setTime(time));
+  }
+
+  function handleSetWeight(weight : number) {
+    dispatch(setWeight(weight));
   }
 
   function handleSetSets(_: Event, value: number | number[]) {
-    setSets(value as number);
+    dispatch(setSets(value as number));
   }
 
   function handleSetReps(_: Event, value: number | number[]) {
-    setReps(value as number);
+    dispatch(setReps(value as number));
   }
 
   // Snackbar state
@@ -68,7 +78,12 @@ export function AddWorkoutPresenter() {
   }
 
   function handleAddExercise(exercise: Exercise) {
-    dispatch(addExercise(includeSetsReps ? { ...exercise, sets, reps } : exercise));
+    const sets = addWorkoutState.sets
+    const reps = addWorkoutState.reps
+    const weight = addWorkoutState.weight
+    const distance = addWorkoutState.distance
+    const time = addWorkoutState.time
+    dispatch(addExercise({ ...exercise, sets, reps, weight, distance, time }));
   }
 
   function handleRemoveExercise(name: string) {
@@ -112,11 +127,12 @@ export function AddWorkoutPresenter() {
   return (
     <>
       <AddWorkoutView
-        includeSetsReps={includeSetsReps}
-        setIncludeSetsReps={handleSetIncludeSetsReps}
-        sets={sets}
+        setDistance={handleSetDistance}
+        setTime={handleSetTime}
+        setWeight={handleSetWeight}
+        sets={addWorkoutState.sets}
         setSets={handleSetSets}
-        reps={reps}
+        reps={addWorkoutState.reps}
         setReps={handleSetReps}
         types={ExerciseTypes}
         selectedType={addWorkoutState.searchType}

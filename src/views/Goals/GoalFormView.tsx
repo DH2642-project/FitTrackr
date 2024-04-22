@@ -3,62 +3,68 @@ import {
   Typography,
   TextField,
   SelectChangeEvent,
-  MenuItem,
-  Select,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
 } from "@mui/material";
+import { SearchBarView } from "../Workout/SearchBarView";
+import { Exercise, ExerciseType } from "../../features/workouts/workoutsSlice";
+import FullscreenCircularProgress from "../../components/FullscreenCircularProgress";
 
 export function GoalFormView({
   open,
   setOpen,
   goalType,
-  exercise,
-  onDescriptionChange,
   onExerciseChange,
-  onStartingPointChange,
   onEndGoalChange,
-  onUpdateGoalType,
-  exerciseOptions,
   metric,
   handleSubmit,
   isAddButtonDisabled,
+  selectedType,
+  setType,
+  types,
+  search,
+  searchLoading,
+  searchResults,
+  setName,
+  name,
+  onDistanceChange,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
-  goalType: string;
-  exercise: string;
-  onDescriptionChange: (description: string) => void;
-  onExerciseChange: (exercise: string) => void;
-  onStartingPointChange: (startingPoint: number) => void;
+  goalType: string | undefined;
+  onExerciseChange: (exercise: Exercise) => void;
   onEndGoalChange: (endGoal: number) => void;
-  onUpdateGoalType: (type: string) => void;
-  exerciseOptions: string[];
   metric: string;
   handleSubmit: () => void;
   isAddButtonDisabled: boolean;
+  selectedType: ExerciseType | "all";
+  setType: (event: SelectChangeEvent) => void;
+  types: ExerciseType[];
+  search: () => void;
+  searchLoading: boolean;
+  searchResults: Exercise[];
+  setName: (name: string) => void;
+  name: string;
+  onDistanceChange: (distance: number) => void;
 }) {
-  function handleDescriptionChange(evt: React.ChangeEvent<HTMLInputElement>) {
-    onDescriptionChange(evt.target.value);
-  }
-
-  function handleStartingPointChange(evt: React.ChangeEvent<HTMLInputElement>) {
-    onStartingPointChange(parseFloat(evt.target.value));
-  }
-
   function handleEndGoalChange(evt: React.ChangeEvent<HTMLInputElement>) {
     onEndGoalChange(parseFloat(evt.target.value));
   }
 
-  function handleSelectChange(evt: SelectChangeEvent<string>) {
-    onUpdateGoalType(evt.target.value);
+  //OK in view?
+  function handleExerciseChange(evt: React.ChangeEvent<HTMLInputElement>) {
+    onExerciseChange(JSON.parse(evt.target.value) as Exercise);
   }
 
-  function handleExerciseChange(evt: SelectChangeEvent<string>) {
-    onExerciseChange(evt.target.value);
+  function handleDistanceChange(evt: React.ChangeEvent<HTMLInputElement>) {
+    onDistanceChange(parseFloat(evt.target.value));
   }
 
   return (
@@ -66,76 +72,81 @@ export function GoalFormView({
       <DialogTitle>Add New Goal</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Typography variant="h6"> Type: </Typography>
+          <Grid item xs={12}>
+            <Typography variant="h6"> Select exercise: </Typography>
           </Grid>
-          <Grid item xs={6}>
-            <Select
-              value={goalType}
-              onChange={handleSelectChange}
-              defaultValue="Cardio"
-            >
-              <MenuItem value="Cardio">Cardio</MenuItem>
-              <MenuItem value="Weight">Weight</MenuItem>
-              <MenuItem value="Strength">Strength</MenuItem>
-            </Select>
+          <Grid item xs={12}>
+            <SearchBarView
+              selectedType={selectedType}
+              setType={setType}
+              types={types}
+              search={search}
+              setName={setName}
+              name={name}
+            ></SearchBarView>
           </Grid>
-
-          {goalType !== "Weight" && (
+          <Grid item xs={12}>
+            {searchLoading ? (
+              <FullscreenCircularProgress />
+            ) : searchResults.length == 0 ? (
+              <Grid item xs={12}>
+                <Typography variant="h6" align="center">
+                  No exercises found
+                </Typography>
+              </Grid>
+            ) : (
+              <Grid item xs={12}>
+                <FormControl>
+                  <RadioGroup onChange={handleExerciseChange}>
+                    {searchResults.map((result: Exercise, index: number) => {
+                      return (
+                        <FormControlLabel
+                          key={index}
+                          value={JSON.stringify(result)}
+                          control={<Radio />}
+                          label={result.name}
+                        />
+                      );
+                    })}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+            )}
+          </Grid>
+          {goalType === "cardio" && (
             <>
               <Grid item xs={6}>
-                <Typography variant="h6"> Exercise: </Typography>
+                <Typography variant="h6"> Distance: </Typography>
               </Grid>
               <Grid item xs={6}>
-                <Select value={exercise} onChange={handleExerciseChange}>
-                  {exerciseOptions.map((option: string, index: number) => (
-                    <MenuItem key={index} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <TextField
+                  label={"km"}
+                  type="number"
+                  id="outlined-basic"
+                  variant="outlined"
+                  required
+                  onChange={handleDistanceChange}
+                />
               </Grid>
             </>
           )}
-
-          <Grid item xs={6}>
-            <Typography variant="h6"> Description: </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              id="outlined-basic"
-              label="Describe your goal"
-              variant="outlined"
-              required
-              onChange={handleDescriptionChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="h6"> Start: </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label={metric}
-              type="number"
-              id="outlined-basic"
-              variant="outlined"
-              required
-              onChange={handleStartingPointChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="h6"> Goal: </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label={metric}
-              type="number"
-              id="outlined-basic"
-              variant="outlined"
-              required
-              onChange={handleEndGoalChange}
-            />
-          </Grid>
+          {searchResults.length !== 0 && (
+            <>
+              <Grid item xs={6}>
+                <Typography variant="h6"> Goal: </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label={metric}
+                  type="number"
+                  id="outlined-basic"
+                  variant="outlined"
+                  required
+                  onChange={handleEndGoalChange}
+                />
+              </Grid>
+            </>
+          )}
         </Grid>
       </DialogContent>
       <DialogActions>

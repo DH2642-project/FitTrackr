@@ -35,7 +35,7 @@ export function GoalsCard({ goals }: { goals: Goal[] }) {
               }}
             >
               <GoalProgressChart value={goal.progress} circleSize={150} />
-              <Typography align="center">{goal.description}</Typography>
+              <Typography align="center">{goal.exercise}</Typography>
             </Box>
           ))}
         </Stack>
