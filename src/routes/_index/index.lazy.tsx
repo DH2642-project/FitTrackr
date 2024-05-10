@@ -26,6 +26,16 @@ export function IndexPresenter() {
     }
   }, [dispatch])
 
+  const goals = useSelector((state: RootState) => state.goals.goals)
+  useEffect(() => {
+    // Fetch workouts from database
+    try {
+      dispatch(fetchGoals())
+    } catch (error) {
+      console.error("Error fetching goals. Try again later.")
+    }
+  }, [dispatch])
+
   const [user] = useAuthState(auth)
 
   const workoutsBeforeNow = workouts.filter(
@@ -132,16 +142,6 @@ export function IndexPresenter() {
         (b.date ? new Date(b.date).getTime() : 0)
     )
     .slice(0, 5)
-
-  const goals = useSelector((state: RootState) => state.goals.goals)
-  useEffect(() => {
-    // Fetch workouts from database
-    try {
-      dispatch(fetchGoals())
-    } catch (error) {
-      console.error("Error fetching goals. Try again later.")
-    }
-  }, [dispatch])
 
   return (
     <FitnessDashboard
