@@ -20,19 +20,16 @@ import {
   setSets,
   setReps,
 } from "../../features/addWorkout/addWorkoutSlice";
+import { useHandlers } from "../../utils/handlers";
 
 export const Route = createLazyFileRoute("/add-workout/")({
   component: AddWorkoutPresenter,
 });
 
 export function AddWorkoutPresenter() {
+  const { handleSetName, handleSearch, handleSetType, handleSetDistance } = useHandlers();
   const addWorkoutState = useSelector((state: RootState) => state.addWorkout);
   const dispatch = useDispatch<AppDispatch>();
-
-  
-  function handleSetDistance(distance: number) {
-    dispatch(setDistance(distance));
-  }
 
   function handleSetTime(time: number) {
     dispatch(setTime(time));
@@ -59,22 +56,6 @@ export function AddWorkoutPresenter() {
     setSnackbarMessage(message);
     setSnackbarOpen(true);
     setSnackbarSeverity(severity);
-  }
-
-  function handleSetType(event: SelectChangeEvent) {
-    dispatch(setSearchType(event.target.value as ExerciseType | "all"));
-  }
-
-  function handleSetName(name: string) {
-    dispatch(setSearchName(name));
-  }
-
-  async function handleSearch() {
-    const response = await dispatch(searchExercises());
-
-    if (response.meta.requestStatus === "rejected") {
-      showSnackbar("Error fetching exercises. Try again later.", "error");
-    }
   }
 
   function handleAddExercise(exercise: Exercise) {

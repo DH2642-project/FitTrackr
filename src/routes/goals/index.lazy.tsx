@@ -1,8 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { GoalsView } from "../../views/GoalsView";
-
 import { useDispatch, useSelector } from "react-redux";
-import { SelectChangeEvent} from "@mui/material";
 import {
   setEndGoal,
   setGoalType,
@@ -11,43 +9,19 @@ import {
   fetchGoals,
   deleteGoalDb,
   resetToDefaultState,
-  setGoalDistance,
 } from "../../features/goals/goalsReducer";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AppDispatch,RootState } from "../../store";
-import { searchExercises, setSearchName, setSearchType } from "../../features/addWorkout/addWorkoutSlice";
-import { Exercise, ExerciseType, ExerciseTypes } from "../../features/workouts/workoutsSlice";
+import { setSearchName } from "../../features/addWorkout/addWorkoutSlice";
+import { Exercise, ExerciseTypes } from "../../features/workouts/workoutsSlice";
+import { useHandlers } from "../../utils/handlers";
 
 export const Route = createLazyFileRoute("/goals/")({
   component: GoalsPresenter,
 });
 
-export interface ChildrenProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  updateExercise: (exercise: Exercise) => void;
-  updateEndGoal: (endGoal: number) => void;
-  handleAddGoal: () => Promise<void>;
-  isAddButtonDisabled: boolean;
-  handleSearch: () => Promise<void>;
-  handleSetName: (name: string) => void;
-  handleSetDistance: (distance: number) => void;
-  handleSetType: (event: SelectChangeEvent) => void;
-  filteredGoals: any[]; 
-  goalType: string | undefined;
-  metric: any;
-  selectedType: ExerciseType | "all";
-  searchLoading: boolean;
-  searchResults: any; 
-  name: string;
-  types: ExerciseType[];
-  goals: any,
-  addWorkoutState: any,
-  ExerciseTypes: any;
-  deleteGoal: (key: string) => Promise<void>;
-}
-
-export function GoalsPresenter({ children }: { children: (props: ChildrenProps) => React.ReactElement}) {
+export function GoalsPresenter() {
+  const { handleSetName, handleSearch, handleSetType, handleSetDistance } = useHandlers();
   const dispatch = useDispatch<AppDispatch>();
 
   const [open, setOpen] = useState(false);
@@ -57,13 +31,8 @@ export function GoalsPresenter({ children }: { children: (props: ChildrenProps) 
     dispatch(setGoalType(exercise.type));
   }
 
-
   function updateEndGoal(endGoal: number) {
     dispatch(setEndGoal(endGoal));
-  }
-
-  function handleSetDistance(distance: number) {
-    dispatch(setGoalDistance(distance));
   }
 
   async function handleAddGoal() {
@@ -75,7 +44,6 @@ export function GoalsPresenter({ children }: { children: (props: ChildrenProps) 
     dispatch(resetToDefaultState());
     dispatch(setSearchName(""));
     setOpen(false);
-
   }
 
   async function deleteGoal(key: string) {
@@ -107,24 +75,8 @@ export function GoalsPresenter({ children }: { children: (props: ChildrenProps) 
     }
   }, [dispatch]);
 
-  //CODE DUPLICATION!!!
   const addWorkoutState = useSelector((state: RootState) => state.addWorkout);
-  function handleSetName(name: string) {
-    dispatch(setSearchName(name));
-  }
-
-  async function handleSearch() {
-    const response = await dispatch(searchExercises());
-
-    if (response.meta.requestStatus === "rejected") {
-      console.log("Error fetching exercises. Try again later.", "error");
-    }
-  }
-
-  function handleSetType(event: SelectChangeEvent) {
-    dispatch(setSearchType(event.target.value as ExerciseType | "all"));
-  }
-
+  
   const filteredGoals = goals.goals.filter(goal => goal.key !== undefined);
 
   return(
