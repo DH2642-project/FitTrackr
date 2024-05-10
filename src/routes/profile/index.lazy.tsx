@@ -18,7 +18,7 @@ export function ProfilePresenter() {
   const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>("info");
   const [user = null] = useAuthState(auth);
   const [signOut, signOutLoading] = useSignOut(auth);
-  const [snapshot, snapshotLoading] = useObject(ref(database, "users/" + user?.uid + "/profile"));
+  const [snapshot] = useObject(ref(database, "users/" + user?.uid + "/profile"));
   const userProfile: UserProfile = snapshot?.val();
 
   function showSnackbar(message: string, severity: AlertColor = "info") {
