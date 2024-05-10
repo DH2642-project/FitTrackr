@@ -47,6 +47,25 @@ export function WorkoutsPresenter() {
     }
   }
 
+  const sortedWorkouts = [...workoutsState.workouts].sort((a, b) => {
+    if (a.date && b.date) {
+      return new Date(b.date as string).getTime() - new Date(a.date as string).getTime();
+    }
+    return 0;
+  });
+
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const previousWorkouts = sortedWorkouts.filter(workout => new Date(workout.date as string) < now);
+  const todaysWorkouts = sortedWorkouts.filter(workout => new Date(workout.date as string) >= now && new Date(workout.date as string) < tomorrow);
+  const upcomingWorkouts = sortedWorkouts.filter(workout => new Date(workout.date as string) >= tomorrow);
+
+  const [isPreviousWorkoutsExpanded, setIsPreviousWorkoutsExpanded] = useState(false);
+  const [isUpcomingWorkoutsExpanded, setIsUpcomingWorkoutsExpanded] = useState(false);
+
   if (status === "loading") {
     return <FullscreenCircularProgress />;
   }
@@ -55,8 +74,14 @@ export function WorkoutsPresenter() {
     <>
       <WorkoutsView
         workoutsLoading={workoutsState.status === "loading"}
-        workouts={workoutsState.workouts}
         deleteWorkout={handleDeleteWorkout}
+        previousWorkouts={previousWorkouts}
+        todaysWorkouts={todaysWorkouts}
+        upcomingWorkouts={upcomingWorkouts}
+        isPreviousWorkoutsExpanded={isPreviousWorkoutsExpanded}
+        setIsPreviousWorkoutsExpanded={setIsPreviousWorkoutsExpanded}
+        isUpcomingWorkoutsExpanded={isUpcomingWorkoutsExpanded}
+        setIsUpcomingWorkoutsExpanded={setIsUpcomingWorkoutsExpanded}
       />
       <CustomSnackbar
         snackbarOpen={snackbarOpen}
