@@ -4,16 +4,17 @@ import { TotalView } from "./Progress/TotalView.tsx";
 import { CalendarChart } from "./Progress/CalendarChart.tsx";
 import { ActivityChart } from "./Progress/ActivityChart.tsx";
 import MuscleChart from "./Progress/MuscleChart.tsx";
+import { GoalsState } from "../features/goals/goalsReducer.ts";
 
 interface ProgressViewProps {
-  goals: any;
-  workouts: any;
+  goals: GoalsState;
+  workouts: { length: number };
   updateGoalSelection: (id: string) => void;
-  calendarData: any;
-  totalWeight: any;
-  totalDistance: any;
-  weeklyData: any;
-  muscleGroupsData: any;
+  calendarData: { date: string; count: number }[];
+  totalWeight: number | string;
+  totalDistance: number | string;
+  weeklyData: { x: number; y: number }[];
+  muscleGroupsData: { name: string; value: number }[];
 }
 
 export const ProgressView: React.FC<ProgressViewProps> = ({
