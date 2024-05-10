@@ -1,5 +1,5 @@
 import { Container, Grid, Stack, Typography } from "@mui/material"
-import { Workout } from "../features/workouts/workoutsSlice"
+import { Workout, Exercise } from "../features/workouts/workoutsSlice"
 import { Goal } from "../features/goals/goalsReducer"
 import { WelcomeCard } from "./Overview/WelcomeCard"
 import { TopExercisesCard } from "./Overview/TopExercisesCard"
@@ -36,14 +36,14 @@ export function FitnessDashboard(
   caloriesMax: number
   workoutsThisWeek: Workout[]
   workoutsLastWeek: Workout[]
-  exercisesThisWeek: any[]
-  exercisesLastWeek: any[]
+  exercisesThisWeek: Exercise[]
+  exercisesLastWeek: Exercise[]
   numUniqueExercisesThisWeek: number
   numUniqueExercisesLastWeek: number
   kcalBurnedThisWeek: number
   kcalBurnedLastWeek: number
   topGoals: Goal[]
-  topExercisesThisWeek: any[]
+  topExercisesThisWeek: [string, number][]
   scheduledWorkouts: Workout[]
 }) {
 

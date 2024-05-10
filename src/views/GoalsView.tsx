@@ -1,6 +1,7 @@
 import { Button, Stack } from "@mui/material";
 import { CurrentGoalsView } from "./Goals/CurrentGoalsView";
 import { GoalFormView } from "./Goals/GoalFormView";
+import { Goal } from "../../features/goals/goalsReducer";
 
 export function GoalsView({
     goals,
@@ -27,7 +28,7 @@ export function GoalsView({
     handleSetDistance: any;
     updateExercise: any;
     updateEndGoal: any;
-    open: any;
+    open: boolean;
     isAddButtonDisabled: any;
     ExerciseTypes: any;
     filteredGoals: any;
