@@ -1,6 +1,33 @@
-import { Button, Stack } from "@mui/material";
+import { Button, Stack, SelectChangeEvent } from "@mui/material";
 import { CurrentGoalsView } from "./Goals/CurrentGoalsView";
 import { GoalFormView } from "./Goals/GoalFormView";
+import { Exercise, ExerciseType } from "../features/workouts/workoutsSlice";
+
+interface GoalsViewProps {
+  goals: {
+    goalType: string | undefined;
+    metric: string;
+  };
+  addWorkoutState: {
+    searchType: ExerciseType | "all";
+    searchStatus: "idle" | "loading" | "succeeded" | "failed";
+    searchResults: Exercise[];
+    searchName: string;
+  };
+  handleAddGoal: () => void;
+  handleSetType: (event: SelectChangeEvent) => void;
+  handleSearch: () => void;
+  handleSetName: (name: string) => void;
+  handleSetDistance: (distance: number) => void;
+  updateExercise: (exercise: Exercise) => void;
+  updateEndGoal: (endGoal: number) => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  isAddButtonDisabled: boolean;
+  ExerciseTypes: ExerciseType[];
+  filteredGoals: any;
+  deleteGoal: any;
+}
 
 export function GoalsView({
     goals,
@@ -16,29 +43,14 @@ export function GoalsView({
     setOpen,
     isAddButtonDisabled,
     ExerciseTypes,
-    ...props
-}:{
-    goals: any;
-    addWorkoutState: any;
-    handleAddGoal: any;
-    handleSetType: any;
-    handleSearch: any;
-    handleSetName: any;
-    handleSetDistance: any;
-    updateExercise: any;
-    updateEndGoal: any;
-    open: boolean;
-    isAddButtonDisabled: any;
-    ExerciseTypes: any;
-    filteredGoals: any;
-    deleteGoal: any;
-    setOpen: any;
-}) {
+    filteredGoals,
+    deleteGoal,
+}: GoalsViewProps) {
     return (
       <Stack sx={{ margin: "30px" }} spacing={2}>
         <CurrentGoalsView
-          goals={props.filteredGoals}
-          onDeleteGoal={props.deleteGoal}
+          goals={filteredGoals}
+          onDeleteGoal={deleteGoal}
         ></CurrentGoalsView>
         <GoalFormView
             open={open}
