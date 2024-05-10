@@ -1,7 +1,6 @@
 import { Button, Stack } from "@mui/material";
 import { CurrentGoalsView } from "./Goals/CurrentGoalsView";
 import { GoalFormView } from "./Goals/GoalFormView";
-import { Goal } from "../../features/goals/goalsReducer";
 
 export function GoalsView({
     goals,
