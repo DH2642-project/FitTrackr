@@ -1,53 +1,25 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import Cover from "../../components/Cover";
-import LoginFormView from "../../views/LoginFormView";
-import LoggedInView from "../../views/LoggedInView";
-import { UserProfile } from "../../main";
-import { auth, database } from "../../firebase";
 import { useState } from "react";
-import { AlertColor, CircularProgress } from "@mui/material";
-import firebase from "firebase/compat/app";
+import { AlertColor } from "@mui/material";
+import { ProfileView } from "../../views/ProfileView";
+import { auth, database } from "../../firebase";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { useObject } from "react-firebase-hooks/database";
 import { ref, set } from "firebase/database";
-import CustomSnackbar from "../../components/CustomSnackbar";
-import * as firebaseui from "firebaseui";
-import { useMemo } from "react";
+import { UserProfile } from "../../main";
 
 export const Route = createLazyFileRoute("/profile/")({
   component: ProfilePresenter,
 });
 
 export function ProfilePresenter() {
-  // User Authentication
-  const [user, userLoading] = useAuthState(auth);
-  const [signOut, signOutLoading] = useSignOut(auth);
-  // Database User Profile
-  const [snapshot, snapshotLoading] = useObject(ref(database, "users/" + user?.uid + "/profile"));
-  const userProfile: UserProfile = snapshot?.val();
-  // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>("info");
-
-  const ui = useMemo(() => firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth()), []);
-  const uiConfig = useMemo(() => ({
-    callbacks: {
-      signInSuccessWithAuthResult: function () {
-        return true;
-      },
-      uiShown: function () {
-        const loader = document.getElementById("loader");
-        if (loader) loader.style.display = "none";
-      },
-    },
-    signInFlow: "popup",
-    signInSuccessUrl: "/",
-    signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    ],
-  }), []);
+  const [user = null] = useAuthState(auth);
+  const [signOut, signOutLoading] = useSignOut(auth);
+  const [snapshot, snapshotLoading] = useObject(ref(database, "users/" + user?.uid + "/profile"));
+  const userProfile: UserProfile = snapshot?.val();
 
   function showSnackbar(message: string, severity: AlertColor = "info") {
     setSnackbarMessage(message);
@@ -114,36 +86,21 @@ export function ProfilePresenter() {
     }
   }
 
-  if (userLoading || snapshotLoading) {
-    return (
-      <Cover>
-        <CircularProgress />
-      </Cover>
-    );
-  }
-
   return (
-    <Cover>
-      {user ? (
-        <LoggedInView
-          user={user as firebase.User}
-          signOut={handleSignOut}
-          signOutLoading={signOutLoading}
-          userProfile={userProfile}
-          setGender={handleSetGender}
-          setWeight={handleSetWeight}
-          setHeight={handleSetHeight}
-          setAge={handleSetAge}
-        />
-      ) : (
-        <LoginFormView ui={ui} uiConfig={uiConfig}/>
-      )}
-      <CustomSnackbar
-        snackbarOpen={snackbarOpen}
-        snackbarMessage={snackbarMessage}
-        snackbarSeverity={snackbarSeverity}
-        setSnackbarOpen={setSnackbarOpen}
-      />
-    </Cover>
+    <ProfileView
+    user={user}
+    userProfile={userProfile}
+    handleSignOut={handleSignOut}
+    handleSetGender={handleSetGender}
+    handleSetWeight={handleSetWeight}
+    handleSetHeight={handleSetHeight}
+    handleSetAge={handleSetAge}
+    showSnackbar={showSnackbar}
+    snackbarOpen={snackbarOpen}
+    snackbarMessage={snackbarMessage}
+    snackbarSeverity={snackbarSeverity}
+    setSnackbarOpen={setSnackbarOpen}
+    signOutLoading={signOutLoading}
+  />
   );
 }
