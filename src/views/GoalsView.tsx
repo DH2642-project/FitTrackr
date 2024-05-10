@@ -5,16 +5,8 @@ import { Exercise, ExerciseType } from "../features/workouts/workoutsSlice";
 import { Goal } from "../features/goals/goalsReducer";
 
 interface GoalsViewProps {
-  goals: {
-    goalType: string | undefined;
-    metric: string;
-  };
-  addWorkoutState: {
-    searchType: ExerciseType | "all";
-    searchStatus: "idle" | "loading" | "succeeded" | "failed";
-    searchResults: Exercise[];
-    searchName: string;
-  };
+  goals: any;
+  addWorkoutState: any;
   handleAddGoal: () => void;
   handleSetType: (event: SelectChangeEvent) => void;
   handleSearch: () => void;
