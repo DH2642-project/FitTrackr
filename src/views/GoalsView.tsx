@@ -2,6 +2,7 @@ import { Button, Stack, SelectChangeEvent } from "@mui/material";
 import { CurrentGoalsView } from "./Goals/CurrentGoalsView";
 import { GoalFormView } from "./Goals/GoalFormView";
 import { Exercise, ExerciseType } from "../features/workouts/workoutsSlice";
+import { Goal } from "../features/goals/goalsReducer";
 
 interface GoalsViewProps {
   goals: {
@@ -25,8 +26,8 @@ interface GoalsViewProps {
   setOpen: (open: boolean) => void;
   isAddButtonDisabled: boolean;
   ExerciseTypes: ExerciseType[];
-  filteredGoals: any;
-  deleteGoal: any;
+  filteredGoals: Goal[];
+  deleteGoal: (key: string) => Promise<void>;
 }
 
 export function GoalsView({
