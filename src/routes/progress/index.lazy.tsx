@@ -1,14 +1,9 @@
-import { Grid } from "@mui/material";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { ActivityChart } from "../../views/Progress/ActivityChart.tsx";
-import { GoalChart } from "../../views/Progress/GoalChart.tsx";
+import { ProgressView } from "../../views/ProgressView.tsx";
 import { fetchGoals, setCurrentGoal } from "../../features/goals/goalsReducer.ts";
 import { useDispatch, useSelector } from "react-redux";
-import { TotalView } from "../../views/Progress/TotalView.tsx";
-import { CalendarChart } from "../../views/Progress/CalendarChart.tsx";
 import { AppDispatch, RootState } from "../../store.ts";
 import { fetchWorkouts } from "../../features/workouts/workoutsSlice.ts";
-import MuscleChart from "../../views/Progress/MuscleChart.tsx";
 import { useEffect } from "react";
 import { getCalendarData, getMuscleGroupsData, getTotalDistance, getWeightlifted, getWorkoutsPerWeek } from "../../utils/progressUtils.tsx";
 
@@ -43,58 +38,15 @@ export function ProgressPresenter() {
   const muscleGroupsData = getMuscleGroupsData(workouts);
 
   return (
-    <>
-      <Grid container spacing={4} sx={{ padding: "30px" }}>
-        {goals.goals.length > 0 && (
-          <Grid item xs={6}>
-            <GoalChart
-              onGoalSelection={updateGoalSelection}
-              goals={goals}
-            ></GoalChart>
-          </Grid>
-        )}
-
-        <Grid item xs={6}>
-          <Grid container spacing={4}>
-            <Grid item xs={6}>
-              <TotalView
-                title={"Total distance (km)"}
-                value={totalDistance}
-              ></TotalView>
-            </Grid>
-            <Grid item xs={6}>
-              <TotalView
-                title={"Total workouts"}
-                value={workouts.length}
-              ></TotalView>
-            </Grid>
-            {workouts.length > 0 && (
-              <Grid item xs={12}>
-                <ActivityChart
-                  data={weeklyData}
-                  title="Weekly activity"
-                  legend="Week"
-                  yAxisLabel="Completed workouts"
-                ></ActivityChart>
-              </Grid>
-            )}
-          </Grid>
-        </Grid>
-        <Grid item xs={4}>
-          <TotalView
-            title={"Total weight lifted (kg)"}
-            value={totalWeight}
-          ></TotalView>
-        </Grid>
-        <Grid item xs={8}>
-          <CalendarChart data={calendarData}></CalendarChart>
-        </Grid>
-        {workouts.length > 0 && (
-          <Grid item xs={6}>
-            <MuscleChart data={muscleGroupsData}></MuscleChart>
-          </Grid>
-        )}
-      </Grid>
-    </>
+    <ProgressView
+      goals={goals}
+      workouts={workouts}
+      updateGoalSelection={updateGoalSelection}
+      calendarData={calendarData}
+      totalWeight={totalWeight}
+      totalDistance={totalDistance}
+      weeklyData={weeklyData}
+      muscleGroupsData={muscleGroupsData}
+    />
   );
 }
