@@ -73,7 +73,8 @@ export const addWorkout = createAsyncThunk("addWorkout/addWorkout", async (_, th
       
       const exercises = state.addWorkout.workout.exercises
       
-      for (const [_, workoutExercise] of Object.entries(exercises)) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      for (const [__, workoutExercise] of Object.entries(exercises)) {
         Object.keys(goals).forEach(goalKey => {
           const goal = goals[goalKey];
           if (goal.exercise === workoutExercise.name) {
