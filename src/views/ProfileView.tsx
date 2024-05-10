@@ -7,6 +7,7 @@ import LoggedInView from "./LoggedInView";
 import CustomSnackbar from "../components/CustomSnackbar";
 import { User } from "firebase/auth";
 import { AlertColor } from "@mui/material";
+import { UserProfile } from "../main";
 
 export function ProfileView(
   {
@@ -25,7 +26,7 @@ export function ProfileView(
 }: {
     user: User | null,
     signOutLoading: boolean,
-    userProfile: any,
+    userProfile: UserProfile | null,
     handleSignOut: () => void,
     handleSetGender: (event: React.ChangeEvent<HTMLInputElement>) => void,
     handleSetWeight: (event: React.ChangeEvent<HTMLInputElement>) => void,
