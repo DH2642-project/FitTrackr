@@ -1,7 +1,9 @@
 import {
   Avatar,
+  Box,
   Button,
   Divider,
+  Fab,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -100,9 +102,12 @@ export default function LoggedInView({
               <TextField type="number" value={userProfile?.age || ""} onChange={setAge} />
             </FormControl>
           </Stack>
-          <Button variant="contained" startIcon={<CloudDone />} onClick={saveChanges}>
-            Save Changes
-          </Button>
+          <Box textAlign="center">
+            <Fab variant="extended" size="medium" color="primary" onClick={saveChanges}>
+              <CloudDone sx={{ mr: 1 }} />
+              Save Changes
+            </Fab>
+          </Box>
         </>
       )}
       <Divider sx={{ my: 1 }} />

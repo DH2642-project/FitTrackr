@@ -60,7 +60,12 @@ export function ProfilePresenter() {
   }
 
   async function handleSaveChanges() {
-    await dispatch(saveChanges(profileState.userProfile as UserProfile));
+    try {
+      await dispatch(saveChanges(profileState.userProfile as UserProfile));
+      showSnackbar("Changes saved.", "success");
+    } catch (error) {
+      showSnackbar("An error occurred while saving changes. Please try again later.", "error");
+    }
   }
 
   return (
