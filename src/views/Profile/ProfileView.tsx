@@ -14,6 +14,7 @@ export function ProfileView(
     user,
     signOutLoading,
     userProfile,
+    userProfileLoading,
     handleSignOut,
     handleSetGender,
     handleSetWeight,
@@ -27,6 +28,7 @@ export function ProfileView(
     user: User | null,
     signOutLoading: boolean,
     userProfile: UserProfile | null,
+    userProfileLoading: boolean,
     handleSignOut: () => void,
     handleSetGender: (event: React.ChangeEvent<HTMLInputElement>) => void,
     handleSetWeight: (event: React.ChangeEvent<HTMLInputElement>) => void,
@@ -64,6 +66,7 @@ export function ProfileView(
       {user ? (
         <LoggedInView
           user={user as firebase.User}
+          userProfileLoading={userProfileLoading}
           signOut={handleSignOut}
           signOutLoading={signOutLoading}
           userProfile={userProfile}

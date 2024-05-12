@@ -1,12 +1,12 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertColor } from "@mui/material";
 import { ProfileView } from "../../views/Profile/ProfileView";
-import { auth, database } from "../../firebase";
+import { auth } from "../../firebase";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
-import { useObject } from "react-firebase-hooks/database";
-import { ref, set } from "firebase/database";
-import { UserProfile } from "../../main";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
+import { fetchProfile, setAge, setGender, setHeight, setWeight } from "../../Model/profile/profileSlice";
 
 export const Route = createLazyFileRoute("/profile/")({
   component: ProfilePresenter,
@@ -18,8 +18,16 @@ export function ProfilePresenter() {
   const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>("info");
   const [user = null] = useAuthState(auth);
   const [signOut, signOutLoading] = useSignOut(auth);
-  const [snapshot] = useObject(ref(database, "users/" + user?.uid + "/profile"));
-  const userProfile: UserProfile = snapshot?.val();
+  const profileState = useSelector((state: RootState) => state.profile);
+
+  // const [snapshot] = useObject(ref(database, "users/" + user?.uid + "/profile"));
+  // const userProfile: UserProfile = snapshot?.val();
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    // Fetch profile from database
+    dispatch(fetchProfile());
+  }, [dispatch]);
 
   function showSnackbar(message: string, severity: AlertColor = "info") {
     setSnackbarMessage(message);
@@ -34,73 +42,42 @@ export function ProfilePresenter() {
     }
   }
 
-  function handleSetGender(event: React.ChangeEvent<HTMLInputElement>) {
-    const success = set(ref(database, "users/" + user?.uid + "/profile"), {
-      ...userProfile,
-      gender: event.target.value,
-    });
-    if (!success) {
-      showSnackbar("An error occurred while updating your profile.", "error");
-    }
-    else {
-      showSnackbar("Gender has been updated!")
-    }
+  async function handleSetGender(event: React.ChangeEvent<HTMLInputElement>) {
+    await dispatch(setGender(event.target.value));
+    await dispatch(fetchProfile());
   }
 
-  function handleSetWeight(event: React.ChangeEvent<HTMLInputElement>) {
-    const success = set(ref(database, "users/" + user?.uid + "/profile"), {
-      ...userProfile,
-      weight: Number(event.target.value),
-    });
-    if (!success) {
-      showSnackbar("An error occurred while updating your profile.", "error");
-    }
-    else {
-      showSnackbar("Weight has been updated!")
-    }
+  async function handleSetWeight(event: React.ChangeEvent<HTMLInputElement>) {
+    await dispatch(setWeight(Number(event.target.value)));
+    await dispatch(fetchProfile());
   }
 
-  function handleSetHeight(event: React.ChangeEvent<HTMLInputElement>) {
-    const success = set(ref(database, "users/" + user?.uid + "/profile"), {
-      ...userProfile,
-      height: Number(event.target.value),
-    });
-    if (!success) {
-      showSnackbar("An error occurred while updating your profile.", "error");
-    }
-    else {
-      showSnackbar("Height has been updated!")
-    }
+  async function handleSetHeight(event: React.ChangeEvent<HTMLInputElement>) {
+    await dispatch(setHeight(Number(event.target.value)));
+    await dispatch(fetchProfile());
   }
 
-  function handleSetAge(event: React.ChangeEvent<HTMLInputElement>) {
-    const success = set(ref(database, "users/" + user?.uid + "/profile"), {
-      ...userProfile,
-      age: Number(event.target.value),
-    });
-    if (!success) {
-      showSnackbar("An error occurred while updating your profile.", "error");
-    }
-    else {
-      showSnackbar("Age has been updated!")
-    }
+  async function handleSetAge(event: React.ChangeEvent<HTMLInputElement>) {
+    await dispatch(setAge(Number(event.target.value)));
+    await dispatch(fetchProfile());
   }
 
   return (
     <ProfileView
-    user={user}
-    userProfile={userProfile}
-    handleSignOut={handleSignOut}
-    handleSetGender={handleSetGender}
-    handleSetWeight={handleSetWeight}
-    handleSetHeight={handleSetHeight}
-    handleSetAge={handleSetAge}
-    showSnackbar={showSnackbar}
-    snackbarOpen={snackbarOpen}
-    snackbarMessage={snackbarMessage}
-    snackbarSeverity={snackbarSeverity}
-    setSnackbarOpen={setSnackbarOpen}
-    signOutLoading={signOutLoading}
-  />
+      user={user}
+      userProfile={profileState.userProfile || null}
+      userProfileLoading={profileState.status === "loading"}
+      handleSignOut={handleSignOut}
+      handleSetGender={handleSetGender}
+      handleSetWeight={handleSetWeight}
+      handleSetHeight={handleSetHeight}
+      handleSetAge={handleSetAge}
+      showSnackbar={showSnackbar}
+      snackbarOpen={snackbarOpen}
+      snackbarMessage={snackbarMessage}
+      snackbarSeverity={snackbarSeverity}
+      setSnackbarOpen={setSnackbarOpen}
+      signOutLoading={signOutLoading}
+    />
   );
 }
