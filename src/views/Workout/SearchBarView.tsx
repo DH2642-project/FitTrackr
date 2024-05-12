@@ -10,7 +10,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { toFriendlyString } from "../../helpers";
-import { ExerciseType } from "../../features/workouts/workoutsSlice";
+import { ExerciseType } from "../../Model/workouts/workoutsSlice";
 
 export function SearchBarView({
   selectedType,

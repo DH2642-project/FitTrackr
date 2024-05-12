@@ -10,7 +10,7 @@ import {
   Slider,
   Button,
 } from "@mui/material";
-import { Exercise } from "../../features/workouts/workoutsSlice";
+import { Exercise } from "../../Model/workouts/workoutsSlice";
 
 export function AddExerciseCard({
   result,

@@ -7,7 +7,7 @@ import {
   CardContent,
 } from "@mui/material";
 import { GoalProgressChart } from "../Progress/GoalProgressChart";
-import { Goal } from "../../features/goals/goalsReducer";
+import { Goal } from "../../Model/goals/goalsReducer";
 
 export function CurrentGoalsView({
   onDeleteGoal,

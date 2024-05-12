@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import firebase from "firebase/compat/app";
-import { UserProfile } from "../main";
+import { UserProfile } from "../../main";
 import { Logout } from "@mui/icons-material";
 
 export default function LoggedInView({

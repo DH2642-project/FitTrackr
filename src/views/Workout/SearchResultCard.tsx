@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { toFriendlyString } from "../../helpers";
-import { Exercise } from "../../features/workouts/workoutsSlice";
+import { Exercise } from "../../Model/workouts/workoutsSlice";
 
 export function SearchResultCard({
   result,

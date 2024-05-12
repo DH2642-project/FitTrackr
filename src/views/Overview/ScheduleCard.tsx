@@ -8,7 +8,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material"
-import { Workout } from "../../features/workouts/workoutsSlice"
+import { Workout } from "../../Model/workouts/workoutsSlice"
 import { Link } from "@tanstack/react-router"
 
 export function ScheduleCard({ workouts }: { workouts: Workout[] }) {

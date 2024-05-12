@@ -1,5 +1,5 @@
 import { Avatar, CircularProgress } from "@mui/material";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { AccountCircle } from "@mui/icons-material";
 

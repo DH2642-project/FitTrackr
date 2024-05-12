@@ -6,41 +6,33 @@ import {
   Collapse,
   Box
 } from "@mui/material";
-import { Workout } from "../features/workouts/workoutsSlice";
-import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
-import WorkoutsCard from "../components/WorkoutsCard";
+import { Workout } from "../../Model/workouts/workoutsSlice";
+import FullscreenCircularProgress from "../Application/FullscreenCircularProgress";
+import WorkoutsCard from "./WorkoutsCard";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useState } from "react";
 
 export default function WorkoutsView({
-  workouts,
   workoutsLoading,
   deleteWorkout,
+  previousWorkouts,
+  todaysWorkouts,
+  upcomingWorkouts,
+  isPreviousWorkoutsExpanded,
+  setIsPreviousWorkoutsExpanded,
+  isUpcomingWorkoutsExpanded,
+  setIsUpcomingWorkoutsExpanded,
 }: {
-  workouts: Workout[];
   workoutsLoading: boolean;
   deleteWorkout: (key: string) => void;
+  previousWorkouts: Workout[];
+  todaysWorkouts: Workout[];
+  upcomingWorkouts: Workout[];
+  isPreviousWorkoutsExpanded: boolean;
+  setIsPreviousWorkoutsExpanded: (value: boolean) => void;
+  isUpcomingWorkoutsExpanded: boolean;
+  setIsUpcomingWorkoutsExpanded: (value: boolean) => void;
 }) {
-  // Sort workouts by date
-  const sortedWorkouts = [...workouts].sort((a, b) => {
-    if (a.date && b.date) {
-      return new Date(b.date as string).getTime() - new Date(a.date as string).getTime();
-    }
-    return 0;
-  });
-
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  const previousWorkouts = sortedWorkouts.filter(workout => new Date(workout.date as string) < now);
-  const todaysWorkouts = sortedWorkouts.filter(workout => new Date(workout.date as string) >= now && new Date(workout.date as string) < tomorrow);
-  const upcomingWorkouts = sortedWorkouts.filter(workout => new Date(workout.date as string) >= tomorrow);
-
-  const [isPreviousWorkoutsExpanded, setIsPreviousWorkoutsExpanded] = useState(false);
-  const [isUpcomingWorkoutsExpanded, setIsUpcomingWorkoutsExpanded] = useState(false);
-
+  
   return (
     <Container sx={{ p: { xs: 1, md: 2 }, width: "100%", height: "100%" }}>
       <Typography variant="h4" align="center" gutterBottom>

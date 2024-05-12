@@ -8,7 +8,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material"
-import { Goal } from "../../features/goals/goalsReducer"
+import { Goal } from "../../Model/goals/goalsReducer"
 import { GoalProgressChart } from "../Progress/GoalProgressChart"
 
 export function GoalsCard({ goals }: { goals: Goal[] }) {

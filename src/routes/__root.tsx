@@ -3,7 +3,7 @@ import { createRootRoute, Outlet } from "@tanstack/react-router"
 import React, { Suspense } from "react"
 import { auth } from "../firebase"
 import { ProfilePresenter } from "./profile/index.lazy"
-import Sidebar from "../components/Sidebar"
+import Sidebar from "../views/Application/Sidebar"
 import { useAuthState } from "react-firebase-hooks/auth"
 import {
   Add,
@@ -12,7 +12,7 @@ import {
   Flag,
   Home,
 } from "@mui/icons-material"
-import { ProfileAvatar } from "../components/ProfileAvatar"
+import { ProfileAvatar } from "../views/Profile/ProfileAvatar"
 
 // TanStack devtools only in development
 const TanStackRouterDevtools =

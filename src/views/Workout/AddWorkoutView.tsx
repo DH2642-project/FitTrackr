@@ -6,8 +6,8 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { Exercise, ExerciseType } from "../../features/workouts/workoutsSlice";
-import FullscreenCircularProgress from "../../components/FullscreenCircularProgress";
+import { Exercise, ExerciseType } from "../../Model/workouts/workoutsSlice";
+import FullscreenCircularProgress from "../Application/FullscreenCircularProgress";
 import { useState } from "react";
 import { WorkoutSummaryView } from "./WorkoutSummaryView";
 import { SearchBarView } from "./SearchBarView";

@@ -1,5 +1,5 @@
 import { Card, CardContent, Stack, Typography } from "@mui/material"
-import { Exercise, Workout } from "../../features/workouts/workoutsSlice"
+import { Exercise, Workout } from "../../Model/workouts/workoutsSlice"
 import { MetricsCard } from "./MetricsCard"
 
 export function WeekCard({
