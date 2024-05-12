@@ -3,9 +3,9 @@ import { ProgressView } from "../../views/Progress/ProgressView.tsx";
 import { fetchGoals, setCurrentGoal } from "../../Model/goals/goalsReducer.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store.ts";
-import { fetchWorkouts } from "../../Model/workouts/workoutsSlice.ts";
+import { Workout, fetchWorkouts } from "../../Model/workouts/workoutsSlice.ts";
 import { useEffect } from "react";
-import { getCalendarData, getMuscleGroupsData, getTotalDistance, getWeightlifted, getWorkoutsPerWeek } from "../../PresenterUtils/progressUtils.tsx";
+import { getWeekNumber } from "../../helpers.ts";
 
 export const Route = createLazyFileRoute("/progress/")({
   component: ProgressPresenter,
@@ -31,6 +31,111 @@ export function ProgressPresenter() {
    
   }, [dispatch]);
 
+  function getCalendarData(
+    workouts: Workout[]
+  ): { date: string; count: number }[] {
+    const calendarMap: { [date: string]: number } = {};
+
+    workouts.forEach((workout) => {
+      if (workout.date) {
+        const date = workout.date.split("T")[0];
+        if (calendarMap[date]) {
+          calendarMap[date]++;
+        } else {
+          calendarMap[date] = 1;
+        }
+      }
+    });
+
+    const calendarData: { date: string; count: number }[] = [];
+    for (const date in calendarMap) {
+      calendarData.push({ date, count: calendarMap[date] });
+    }
+    return calendarData;
+  }
+
+  function getWeightlifted(workouts: Workout[]) {
+    let weight = 0;
+    workouts.forEach((workout) => {
+      const exercises = workout.exercises;
+      exercises.forEach((e) => {
+        if (e.sets && e.reps && e.weight) {
+          weight += e.sets * e.reps * e.weight;
+        }
+      });
+    });
+    return weight;
+  }
+  
+  function getTotalDistance(workouts: Workout[]) {
+    let distance = 0;
+    workouts.forEach((workout) => {
+      const exercises = workout.exercises;
+      exercises.forEach((e) => {
+        if (e.distance) {
+          distance += e.distance;
+        }
+      });
+    });
+    return distance;
+  }
+
+  function getWorkoutsPerWeek(
+    workouts: Workout[]
+  ): { x: number; y: number }[] {
+    const workoutsPerWeek: { [week: number]: number } = {};
+
+    workouts.forEach((workout) => {
+      if (workout.date) {
+        const date = new Date(workout.date);
+        const weekNumber = getWeekNumber(date);
+        workoutsPerWeek[weekNumber] = (workoutsPerWeek[weekNumber] || 0) + 1;
+      }
+    });
+
+    const data: { x: number; y: number }[] = Object.keys(workoutsPerWeek).map(
+      (week) => ({
+        x: parseInt(week),
+        y: workoutsPerWeek[parseInt(week)],
+      })
+    );
+
+    return data;
+  }
+
+  function getMuscleGroupsData(workouts: Workout[]) {
+    let totalSets = 0;
+    workouts.forEach((workout) => {
+      workout.exercises.forEach((exercise) => {
+        if (exercise.sets) {
+          totalSets += exercise.sets;
+        }
+      });
+    });
+
+    const muscleGroupsData: { [key: string]: number } = {};
+    workouts.forEach((workout) => {
+      workout.exercises.forEach((exercise) => {
+        if (exercise.muscle) {
+          if (!muscleGroupsData[exercise.muscle]) {
+            muscleGroupsData[exercise.muscle] = exercise.sets || 0;
+          } else muscleGroupsData[exercise.muscle] += exercise.sets || 0;
+        }
+      });
+    });
+
+    const result: { name: string; value: number }[] = [];
+    for (const muscle in muscleGroupsData) {
+      result.push({
+        name: muscle,
+        value: parseFloat(
+          ((muscleGroupsData[muscle] / totalSets) * 100).toFixed(2)
+        ),
+      });
+    }
+    return result;
+  }
+  
   const calendarData = getCalendarData(workouts);
   const totalWeight = getWeightlifted(workouts);
   const totalDistance = getTotalDistance(workouts);
