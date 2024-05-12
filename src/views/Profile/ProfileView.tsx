@@ -1,13 +1,13 @@
 import firebase from "firebase/compat/app";
 import { useMemo } from "react";
 import * as firebaseui from "firebaseui";
-import Cover from "../components/Cover";
+import Cover from "../Application/Cover";
 import LoginFormView from "./LoginFormView";
 import LoggedInView from "./LoggedInView";
-import CustomSnackbar from "../components/CustomSnackbar";
+import CustomSnackbar from "../Application/CustomSnackbar";
 import { User } from "firebase/auth";
 import { AlertColor } from "@mui/material";
-import { UserProfile } from "../main";
+import { UserProfile } from "../../main";
 
 export function ProfileView(
   {

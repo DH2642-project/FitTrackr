@@ -1,12 +1,12 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AlertColor } from "@mui/material";
-import { fetchWorkouts, deleteWorkout } from "../../features/workouts/workoutsSlice";
+import { fetchWorkouts, deleteWorkout } from "../../Model/workouts/workoutsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
-import WorkoutsView from "../../views/WorkoutsView";
-import CustomSnackbar from "../../components/CustomSnackbar";
-import FullscreenCircularProgress from "../../components/FullscreenCircularProgress";
+import WorkoutsView from "../../views/Workout/WorkoutsView";
+import CustomSnackbar from "../../views/Application/CustomSnackbar";
+import FullscreenCircularProgress from "../../views/Application/FullscreenCircularProgress";
 
 export const Route = createLazyFileRoute("/workouts/")({
   component: WorkoutsPresenter,
@@ -18,7 +18,6 @@ export function WorkoutsPresenter() {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    // Fetch workouts from database
     try {
       dispatch(fetchWorkouts());
     } catch (error) {

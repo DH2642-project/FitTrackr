@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { GoalsView } from "../../views/GoalsView";
+import { GoalsView } from "../../views/Goals/GoalsView";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setEndGoal,
@@ -9,12 +9,12 @@ import {
   fetchGoals,
   deleteGoalDb,
   resetToDefaultState,
-} from "../../features/goals/goalsReducer";
+} from "../../Model/goals/goalsReducer";
 import { useEffect, useState } from "react";
 import { AppDispatch,RootState } from "../../store";
-import { setSearchName } from "../../features/addWorkout/addWorkoutSlice";
-import { Exercise, ExerciseTypes } from "../../features/workouts/workoutsSlice";
-import { useHandlers } from "../../utils/handlers";
+import { setSearchName } from "../../Model/addWorkout/addWorkoutSlice";
+import { Exercise, ExerciseTypes } from "../../Model/workouts/workoutsSlice";
+import { useHandlers } from "../../PresenterUtils/handlers";
 
 export const Route = createLazyFileRoute("/goals/")({
   component: GoalsPresenter,

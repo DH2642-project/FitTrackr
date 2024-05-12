@@ -16,7 +16,7 @@ import {
   CardContent,
 } from "@mui/material";
 import { GoalProgressChart } from "./GoalProgressChart";
-import { Goal, GoalsState } from "../../features/goals/goalsReducer";
+import { Goal, GoalsState } from "../../Model/goals/goalsReducer";
 import theme from "../../theme";
 
 export function GoalChart({

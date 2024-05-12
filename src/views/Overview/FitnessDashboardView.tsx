@@ -1,14 +1,14 @@
 import { Container, Grid, Stack, Typography } from "@mui/material"
-import { Workout, Exercise } from "../features/workouts/workoutsSlice"
-import { Goal } from "../features/goals/goalsReducer"
-import { WelcomeCard } from "./Overview/WelcomeCard"
-import { TopExercisesCard } from "./Overview/TopExercisesCard"
-import { TodayCard } from "./Overview/TodayCard"
-import { WeekCard } from "./Overview/WeekCard"
-import { GoalsCard } from "./Overview/GoalsCard"
-import { ProfileAvatar } from "../components/ProfileAvatar"
+import { Workout, Exercise } from "../../Model/workouts/workoutsSlice"
+import { Goal } from "../../Model/goals/goalsReducer"
+import { WelcomeCard } from "./WelcomeCard"
+import { TopExercisesCard } from "./TopExercisesCard"
+import { TodayCard } from "./TodayCard"
+import { WeekCard } from "./WeekCard"
+import { GoalsCard } from "./GoalsCard"
+import { ProfileAvatar } from "../Profile/ProfileAvatar"
 import { Link } from "@tanstack/react-router"
-import { ScheduleCard } from "./Overview/ScheduleCard"
+import { ScheduleCard } from "./ScheduleCard"
 
 export function FitnessDashboard(
   {

@@ -1,10 +1,10 @@
 import { Grid } from "@mui/material";
-import { GoalChart } from "./Progress/GoalChart.tsx";
-import { TotalView } from "./Progress/TotalView.tsx";
-import { CalendarChart } from "./Progress/CalendarChart.tsx";
-import { ActivityChart } from "./Progress/ActivityChart.tsx";
-import MuscleChart from "./Progress/MuscleChart.tsx";
-import { GoalsState } from "../features/goals/goalsReducer.ts";
+import { GoalChart } from "./GoalChart.tsx";
+import { TotalView } from "./TotalView.tsx";
+import { CalendarChart } from "./CalendarChart.tsx";
+import { ActivityChart } from "./ActivityChart.tsx";
+import MuscleChart from "./MuscleChart.tsx";
+import { GoalsState } from "../../Model/goals/goalsReducer.ts";
 
 interface ProgressViewProps {
   goals: GoalsState;

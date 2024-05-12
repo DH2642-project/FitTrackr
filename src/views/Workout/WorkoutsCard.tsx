@@ -15,7 +15,7 @@ import {
   Box,
 } from "@mui/material";
 import { LocalFireDepartment } from "@mui/icons-material";
-import { Workout } from "../features/workouts/workoutsSlice";
+import { Workout } from "../../Model/workouts/workoutsSlice";
 import InfoIcon from "@mui/icons-material/Info";
 import { useState } from "react";
 

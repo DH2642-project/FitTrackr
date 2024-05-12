@@ -6,9 +6,9 @@ import {
   Collapse,
   Box
 } from "@mui/material";
-import { Workout } from "../features/workouts/workoutsSlice";
-import FullscreenCircularProgress from "../components/FullscreenCircularProgress";
-import WorkoutsCard from "../components/WorkoutsCard";
+import { Workout } from "../../Model/workouts/workoutsSlice";
+import FullscreenCircularProgress from "../Application/FullscreenCircularProgress";
+import WorkoutsCard from "./WorkoutsCard";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function WorkoutsView({

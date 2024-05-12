@@ -1,8 +1,8 @@
 import { Button, Stack, SelectChangeEvent } from "@mui/material";
-import { CurrentGoalsView } from "./Goals/CurrentGoalsView";
-import { GoalFormView } from "./Goals/GoalFormView";
-import { Exercise, ExerciseType } from "../features/workouts/workoutsSlice";
-import { Goal } from "../features/goals/goalsReducer";
+import { CurrentGoalsView } from "./CurrentGoalsView";
+import { GoalFormView } from "./GoalFormView";
+import { Exercise, ExerciseType } from "../../Model/workouts/workoutsSlice";
+import { Goal } from "../../Model/goals/goalsReducer";
 
 interface GoalsViewProps {
   goals: any;

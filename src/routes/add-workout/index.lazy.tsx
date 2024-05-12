@@ -2,10 +2,10 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import AddWorkoutView from "../../views/Workout/AddWorkoutView";
 import { useEffect, useState } from "react";
 import { AlertColor } from "@mui/material";
-import { Exercise, ExerciseTypes } from "../../features/workouts/workoutsSlice";
+import { Exercise, ExerciseTypes } from "../../Model/workouts/workoutsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
-import CustomSnackbar from "../../components/CustomSnackbar";
+import CustomSnackbar from "../../views/Application/CustomSnackbar";
 import {
   addWorkout,
   addExercise,
@@ -16,8 +16,8 @@ import {
   setWeight,
   setSets,
   setReps,
-} from "../../features/addWorkout/addWorkoutSlice";
-import { useHandlers } from "../../utils/handlers";
+} from "../../Model/addWorkout/addWorkoutSlice";
+import { useHandlers } from "../../PresenterUtils/handlers";
 
 export const Route = createLazyFileRoute("/add-workout/")({
   component: AddWorkoutPresenter,

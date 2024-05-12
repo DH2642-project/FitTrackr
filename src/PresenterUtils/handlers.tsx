@@ -1,7 +1,7 @@
 // utils/handlers.ts
 import { AppDispatch } from "../store";
-import { setSearchName, setSearchType, setDistance, searchExercises } from "../features/addWorkout/addWorkoutSlice";
-import { ExerciseType } from "../features/workouts/workoutsSlice";
+import { setSearchName, setSearchType, setDistance, searchExercises } from "../Model/addWorkout/addWorkoutSlice";
+import { ExerciseType } from "../Model/workouts/workoutsSlice";
 import { SelectChangeEvent } from "@mui/material";
 import { useDispatch } from "react-redux";
 

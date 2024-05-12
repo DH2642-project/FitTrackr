@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AlertColor } from "@mui/material";
-import { ProfileView } from "../../views/ProfileView";
+import { ProfileView } from "../../views/Profile/ProfileView";
 import { auth, database } from "../../firebase";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { useObject } from "react-firebase-hooks/database";

@@ -14,8 +14,8 @@ import {
   RadioGroup,
 } from "@mui/material";
 import { SearchBarView } from "../Workout/SearchBarView";
-import { Exercise, ExerciseType } from "../../features/workouts/workoutsSlice";
-import FullscreenCircularProgress from "../../components/FullscreenCircularProgress";
+import { Exercise, ExerciseType } from "../../Model/workouts/workoutsSlice";
+import FullscreenCircularProgress from "../Application/FullscreenCircularProgress";
 
 export function GoalFormView({
   open,
@@ -58,7 +58,6 @@ export function GoalFormView({
     onEndGoalChange(parseFloat(evt.target.value));
   }
 
-  //OK in view?
   function handleExerciseChange(evt: React.ChangeEvent<HTMLInputElement>) {
     onExerciseChange(JSON.parse(evt.target.value) as Exercise);
   }

@@ -15,7 +15,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import dayjs from "dayjs";
-import { Exercise } from "../../features/workouts/workoutsSlice";
+import { Exercise } from "../../Model/workouts/workoutsSlice";
 
 export function WorkoutSummaryView({
   addWorkoutLoading,

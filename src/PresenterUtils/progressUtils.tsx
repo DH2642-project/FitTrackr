@@ -1,7 +1,7 @@
 
 import { getWeekNumber } from "../helpers.ts";
-import { Workout } from "../features/workouts/workoutsSlice.ts";
-import { GoalData } from "../features/goals/goalsReducer.ts";
+import { Workout } from "../Model/workouts/workoutsSlice.ts";
+import { GoalData } from "../Model/goals/goalsReducer.ts";
 
 export function generateRandomData() {
   const startDate = new Date(2024, 0, 1);

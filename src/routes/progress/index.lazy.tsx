@@ -1,11 +1,11 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { ProgressView } from "../../views/ProgressView.tsx";
-import { fetchGoals, setCurrentGoal } from "../../features/goals/goalsReducer.ts";
+import { ProgressView } from "../../views/Progress/ProgressView.tsx";
+import { fetchGoals, setCurrentGoal } from "../../Model/goals/goalsReducer.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store.ts";
-import { fetchWorkouts } from "../../features/workouts/workoutsSlice.ts";
+import { fetchWorkouts } from "../../Model/workouts/workoutsSlice.ts";
 import { useEffect } from "react";
-import { getCalendarData, getMuscleGroupsData, getTotalDistance, getWeightlifted, getWorkoutsPerWeek } from "../../utils/progressUtils.tsx";
+import { getCalendarData, getMuscleGroupsData, getTotalDistance, getWeightlifted, getWorkoutsPerWeek } from "../../PresenterUtils/progressUtils.tsx";
 
 export const Route = createLazyFileRoute("/progress/")({
   component: ProgressPresenter,
