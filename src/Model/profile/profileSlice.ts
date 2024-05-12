@@ -9,21 +9,9 @@ export const fetchProfile = createAsyncThunk("profile/fetchProfile", async () =>
   const snapshot = await get(ref(database, "users/" + userId + "/profile"));
   return snapshot.val();
 });
-export const setGender = createAsyncThunk("profile/setGender", async (newValue: string) => {
+export const saveChanges = createAsyncThunk("profile/saveChanges", async (newUserProfile: UserProfile) => {
   const userId = auth.currentUser?.uid;
-  set(ref(database, "users/" + userId + "/profile/gender"), newValue);
-});
-export const setWeight = createAsyncThunk("profile/setWeight", async (newValue: number) => {
-  const userId = auth.currentUser?.uid;
-  set(ref(database, "users/" + userId + "/profile/weight"), newValue);
-});
-export const setHeight = createAsyncThunk("profile/setHeight", async (newValue: number) => {
-  const userId = auth.currentUser?.uid;
-  set(ref(database, "users/" + userId + "/profile/height"), newValue);
-});
-export const setAge = createAsyncThunk("profile/setAge", async (newValue: number) => {
-  const userId = auth.currentUser?.uid;
-  set(ref(database, "users/" + userId + "/profile/age"), newValue);
+  set(ref(database, "users/" + userId + "/profile"), newUserProfile);
 });
 
 // Define a type for the slice state
@@ -42,7 +30,28 @@ const initialState: ProfileState = {
 export const profileSlice = createSlice({
   name: "profile",
   initialState,
-  reducers: {},
+  reducers: {
+    setAge: (state, action: PayloadAction<number>) => {
+      if (state.userProfile) {
+        state.userProfile.age = action.payload;
+      }
+    },
+    setGender: (state, action: PayloadAction<string>) => {
+      if (state.userProfile) {
+        state.userProfile.gender = action.payload;
+      }
+    },
+    setHeight: (state, action: PayloadAction<number>) => {
+      if (state.userProfile) {
+        state.userProfile.height = action.payload;
+      }
+    },
+    setWeight: (state, action: PayloadAction<number>) => {
+      if (state.userProfile) {
+        state.userProfile.weight = action.payload;
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProfile.pending, (state) => {
@@ -52,31 +61,15 @@ export const profileSlice = createSlice({
         state.status = "idle";
         state.userProfile = action.payload;
       })
-      .addCase(setGender.pending, (state) => {
+      .addCase(saveChanges.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(setGender.fulfilled, (state) => {
-        state.status = "idle";
-      })
-      .addCase(setWeight.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(setWeight.fulfilled, (state) => {
-        state.status = "idle";
-      })
-      .addCase(setHeight.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(setHeight.fulfilled, (state) => {
-        state.status = "idle";
-      })
-      .addCase(setAge.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(setAge.fulfilled, (state) => {
+      .addCase(saveChanges.fulfilled, (state) => {
         state.status = "idle";
       });
   },
 });
+
+export const { setAge, setGender, setHeight, setWeight } = profileSlice.actions;
 
 export default profileSlice.reducer;

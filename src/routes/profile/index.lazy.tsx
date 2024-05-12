@@ -6,7 +6,8 @@ import { auth } from "../../firebase";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
-import { fetchProfile, setAge, setGender, setHeight, setWeight } from "../../Model/profile/profileSlice";
+import { fetchProfile, saveChanges, setAge, setGender, setHeight, setWeight } from "../../Model/profile/profileSlice";
+import { UserProfile } from "../../main";
 
 export const Route = createLazyFileRoute("/profile/")({
   component: ProfilePresenter,
@@ -42,24 +43,24 @@ export function ProfilePresenter() {
     }
   }
 
-  async function handleSetGender(event: React.ChangeEvent<HTMLInputElement>) {
-    await dispatch(setGender(event.target.value));
-    await dispatch(fetchProfile());
+  function handleSetGender(event: React.ChangeEvent<HTMLInputElement>) {
+    dispatch(setGender(event.target.value));
   }
 
-  async function handleSetWeight(event: React.ChangeEvent<HTMLInputElement>) {
-    await dispatch(setWeight(Number(event.target.value)));
-    await dispatch(fetchProfile());
+  function handleSetWeight(event: React.ChangeEvent<HTMLInputElement>) {
+    dispatch(setWeight(Number(event.target.value)));
   }
 
-  async function handleSetHeight(event: React.ChangeEvent<HTMLInputElement>) {
-    await dispatch(setHeight(Number(event.target.value)));
-    await dispatch(fetchProfile());
+  function handleSetHeight(event: React.ChangeEvent<HTMLInputElement>) {
+    dispatch(setHeight(Number(event.target.value)));
   }
 
-  async function handleSetAge(event: React.ChangeEvent<HTMLInputElement>) {
-    await dispatch(setAge(Number(event.target.value)));
-    await dispatch(fetchProfile());
+  function handleSetAge(event: React.ChangeEvent<HTMLInputElement>) {
+    dispatch(setAge(Number(event.target.value)));
+  }
+
+  async function handleSaveChanges() {
+    await dispatch(saveChanges(profileState.userProfile as UserProfile));
   }
 
   return (
@@ -72,6 +73,7 @@ export function ProfilePresenter() {
       handleSetWeight={handleSetWeight}
       handleSetHeight={handleSetHeight}
       handleSetAge={handleSetAge}
+      handleSaveChanges={handleSaveChanges}
       showSnackbar={showSnackbar}
       snackbarOpen={snackbarOpen}
       snackbarMessage={snackbarMessage}
