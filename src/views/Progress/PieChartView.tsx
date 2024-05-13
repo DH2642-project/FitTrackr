@@ -8,11 +8,14 @@ import {
   Cell,
 } from "recharts";
 import theme from "../../theme";
+import { toFriendlyString } from "../../helpers";
 
-export function MuscleChart({
+export function PieChartView({
   data,
+  title,
 }: {
-  data: { name: string; value: number }[];
+    data: { name: string; value: number }[],
+    title: string
 }) {
   const COLORS = [
     "#1f77b4", // blue
@@ -40,11 +43,18 @@ export function MuscleChart({
   return (
     <Card sx={{ borderRadius: 4 }}>
       <CardContent>
-        <Typography variant="h4">Muscles worked</Typography>
+        <Typography variant="h4">{title}</Typography>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
-            <Tooltip />
-            <Legend layout="vertical" verticalAlign="middle" align="right" />
+            <Tooltip
+              formatter={(_, name) => [`${toFriendlyString(name.toString())}`]}
+            />
+            <Legend
+              layout="vertical"
+              verticalAlign="middle"
+              align="right"
+              formatter={(name) => [`${toFriendlyString(name.toString())}`]}
+            />
             <Pie
               data={data}
               dataKey="value"
@@ -54,7 +64,7 @@ export function MuscleChart({
               innerRadius={60}
               outerRadius={80}
               fill={theme.palette.primary.main}
-              label={({ value }) => `(${value}%)`}
+              label={({ value }) => `${value}%`}
             >
               {data.map((_, index) => (
                 <Cell
@@ -70,4 +80,4 @@ export function MuscleChart({
   );
 }
 
-export default MuscleChart;
+export default PieChartView;

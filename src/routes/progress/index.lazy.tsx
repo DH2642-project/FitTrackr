@@ -135,12 +135,43 @@ export function ProgressPresenter() {
     }
     return result;
   }
+
+  function getWorkoutTypesData(workouts: Workout[]) {
+    
+    
+    const workoutTypesData: { [name: string]: number } = {};
+    let totalTypes = 0
+    workouts.forEach((workout) => {
+      const workoutTypeCounted: { [name: string]: boolean } = {};
+      workout.exercises.forEach((exercise) => {
+        if (exercise.type && !workoutTypeCounted[exercise.type]) {
+          workoutTypeCounted[exercise.type] = true;
+          totalTypes +=1
+          if (!workoutTypesData[exercise.type]) {
+            workoutTypesData[exercise.type] = 1
+          } else workoutTypesData[exercise.type] += 1;
+        }
+      });
+    });
+
+    const result: { name: string; value: number }[] = [];
+    for (const type in workoutTypesData) {
+      result.push({
+        name: type,
+        value: parseFloat(
+          ((workoutTypesData[type]) / totalTypes * 100).toFixed(2)
+        ),
+      });
+    }
+    return result;
+  }
   
   const calendarData = getCalendarData(workouts);
   const totalWeight = getWeightlifted(workouts);
   const totalDistance = getTotalDistance(workouts);
   const weeklyData = getWorkoutsPerWeek(workouts);
   const muscleGroupsData = getMuscleGroupsData(workouts);
+  const workoutTypesData = getWorkoutTypesData(workouts);
 
   return (
     <ProgressView
@@ -152,6 +183,7 @@ export function ProgressPresenter() {
       totalDistance={totalDistance}
       weeklyData={weeklyData}
       muscleGroupsData={muscleGroupsData}
+      workoutTypesData={workoutTypesData}
     />
   );
 }
