@@ -40,17 +40,6 @@ export function PieChartView({
     "#ffeda0", // light yellow
   ];
 
-  const customTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div>
-          <p>{payload[0].payload.name}</p>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
     <Card sx={{ borderRadius: 4 }}>
       <CardContent>
