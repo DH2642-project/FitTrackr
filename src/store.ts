@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import workoutsReducer from "./Model/workouts/workoutsSlice";
 import addWorkoutReducer from "./Model/addWorkout/addWorkoutSlice";
 import goalsReducer from "./Model/goals/goalsReducer";
+import profileReducer from "./Model/profile/profileSlice";
 
 export const store = configureStore({
   reducer: {
     workouts: workoutsReducer,
     addWorkout: addWorkoutReducer,
     goals: goalsReducer,
+    profile: profileReducer,
   },
 });
 
