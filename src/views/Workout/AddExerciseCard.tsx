@@ -69,6 +69,8 @@ export function AddExerciseCard({
               setDistance(parseFloat(evt.target.value))
             }
             type="number"
+            placeholder="Enter distance"
+            required
           />
           <Typography variant="subtitle1">Time</Typography>
           <OutlinedInput
@@ -79,6 +81,8 @@ export function AddExerciseCard({
               setTime(parseFloat(evt.target.value))
             }
             type="number"
+            placeholder="Enter time"
+            required
           />
         </>
       ) : (
@@ -110,6 +114,8 @@ export function AddExerciseCard({
             onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
               setWeight(parseFloat(evt.target.value))
             }
+            placeholder="Enter weight"
+            required
           />
         </>
       )}
@@ -119,6 +125,7 @@ export function AddExerciseCard({
           addExercise(result!);
           setAddModal(false);
         }}
+
       >
         Add to workout
       </Button>

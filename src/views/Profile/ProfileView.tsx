@@ -1,6 +1,3 @@
-import firebase from "firebase/compat/app";
-import { useMemo } from "react";
-import * as firebaseui from "firebaseui";
 import Cover from "../Application/Cover";
 import LoginFormView from "./LoginFormView";
 import LoggedInView from "./LoggedInView";
@@ -8,8 +5,12 @@ import CustomSnackbar from "../Application/CustomSnackbar";
 import { User } from "firebase/auth";
 import { AlertColor } from "@mui/material";
 import { UserProfile } from "../../main";
+import * as firebaseui from "firebaseui";
+import firebase from "firebase/compat/app";
 
 export function ProfileView({
+  ui,
+  uiConfig,
   user,
   signOutLoading,
   userProfile,
@@ -25,6 +26,8 @@ export function ProfileView({
   snackbarSeverity,
   setSnackbarOpen,
 }: {
+  ui: firebaseui.auth.AuthUI;
+  uiConfig: firebaseui.auth.Config;
   user: User | null;
   signOutLoading: boolean;
   userProfile: UserProfile | null;
@@ -41,25 +44,6 @@ export function ProfileView({
   snackbarSeverity: AlertColor;
   setSnackbarOpen: (open: boolean) => void;
 }) {
-  const ui = useMemo(() => firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth()), []);
-  const uiConfig = useMemo(
-    () => ({
-      callbacks: {
-        signInSuccessWithAuthResult: function () {
-          return true;
-        },
-        uiShown: function () {
-          const loader = document.getElementById("loader");
-          if (loader) loader.style.display = "none";
-        },
-      },
-      signInFlow: "popup",
-      signInSuccessUrl: "/",
-      signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID, firebase.auth.EmailAuthProvider.PROVIDER_ID],
-    }),
-    []
-  );
-
   return (
     <Cover>
       {user ? (

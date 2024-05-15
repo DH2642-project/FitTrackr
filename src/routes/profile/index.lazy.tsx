@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { AlertColor } from "@mui/material";
 import { ProfileView } from "../../views/Profile/ProfileView";
 import { auth } from "../../firebase";
@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { fetchProfile, saveChanges, setAge, setGender, setHeight, setWeight } from "../../Model/profile/profileSlice";
 import { UserProfile } from "../../main";
+import * as firebaseui from "firebaseui";
+import firebase from "firebase/compat/app";
 
 export const Route = createLazyFileRoute("/profile/")({
   component: ProfilePresenter,
@@ -29,6 +31,25 @@ export function ProfilePresenter() {
     // Fetch profile from database
     dispatch(fetchProfile());
   }, [dispatch]);
+
+  const ui = useMemo(() => firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth()), []);
+  const uiConfig = useMemo(
+    () => ({
+      callbacks: {
+        signInSuccessWithAuthResult: function () {
+          return true;
+        },
+        uiShown: function () {
+          const loader = document.getElementById("loader");
+          if (loader) loader.style.display = "none";
+        },
+      },
+      signInFlow: "popup",
+      signInSuccessUrl: "/",
+      signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID, firebase.auth.EmailAuthProvider.PROVIDER_ID],
+    }),
+    []
+  );
 
   function showSnackbar(message: string, severity: AlertColor = "info") {
     setSnackbarMessage(message);
@@ -70,6 +91,8 @@ export function ProfilePresenter() {
 
   return (
     <ProfileView
+      ui={ui}
+      uiConfig={uiConfig}
       user={user}
       userProfile={profileState.userProfile || null}
       userProfileLoading={profileState.status === "loading"}
