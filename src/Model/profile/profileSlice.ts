@@ -7,6 +7,9 @@ import { get } from "firebase/database";
 export const fetchProfile = createAsyncThunk("profile/fetchProfile", async () => {
   const userId = auth.currentUser?.uid;
   const snapshot = await get(ref(database, "users/" + userId + "/profile"));
+  if (!snapshot.exists()) {
+    return {} as UserProfile;
+  }
   return snapshot.val();
 });
 export const saveChanges = createAsyncThunk("profile/saveChanges", async (newUserProfile: UserProfile) => {
@@ -22,7 +25,7 @@ export interface ProfileState {
 }
 
 const initialState: ProfileState = {
-  userProfile: undefined,
+  userProfile: {} as UserProfile,
   status: "loading", // always fetch data on page load
 };
 
@@ -32,22 +35,22 @@ export const profileSlice = createSlice({
   initialState,
   reducers: {
     setAge: (state, action: PayloadAction<number>) => {
-      if (state.userProfile) {
+      if (state.userProfile && action.payload) {
         state.userProfile.age = action.payload;
       }
     },
     setGender: (state, action: PayloadAction<string>) => {
-      if (state.userProfile) {
+      if (state.userProfile && action.payload) {
         state.userProfile.gender = action.payload;
       }
     },
     setHeight: (state, action: PayloadAction<number>) => {
-      if (state.userProfile) {
+      if (state.userProfile && action.payload) {
         state.userProfile.height = action.payload;
       }
     },
     setWeight: (state, action: PayloadAction<number>) => {
-      if (state.userProfile) {
+      if (state.userProfile && action.payload) {
         state.userProfile.weight = action.payload;
       }
     },
