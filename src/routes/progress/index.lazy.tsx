@@ -4,7 +4,7 @@ import { fetchGoals, setCurrentGoal } from "../../Model/goals/goalsReducer.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store.ts";
 import { Workout, fetchWorkouts } from "../../Model/workouts/workoutsSlice.ts";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getWeekNumber } from "../../helpers.ts";
 
 export const Route = createLazyFileRoute("/progress/")({
@@ -17,14 +17,18 @@ export function ProgressPresenter() {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const updateGoalSelection = (id: string) => {
     dispatch(setCurrentGoal(id));
   };
 
   useEffect(() => {
     try {
-       dispatch(fetchGoals());
-       dispatch(fetchWorkouts());
+      setIsLoading(true);
+      dispatch(fetchGoals());
+      dispatch(fetchWorkouts());
+      setIsLoading(false);
     } catch (error) {
       console.log("Error fetching data")
     }
@@ -184,6 +188,7 @@ export function ProgressPresenter() {
       weeklyData={weeklyData}
       muscleGroupsData={muscleGroupsData}
       workoutTypesData={workoutTypesData}
+      isLoading={isLoading}
     />
   );
 }
