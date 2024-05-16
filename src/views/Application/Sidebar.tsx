@@ -11,6 +11,7 @@ import {
   Typography,
   useMediaQuery,
   Tooltip,
+  Box,
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
@@ -78,7 +79,7 @@ export default function Sidebar({
         </Toolbar>
         <List>
           {pages.map((page, index) => (
-            <div>
+            <Box key={index}>
               <Tooltip title={page.disabled ? "You need to sign in to access this page." : ""} arrow>
                 <span>
                   <ListItemButton
@@ -99,7 +100,7 @@ export default function Sidebar({
                   </ListItemButton>
                 </span>
               </Tooltip>
-            </div>
+            </Box>
           ))}
         </List>
       </Drawer>

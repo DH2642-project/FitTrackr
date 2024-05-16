@@ -119,6 +119,7 @@ export default function AddWorkoutView({
                     );
                     return (
                       <SearchResultCard
+                        key={result.name}
                         result={result}
                         isAdded={isAdded}
                         setResult={setResult}
@@ -145,7 +146,7 @@ export default function AddWorkoutView({
           setTime={setTime}
           setDistance={setDistance}
           addExercise={addExercise}
-        ></AddExerciseCard>
+        />
       </Modal>
     </>
   );
