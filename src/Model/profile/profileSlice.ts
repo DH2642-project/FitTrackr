@@ -8,13 +8,14 @@ export const fetchProfile = createAsyncThunk("profile/fetchProfile", async () =>
   const userId = auth.currentUser?.uid;
   const snapshot = await get(ref(database, "users/" + userId + "/profile"));
   if (!snapshot.exists()) {
+    // if the user has no profile, return an empty object for further use
     return {} as UserProfile;
   }
   return snapshot.val();
 });
 export const saveChanges = createAsyncThunk("profile/saveChanges", async (newUserProfile: UserProfile) => {
   const userId = auth.currentUser?.uid;
-  set(ref(database, "users/" + userId + "/profile"), newUserProfile);
+  await set(ref(database, "users/" + userId + "/profile"), newUserProfile);
 });
 
 // Define a type for the slice state

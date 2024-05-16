@@ -91,7 +91,7 @@ export const fetchWorkouts = createAsyncThunk("workouts/fetchWorkouts", async ()
 
 export const deleteWorkout = createAsyncThunk("workouts/deleteWorkout", async (key: string) => {
   const userId = auth.currentUser?.uid;
-  set(ref(database, `workouts/${userId}/${key}`), null);
+  await set(ref(database, `workouts/${userId}/${key}`), null);
 });
 
 export const workoutsSlice = createSlice({
