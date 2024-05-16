@@ -125,7 +125,7 @@ export function SearchResultCard({
                     setAddModal(true);
                   }}
                 >
-                  Add to workout
+                  Add exercise
                 </Button>
               )}
             </CardActions>

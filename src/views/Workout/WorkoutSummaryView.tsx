@@ -56,18 +56,13 @@ export function WorkoutSummaryView({
               key={exercise.name}
               disablePadding
               secondaryAction={
-                <IconButton
-                  edge="end"
-                  onClick={() => removeExercise(exercise.name)}
-                >
+                <IconButton edge="end" onClick={() => removeExercise(exercise.name)}>
                   <Remove />
                 </IconButton>
               }
             >
               <ListItemText
-                primary={
-                  <Typography lineHeight={1}>{exercise.name}</Typography>
-                }
+                primary={<Typography lineHeight={1}>{exercise.name}</Typography>}
                 secondary={
                   exercise.type !== "cardio"
                     ? `${exercise.sets} sets, ${exercise.reps} reps, ${exercise.weight} kg `
@@ -80,15 +75,12 @@ export function WorkoutSummaryView({
       </CardContent>
       <CardActions>
         {addWorkoutLoading ? (
-          <Button
-            startIcon={<CircularProgress color="inherit" size={20} />}
-            disabled
-          >
+          <Button startIcon={<CircularProgress color="inherit" size={20} />} disabled>
             Loading...
           </Button>
         ) : (
-          <Button disabled={exercises.length == 0} onClick={addWorkout}>
-            Add workout
+          <Button variant="contained" disabled={exercises.length == 0} onClick={addWorkout}>
+            Register workout
           </Button>
         )}
       </CardActions>

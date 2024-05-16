@@ -54,9 +54,7 @@ export function AddExerciseCard({
       </Typography>
       {result?.instructions && (
         <Accordion>
-          <AccordionSummary expandIcon={<ExpandMore />}>
-            Instructions
-          </AccordionSummary>
+          <AccordionSummary expandIcon={<ExpandMore />}>Instructions</AccordionSummary>
           <AccordionDetails>{result.instructions}</AccordionDetails>
         </Accordion>
       )}
@@ -65,21 +63,15 @@ export function AddExerciseCard({
           <Typography variant="subtitle1">Distance</Typography>
           <OutlinedInput
             endAdornment={<InputAdornment position="end">km</InputAdornment>}
-            onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
-              setDistance(parseFloat(evt.target.value))
-            }
+            onChange={(evt: React.ChangeEvent<HTMLInputElement>) => setDistance(parseFloat(evt.target.value))}
             type="number"
             placeholder="Enter distance"
             required
           />
           <Typography variant="subtitle1">Time</Typography>
           <OutlinedInput
-            endAdornment={
-              <InputAdornment position="end">minutes</InputAdornment>
-            }
-            onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
-              setTime(parseFloat(evt.target.value))
-            }
+            endAdornment={<InputAdornment position="end">minutes</InputAdornment>}
+            onChange={(evt: React.ChangeEvent<HTMLInputElement>) => setTime(parseFloat(evt.target.value))}
             type="number"
             placeholder="Enter time"
             required
@@ -88,32 +80,14 @@ export function AddExerciseCard({
       ) : (
         <>
           <Typography variant="subtitle1">Sets</Typography>
-          <Slider
-            value={sets}
-            onChange={setSets}
-            step={1}
-            marks
-            min={1}
-            max={8}
-            valueLabelDisplay="on"
-          />
+          <Slider value={sets} onChange={setSets} step={1} marks min={1} max={8} valueLabelDisplay="on" />
           <Typography variant="subtitle1">Reps</Typography>
-          <Slider
-            value={reps}
-            onChange={setReps}
-            step={1}
-            marks
-            min={1}
-            max={20}
-            valueLabelDisplay="on"
-          />
+          <Slider value={reps} onChange={setReps} step={1} marks min={1} max={20} valueLabelDisplay="on" />
           <Typography variant="subtitle1">Weight</Typography>
           <OutlinedInput
             endAdornment={<InputAdornment position="end">kg</InputAdornment>}
             type="number"
-            onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
-              setWeight(parseFloat(evt.target.value))
-            }
+            onChange={(evt: React.ChangeEvent<HTMLInputElement>) => setWeight(parseFloat(evt.target.value))}
             placeholder="Enter weight"
             required
           />
@@ -125,9 +99,10 @@ export function AddExerciseCard({
           addExercise(result!);
           setAddModal(false);
         }}
-
+        variant="contained"
+        sx={{ mt: 1 }}
       >
-        Add to workout
+        Add exercise
       </Button>
     </Paper>
   );
