@@ -1,4 +1,4 @@
-import { Clear } from "@mui/icons-material";
+import { DeleteOutlined } from "@mui/icons-material";
 import {
   Card,
   CardContent,
@@ -10,6 +10,9 @@ import {
   CardActions,
   Button,
   CircularProgress,
+  Divider,
+  Container,
+  Alert,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -38,7 +41,10 @@ export function WorkoutSummaryView({
         <Typography variant="h5" align="center">
           New Workout
         </Typography>
-        <Typography variant="subtitle1" align="center">
+      </CardContent>
+      <Divider />
+      <CardContent>
+        <Container sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               name="workout-date"
@@ -49,41 +55,47 @@ export function WorkoutSummaryView({
               }}
             />
           </LocalizationProvider>
-        </Typography>
-        <List disablePadding>
-          {exercises.map((exercise) => (
-            <ListItem
-              key={exercise.name}
-              disablePadding
-              secondaryAction={
-                <IconButton color="error" edge="end" onClick={() => removeExercise(exercise.name)}>
-                  <Clear />
-                </IconButton>
-              }
-            >
-              <ListItemText
-                primary={<Typography lineHeight={1}>{exercise.name}</Typography>}
-                secondary={
-                  exercise.type !== "cardio"
-                    ? `${exercise.sets} sets, ${exercise.reps} reps, ${exercise.weight} kg `
-                    : `${exercise.distance} km, ${exercise.time} minutes`
-                }
-              />
-            </ListItem>
-          ))}
-        </List>
-      </CardContent>
-      <CardActions>
-        {addWorkoutLoading ? (
-          <Button startIcon={<CircularProgress color="inherit" size={20} />} disabled>
-            Loading...
-          </Button>
+        </Container>
+        {exercises.length === 0 ? (
+          <Alert severity="info">Start by adding exercises to your workout</Alert>
         ) : (
-          <Button variant="contained" disabled={exercises.length == 0} onClick={addWorkout}>
-            Register workout
-          </Button>
+          exercises.map((exercise) => (
+            <List disablePadding>
+              <ListItem
+                key={exercise.name}
+                disablePadding
+                secondaryAction={
+                  <IconButton color="error" edge="end" onClick={() => removeExercise(exercise.name)}>
+                    <DeleteOutlined />
+                  </IconButton>
+                }
+              >
+                <ListItemText
+                  primary={<Typography lineHeight={1}>{exercise.name}</Typography>}
+                  secondary={
+                    exercise.type !== "cardio"
+                      ? `${exercise.sets} sets, ${exercise.reps} reps, ${exercise.weight} kg `
+                      : `${exercise.distance} km, ${exercise.time} minutes`
+                  }
+                />
+              </ListItem>
+            </List>
+          ))
         )}
-      </CardActions>
+      </CardContent>
+      {exercises.length > 0 && (
+        <CardActions>
+          {addWorkoutLoading ? (
+            <Button startIcon={<CircularProgress color="inherit" size={20} />} disabled>
+              Loading...
+            </Button>
+          ) : (
+            <Button variant="contained" disabled={exercises.length === 0} onClick={addWorkout}>
+              Register workout
+            </Button>
+          )}
+        </CardActions>
+      )}
     </Card>
   );
 }

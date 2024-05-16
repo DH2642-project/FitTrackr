@@ -1,4 +1,4 @@
-import { CheckCircle, Clear } from "@mui/icons-material";
+import { CheckCircle, DeleteOutlined } from "@mui/icons-material";
 import {
   Badge,
   Button,
@@ -96,9 +96,8 @@ export function SearchResultCard({
           <Collapse in={isAdded}>
             <CardActions>
               <Button
-                startIcon={<Clear />}
+                startIcon={<DeleteOutlined />}
                 color="error"
-                variant="outlined"
                 onClick={() => {
                   removeExercise(result.name);
                 }}
