@@ -3,6 +3,7 @@ import { CurrentGoalsView } from "./CurrentGoalsView";
 import { GoalFormView } from "./GoalFormView";
 import { Exercise, ExerciseType } from "../../Model/workouts/workoutsSlice";
 import { Goal } from "../../Model/goals/goalsReducer";
+import FullscreenCircularProgress from "../Application/FullscreenCircularProgress";
 
 interface GoalsViewProps {
   goals: any;
@@ -20,6 +21,7 @@ interface GoalsViewProps {
   ExerciseTypes: ExerciseType[];
   filteredGoals: Goal[];
   deleteGoal: (key: string) => Promise<void>;
+  isLoading: boolean;
 }
 
 export function GoalsView({
@@ -38,7 +40,11 @@ export function GoalsView({
     ExerciseTypes,
     filteredGoals,
     deleteGoal,
+    isLoading,
 }: GoalsViewProps) {
+    if (isLoading) {
+      return <FullscreenCircularProgress></FullscreenCircularProgress>;
+    }
     return (
       <Stack sx={{ margin: "30px" }} spacing={2}>
         <CurrentGoalsView
