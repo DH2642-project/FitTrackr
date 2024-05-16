@@ -1,4 +1,4 @@
-import { Remove } from "@mui/icons-material";
+import { Clear } from "@mui/icons-material";
 import {
   Card,
   CardContent,
@@ -56,8 +56,8 @@ export function WorkoutSummaryView({
               key={exercise.name}
               disablePadding
               secondaryAction={
-                <IconButton edge="end" onClick={() => removeExercise(exercise.name)}>
-                  <Remove />
+                <IconButton color="error" edge="end" onClick={() => removeExercise(exercise.name)}>
+                  <Clear />
                 </IconButton>
               }
             >

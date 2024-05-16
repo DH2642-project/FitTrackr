@@ -1,4 +1,4 @@
-import { CheckCircle } from "@mui/icons-material";
+import { CheckCircle, Clear } from "@mui/icons-material";
 import {
   Badge,
   Button,
@@ -7,6 +7,7 @@ import {
   CardActions,
   CardContent,
   Chip,
+  Collapse,
   Grid,
   Stack,
   Typography,
@@ -28,7 +29,7 @@ export function SearchResultCard({
   removeExercise: (name: string) => void;
 }) {
   return (
-    <Grid item key={result.name} xs={4}>
+    <Grid item xs={4}>
       <Badge
         invisible={!isAdded}
         badgeContent={
@@ -55,6 +56,7 @@ export function SearchResultCard({
               setResult(result);
               setAddModal(true);
             }}
+            disabled={isAdded}
           >
             <CardContent>
               <Typography variant="h5" gutterBottom lineHeight={1}>
@@ -71,26 +73,10 @@ export function SearchResultCard({
                 }}
               >
                 {result.difficulty && (
-                  <Chip
-                    color="secondary"
-                    size="small"
-                    label={toFriendlyString(result.difficulty)}
-                  />
+                  <Chip color="secondary" size="small" label={toFriendlyString(result.difficulty)} />
                 )}
-                {result.type && (
-                  <Chip
-                    color="success"
-                    size="small"
-                    label={toFriendlyString(result.type)}
-                  />
-                )}
-                {result.muscle && (
-                  <Chip
-                    color="error"
-                    size="small"
-                    label={toFriendlyString(result.muscle)}
-                  />
-                )}
+                {result.type && <Chip color="success" size="small" label={toFriendlyString(result.type)} />}
+                {result.muscle && <Chip color="error" size="small" label={toFriendlyString(result.muscle)} />}
               </Stack>
               <Typography
                 variant="body2"
@@ -106,30 +92,21 @@ export function SearchResultCard({
                 {result.instructions}
               </Typography>
             </CardContent>
-            <CardActions>
-              {isAdded ? (
-                <Button
-                  color="error"
-                  onClick={() => {
-                    removeExercise(result.name);
-                  }}
-                >
-                  Remove from workout
-                </Button>
-              ) : (
-                <Button
-                  color="primary"
-                  disabled={isAdded}
-                  onClick={() => {
-                    setResult(result);
-                    setAddModal(true);
-                  }}
-                >
-                  Add exercise
-                </Button>
-              )}
-            </CardActions>
           </CardActionArea>
+          <Collapse in={isAdded}>
+            <CardActions>
+              <Button
+                startIcon={<Clear />}
+                color="error"
+                variant="outlined"
+                onClick={() => {
+                  removeExercise(result.name);
+                }}
+              >
+                Remove exercise
+              </Button>
+            </CardActions>
+          </Collapse>
         </Card>
       </Badge>
     </Grid>
