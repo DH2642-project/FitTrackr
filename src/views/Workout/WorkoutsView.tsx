@@ -12,7 +12,6 @@ import WorkoutsCard from "./WorkoutsCard";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function WorkoutsView({
-  workoutsLoading,
   deleteWorkout,
   previousWorkouts,
   todaysWorkouts,
@@ -21,8 +20,8 @@ export default function WorkoutsView({
   setIsPreviousWorkoutsExpanded,
   isUpcomingWorkoutsExpanded,
   setIsUpcomingWorkoutsExpanded,
+  isLoading,
 }: {
-  workoutsLoading: boolean;
   deleteWorkout: (key: string) => void;
   previousWorkouts: Workout[];
   todaysWorkouts: Workout[];
@@ -31,19 +30,20 @@ export default function WorkoutsView({
   setIsPreviousWorkoutsExpanded: (value: boolean) => void;
   isUpcomingWorkoutsExpanded: boolean;
   setIsUpcomingWorkoutsExpanded: (value: boolean) => void;
+  isLoading: boolean;
 }) {
+
   
   return (
     <Container sx={{ p: { xs: 1, md: 2 }, width: "100%", height: "100%" }}>
       <Typography variant="h4" align="center" gutterBottom>
         My Workouts
       </Typography>
-      {workoutsLoading && <FullscreenCircularProgress />}
       <Typography variant="h5" align="left" gutterBottom>
         Today's Workouts
       </Typography>
       <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-        {!workoutsLoading && todaysWorkouts.length > 0 ? (
+        {!isLoading && todaysWorkouts.length > 0 ? (
           todaysWorkouts.map((workout) => (
             <WorkoutsCard key={workout.key} workout={workout} deleteWorkout={deleteWorkout} />
           ))
@@ -68,7 +68,7 @@ export default function WorkoutsView({
         </Typography>
         <Collapse in={isUpcomingWorkoutsExpanded}>
           <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-            {!workoutsLoading && upcomingWorkouts.length > 0 ? (
+            {!isLoading && upcomingWorkouts.length > 0 ? (
               upcomingWorkouts.map((workout) => (
                 <WorkoutsCard key={workout.key} workout={workout} deleteWorkout={deleteWorkout} />
               ))
@@ -95,7 +95,7 @@ export default function WorkoutsView({
         </Typography>
         <Collapse in={isPreviousWorkoutsExpanded}>
         <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-          {!workoutsLoading && previousWorkouts.length > 0 ? (
+          {!isLoading && previousWorkouts.length > 0 ? (
             previousWorkouts.map((workout) => (
               <WorkoutsCard key={workout.key} workout={workout} deleteWorkout={deleteWorkout} />
             ))
