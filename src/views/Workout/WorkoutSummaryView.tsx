@@ -1,4 +1,4 @@
-import { DeleteOutlined } from "@mui/icons-material";
+import { DeleteOutlined, Done } from "@mui/icons-material";
 import {
   Card,
   CardContent,
@@ -43,7 +43,7 @@ export function WorkoutSummaryView({
         </Typography>
       </CardContent>
       <Divider />
-      <CardContent>
+      <CardContent sx={{ pb: 1 }}>
         <Container sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
@@ -59,8 +59,8 @@ export function WorkoutSummaryView({
         {exercises.length === 0 ? (
           <Alert severity="info">Start by adding exercises to your workout</Alert>
         ) : (
-          exercises.map((exercise) => (
-            <List disablePadding>
+          <List disablePadding>
+            {exercises.map((exercise) => (
               <ListItem
                 key={exercise.name}
                 disablePadding
@@ -79,8 +79,8 @@ export function WorkoutSummaryView({
                   }
                 />
               </ListItem>
-            </List>
-          ))
+            ))}
+          </List>
         )}
       </CardContent>
       {exercises.length > 0 && (
@@ -90,7 +90,7 @@ export function WorkoutSummaryView({
               Loading...
             </Button>
           ) : (
-            <Button variant="contained" disabled={exercises.length === 0} onClick={addWorkout}>
+            <Button startIcon={<Done />} variant="contained" disabled={exercises.length === 0} onClick={addWorkout}>
               Register workout
             </Button>
           )}

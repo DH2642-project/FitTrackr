@@ -1,15 +1,9 @@
-import {
-  Container,
-  Grid,
-  Typography,
-  IconButton,
-  Collapse,
-  Box
-} from "@mui/material";
+import { Container, Grid, Typography, IconButton, Collapse, Box } from "@mui/material";
 import { Workout } from "../../Model/workouts/workoutsSlice";
 import FullscreenCircularProgress from "../Application/FullscreenCircularProgress";
 import WorkoutsCard from "./WorkoutsCard";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { DateRange, Event, Today } from "@mui/icons-material";
 
 export default function WorkoutsView({
   deleteWorkout,
@@ -35,14 +29,17 @@ export default function WorkoutsView({
   if (isLoading) {
     return <FullscreenCircularProgress />;
   }
-  
+
   return (
     <Container sx={{ p: { xs: 1, md: 2 }, width: "100%", height: "100%" }}>
       <Typography variant="h4" align="center" gutterBottom>
         My Workouts
       </Typography>
       <Typography variant="h5" align="left" gutterBottom>
-        Today's Workouts
+        <Box display="flex" alignItems="center">
+          <Today sx={{ mr: 1 }} />
+          Today's Workouts
+        </Box>
       </Typography>
       <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
         {!isLoading && todaysWorkouts.length > 0 ? (
@@ -57,16 +54,20 @@ export default function WorkoutsView({
           </Grid>
         )}
       </Grid>
-      
-      <Box sx={{mt: 3}}>
+
+      <Box sx={{ mt: 3 }}>
         <Typography variant="h5" align="left" gutterBottom>
-          Upcoming Workouts
-          <IconButton
-            onClick={() => setIsUpcomingWorkoutsExpanded(!isUpcomingWorkoutsExpanded)}
-            aria-expanded={isUpcomingWorkoutsExpanded}
-            aria-label="show more">
-            <ExpandMoreIcon />
-          </IconButton>
+          <Box display="flex" alignItems="center">
+            <Event sx={{ mr: 1 }} />
+            Upcoming Workouts
+            <IconButton
+              onClick={() => setIsUpcomingWorkoutsExpanded(!isUpcomingWorkoutsExpanded)}
+              aria-expanded={isUpcomingWorkoutsExpanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </Box>
         </Typography>
         <Collapse in={isUpcomingWorkoutsExpanded}>
           <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
@@ -84,31 +85,35 @@ export default function WorkoutsView({
           </Grid>
         </Collapse>
       </Box>
-      
-      <Box sx={{mt: 3}}>
+
+      <Box sx={{ mt: 3 }}>
         <Typography variant="h5" align="left" gutterBottom>
-          Previous Workouts
-          <IconButton
-            onClick={() => setIsPreviousWorkoutsExpanded(!isPreviousWorkoutsExpanded)}
-            aria-expanded={isPreviousWorkoutsExpanded}
-            aria-label="show more">
-            <ExpandMoreIcon />
-          </IconButton>
+          <Box display="flex" alignItems="center">
+            <DateRange sx={{ mr: 1 }} />
+            Previous Workouts
+            <IconButton
+              onClick={() => setIsPreviousWorkoutsExpanded(!isPreviousWorkoutsExpanded)}
+              aria-expanded={isPreviousWorkoutsExpanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </Box>
         </Typography>
         <Collapse in={isPreviousWorkoutsExpanded}>
-        <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-          {!isLoading && previousWorkouts.length > 0 ? (
-            previousWorkouts.map((workout) => (
-              <WorkoutsCard key={workout.key} workout={workout} deleteWorkout={deleteWorkout} />
-            ))
-          ) : (
-            <Grid item xs={12}>
-              <Typography variant="h6" align="left">
-                There are no previous workouts
-              </Typography>
-            </Grid>
-          )}
-        </Grid>
+          <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            {!isLoading && previousWorkouts.length > 0 ? (
+              previousWorkouts.map((workout) => (
+                <WorkoutsCard key={workout.key} workout={workout} deleteWorkout={deleteWorkout} />
+              ))
+            ) : (
+              <Grid item xs={12}>
+                <Typography variant="h6" align="left">
+                  There are no previous workouts
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
         </Collapse>
       </Box>
     </Container>

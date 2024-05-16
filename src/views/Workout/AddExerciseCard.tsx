@@ -1,4 +1,4 @@
-import { ExpandMore } from "@mui/icons-material";
+import { Add, ExpandMore } from "@mui/icons-material";
 import {
   Typography,
   Accordion,
@@ -118,6 +118,7 @@ export function AddExerciseCard({
       <Divider />
       <CardActions>
         <Button
+          startIcon={<Add />}
           onClick={() => {
             addExercise(result!);
             setAddModal(false);
