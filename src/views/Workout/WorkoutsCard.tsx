@@ -11,10 +11,13 @@ import {
   CardActions,
   Button,
   IconButton,
-  Modal,
-  Box,
+  ListItemIcon,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
 } from "@mui/material";
-import { LocalFireDepartment } from "@mui/icons-material";
+import { DeleteForever, LocalFireDepartment } from "@mui/icons-material";
 import { Workout } from "../../Model/workouts/workoutsSlice";
 import InfoIcon from "@mui/icons-material/Info";
 import { useState } from "react";
@@ -45,7 +48,7 @@ const WorkoutsCard: React.FC<WorkoutCardProps> = ({ workout, deleteWorkout }) =>
   const handleOpen = (exercise: Exercise) => {
     setModalOpen(true);
     setCurrentExercise(exercise);
-  }
+  };
 
   return (
     <Grid key={workout.key} item xs={4} sm={4} md={4}>
@@ -80,56 +83,55 @@ const WorkoutsCard: React.FC<WorkoutCardProps> = ({ workout, deleteWorkout }) =>
           >
             {workout.exercises.map((exercise) => (
               <ListItem disablePadding key={exercise.name}>
+                <ListItemIcon>
+                  <IconButton
+                    aria-label="info"
+                    onClick={() => {
+                      handleOpen(exercise);
+                    }}
+                  >
+                    <InfoIcon />
+                  </IconButton>
+                </ListItemIcon>
                 <ListItemText
-                  primary={
-                    <div>
-                      <Typography lineHeight={1}>{exercise.name}</Typography>
-                      <IconButton size="small" edge="end" aria-label="info" sx={{ p: 0 }} onClick={() => {
-                        handleOpen(exercise);
-                      }}>
-                        <InfoIcon />
-                      </IconButton>
-                    </div>
+                  primary={<Typography lineHeight={1}>{exercise.name}</Typography>}
+                  secondary={
+                    exercise.sets ? `${exercise.sets} sets, ${exercise.reps} reps` : <em>Sets/reps omitted</em>
                   }
-                  secondary={exercise.sets ? `${exercise.sets} sets, ${exercise.reps} reps` : <em>Sets/reps omitted</em>}
                 />
               </ListItem>
             ))}
           </List>
-          <Modal
+          <Dialog
+            scroll="paper"
             open={modalOpen}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box sx={{ 
-              position: 'absolute', 
-              top: '50%', 
-              left: '50%', 
-              transform: 'translate(-50%, -50%)', 
-              width: 400, 
-              bgcolor: 'background.paper', 
-              border: '2px solid #000', 
-              boxShadow: 24, 
-              p: 4 
-            }}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Info - {currentExercise?.name}
+            <DialogTitle id="modal-modal-title" variant="h6" component="h2">
+              Info - {currentExercise?.name}
+            </DialogTitle>
+            <Divider />
+            <DialogContent>
+              <Typography id="modal-modal-description">
+                Difficulty: {currentExercise?.difficulty}
+                <br />
+                Type: {currentExercise?.type}
+                <br />
+                Muscle: {currentExercise?.muscle}
+                <br />
               </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Difficulty: {currentExercise?.difficulty}<br />
-                Type: {currentExercise?.type}<br />
-                Muscle: {currentExercise?.muscle}<br />
-                Instructions: {currentExercise?.instructions}<br />
-              </Typography>
-            </Box>
-          </Modal>
+              Instructions: {currentExercise?.instructions}
+              <br />
+            </DialogContent>
+          </Dialog>
           <Tooltip title={<Typography variant="caption">*Assumes each exercise is 7.5 min</Typography>} placement="top">
             <Chip icon={<LocalFireDepartment />} color="primary" label={`${workout.kcal} kcal*`} />
           </Tooltip>
         </CardContent>
         <CardActions>
-          <Button color="error" onClick={() => deleteWorkout(workout.key!)}>
+          <Button startIcon={<DeleteForever />} color="error" onClick={() => deleteWorkout(workout.key!)}>
             Delete Workout
           </Button>
         </CardActions>
