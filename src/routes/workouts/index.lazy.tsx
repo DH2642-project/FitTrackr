@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import WorkoutsView from "../../views/Workout/WorkoutsView";
 import CustomSnackbar from "../../views/Application/CustomSnackbar";
-import FullscreenCircularProgress from "../../views/Application/FullscreenCircularProgress";
 
 export const Route = createLazyFileRoute("/workouts/")({
   component: WorkoutsPresenter,
@@ -16,10 +15,13 @@ export const Route = createLazyFileRoute("/workouts/")({
 export function WorkoutsPresenter() {
   const workoutsState = useSelector((state: RootState) => state.workouts);
   const dispatch = useDispatch<AppDispatch>();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     try {
+      setIsLoading(true);
       dispatch(fetchWorkouts());
+      setIsLoading(false);
     } catch (error) {
       showSnackbar("Error fetching workouts. Try again later.", "error");
     }
@@ -65,14 +67,10 @@ export function WorkoutsPresenter() {
   const [isPreviousWorkoutsExpanded, setIsPreviousWorkoutsExpanded] = useState(false);
   const [isUpcomingWorkoutsExpanded, setIsUpcomingWorkoutsExpanded] = useState(false);
 
-  if (status === "loading") {
-    return <FullscreenCircularProgress />;
-  }
-
   return (
     <>
       <WorkoutsView
-        workoutsLoading={workoutsState.status === "loading"}
+        isLoading={isLoading}
         deleteWorkout={handleDeleteWorkout}
         previousWorkouts={previousWorkouts}
         todaysWorkouts={todaysWorkouts}

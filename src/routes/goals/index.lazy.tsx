@@ -26,6 +26,8 @@ export function GoalsPresenter() {
 
   const [open, setOpen] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   function updateExercise(exercise: Exercise) {
     dispatch(setExercise(exercise.name));
     dispatch(setGoalType(exercise.type));
@@ -69,7 +71,9 @@ export function GoalsPresenter() {
   useEffect(() => {
     // Fetch workouts from database
     try {
+      setIsLoading(true);
       dispatch(fetchGoals());
+      setIsLoading(false);
     } catch (error) {
       console.log("Error fetching goals. Try again later.", "error");
     }
@@ -96,6 +100,7 @@ export function GoalsPresenter() {
       goals={goals}
       addWorkoutState={addWorkoutState}
       ExerciseTypes={ExerciseTypes}
+      isLoading={isLoading}
     />
   );
 }

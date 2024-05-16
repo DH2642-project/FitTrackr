@@ -5,6 +5,7 @@ import { CalendarChart } from "./CalendarChart.tsx";
 import { ActivityChart } from "./ActivityChart.tsx";
 import PieChartView from "./PieChartView.tsx";
 import { GoalsState } from "../../Model/goals/goalsReducer.ts";
+import FullscreenCircularProgress from "../Application/FullscreenCircularProgress";
 
 interface ProgressViewProps {
   goals: GoalsState;
@@ -16,6 +17,7 @@ interface ProgressViewProps {
   weeklyData: { x: number; y: number }[];
   muscleGroupsData: { name: string; value: number }[];
   workoutTypesData: { name: string; value: number }[];
+  isLoading: boolean;
 }
 
 export const ProgressView: React.FC<ProgressViewProps> = ({
@@ -28,7 +30,12 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
   weeklyData,
   muscleGroupsData,
   workoutTypesData,
+  isLoading,
 }) => {
+  if (isLoading) {
+    return <FullscreenCircularProgress></FullscreenCircularProgress>;
+  }
+  
   return (
     <>
       <Grid container spacing={4} sx={{ padding: "30px" }}>
