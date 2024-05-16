@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import WorkoutsView from "../../views/Workout/WorkoutsView";
 import CustomSnackbar from "../../views/Application/CustomSnackbar";
-import FullscreenCircularProgress from "../../views/Application/FullscreenCircularProgress";
 
 export const Route = createLazyFileRoute("/workouts/")({
   component: WorkoutsPresenter,

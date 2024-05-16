@@ -32,7 +32,9 @@ export default function WorkoutsView({
   setIsUpcomingWorkoutsExpanded: (value: boolean) => void;
   isLoading: boolean;
 }) {
-
+  if (isLoading) {
+    return <FullscreenCircularProgress />;
+  }
   
   return (
     <Container sx={{ p: { xs: 1, md: 2 }, width: "100%", height: "100%" }}>
