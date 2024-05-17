@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { GoalProgressChart } from "../Progress/GoalProgressChart";
 import { Goal } from "../../Model/goals/goalsReducer";
+import { toFriendlyString } from "../../helpers";
 
 export function CurrentGoalsView({
   onDeleteGoal,
@@ -23,8 +24,12 @@ export function CurrentGoalsView({
           <Grid container spacing={2}>
             <Grid item xs={9}>
               <Typography variant="h4">{goal.exercise}</Typography>
-              <Typography variant="body1">Type: {goal.goalType}</Typography>
-              <Typography variant="body1">Goal: {goal.endGoal} {goal.metric}</Typography>
+              <Typography variant="body1">
+                {"Type " + toFriendlyString(goal.goalType || "")}
+              </Typography>
+              <Typography variant="body1">
+                Goal: {goal.endGoal} {goal.metric}
+              </Typography>
             </Grid>
 
             <Grid item xs={3}>
