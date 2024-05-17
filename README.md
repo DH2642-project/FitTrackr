@@ -34,10 +34,10 @@
 
 ## APIs
 [Exercises API](https://api-ninjas.com/api/exercises)  
-[Calories burned API]((https://api-ninjas.com/api/caloriesburned))  
+[Calories burned API](https://api-ninjas.com/api/caloriesburned)
 
 ## 3rd party components
-All charts to visualize data are from [Recharts](https://recharts.org/) (except the calendar heat map which is from [uiw](https://uiwjs.github.io/react-heat-map/). The calendar date picker used when adding a workout is from [Material UI](https://mui.com/material-ui/all-components/).
+All charts to visualize data are from [Recharts](https://recharts.org/) (except the calendar heat map which is from [uiw](https://uiwjs.github.io/react-heat-map/)). The calendar date picker used when adding a workout is from [Material UI](https://mui.com/material-ui/all-components/).
 
 ## File structure
 
@@ -50,7 +50,7 @@ All charts to visualize data are from [Recharts](https://recharts.org/) (except 
     - [profile/](./src/features/profile/) - state and types for the profile feature
     - [workouts/](./src/features/workouts/) - state and types for the workouts feature
   - [PresenterUtils](./src/PresenterUtils/) - folder for utility functions to presenters
-      - [PresenterUtils](./src/PresenterUtils/handlers.tsx) handlers used by several presenters 
+      - [handlers.tsx](./src/PresenterUtils/handlers.tsx) handlers used by several presenters 
   - [routes/](./src/routes/) - folder for Presenters (Tanstack Router routes)
     - [\_\_root.tsx](./src/routes/__root.tsx) - root layout for rendering sidebar menu and common parts between routes
     - [\_index/](./src/routes/_index/) - route for index page with overview dashboard
