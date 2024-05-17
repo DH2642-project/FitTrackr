@@ -158,6 +158,9 @@ export const addWorkoutSlice = createSlice({
   reducers: {
     addExercise: (state, action: PayloadAction<Exercise>) => {
       state.workout.exercises.push(action.payload);
+      state.distance = 0
+      state.weight = 0
+      state.time = 0
     },
     removeExercise: (state, action: PayloadAction<string>) => {
       state.workout.exercises = state.workout.exercises.filter((exercise) => exercise.name !== action.payload);
