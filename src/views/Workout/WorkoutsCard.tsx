@@ -96,7 +96,11 @@ const WorkoutsCard: React.FC<WorkoutCardProps> = ({ workout, deleteWorkout }) =>
                 <ListItemText
                   primary={<Typography lineHeight={1}>{exercise.name}</Typography>}
                   secondary={
-                    exercise.sets ? `${exercise.sets} sets, ${exercise.reps} reps` : <em>Sets/reps omitted</em>
+                    exercise.distance && exercise.time
+                      ? `${exercise.distance} km, ${exercise.time} min`
+                      : exercise.sets && exercise.reps
+                        ? `${exercise.sets} sets, ${exercise.reps} reps`
+                        : ""
                   }
                 />
               </ListItem>
