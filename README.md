@@ -1,8 +1,9 @@
 # FitTrackr
 
-> A web application where users can set goals for their fitness and health and track their progress over time. Users should be able to create and log their own workout sessions and meals. User data is visualized through various types of graphs.
-
-# Development
+> A web application where users can set goals for their workouts and track their progress over time. Users can create and log their own workout sessions. User data is visualized through various types of graphs.
+## URL to deployed site
+[FitTrackr](https://dh2642-project-7eb8e.web.app/).
+## Development
 
 1. Install dependencies:
     ```bash
@@ -15,26 +16,6 @@
     ```
 
 3. Open the url [`localhost:5137`](http://localhost:5173/) in your browser.
-
-## What we’ve done:
-
-- User prototype testing (30 min)
-
-- **Login**: Users can log in through Google and email and their information persists across sessions.
-- **Profile**: Users can add personal information like weight and height.
-- **Overview**: Provides a high-level view and statistics on goals and workouts.
-- **Add Workouts**: Exercises are fetched from an API and the user can create custom workouts, and save them (stored on Firebase).
-- **My Workouts**: Shows users their past and upcoming workouts.
-- **Goals**: Users can set goals (currently only a few different options).
-- **Progress**: Users can track statistics on workouts and progress towards their goals. The data is visualized through various graphs from ReCharts. Currently, the data on the progress page is randomly generated and not linked to logged workouts. Most of the data about workouts are pulled from the real workout data.
-
-## What we plan to do:
-
-We still need to connect the completed workouts to the goals and the progress view. Right now, the Goals and Workouts are completely independent and implemented using placeholder data. This needs to be updated such that the views use the relevant data from the profile. We still have to add meals and count calories consumed each day in order to get the calories calculated correctly. We need to add responsiveness for the pages /goals and /progress. The goals and progress page should also display a spinning wheel while waiting for data from Pirebase
-
-Users should also be able to add data about weight and time when they create the workouts. We also plan to make the sidebar invisible when the user is not logged in.
-
-When all of the above are implemented, a user evaluation of the platform needs to be conducted and feedback from that needs to be implemented.
 
 ## Tech stack
 - Typescript
@@ -51,17 +32,26 @@ When all of the above are implemented, a user evaluation of the platform needs t
 - Redux with [Redux Toolkit](https://redux-toolkit.js.org/tutorials/quick-start)
 - [Recharts](https://recharts.org/)
 
+## APIs
+[Exercises API](https://api-ninjas.com/api/exercises)  
+[Calories burned API]((https://api-ninjas.com/api/caloriesburned))  
+
+## 3rd party components
+All charts to visualize data are from [Recharts](https://recharts.org/) (except the calendar heat map which is from [uiw](https://uiwjs.github.io/react-heat-map/). The calendar date picker used when adding a workout is from [Material UI](https://mui.com/material-ui/all-components/).
+
 ## File structure
 
 - [.github/workflows](./.github/workflows) - github actions for automatically deploying to firebase hosting on new commits and pull requests
 - [public/](./public/) - public files and assets
 - [src/](./src/) - source files
-  - [components/](./src/components/) - reusable components
-  - [features/](./src/features/) - redux slices and type definitions for page features
+  - [Model/](./src/Model/) - redux slices and type definitions for page features
     - [addWorkout/](./src/features/addWorkout/) - state and types for the add workout feature
     - [goals/](./src/features/goals/) - state and types for the add goals feature
+    - [profile/](./src/features/profile/) - state and types for the profile feature
     - [workouts/](./src/features/workouts/) - state and types for the workouts feature
-  - [routes/](./src/routes/) - folder for Tanstack Router routes
+  - [PresenterUtils](./src/PresenterUtils/) - folder for utility functions to presenters
+      - [PresenterUtils](./src/PresenterUtils/handlers.tsx) handlers used by several presenters 
+  - [routes/](./src/routes/) - folder for Presenters (Tanstack Router routes)
     - [\_\_root.tsx](./src/routes/__root.tsx) - root layout for rendering sidebar menu and common parts between routes
     - [\_index/](./src/routes/_index/) - route for index page with overview dashboard
     - [add-workout/](./src/routes/add-workout/) - route for add workout page with exercise search and select
@@ -70,14 +60,13 @@ When all of the above are implemented, a user evaluation of the platform needs t
     - [progress/](./src/routes/progress/) - route for progress page with statistics for workouts, goals and more
     - [workouts/](./src/routes/workouts/) - route for workouts page with todays, upcoming and previous workouts
   - [views/](./src/views/)
+    - [Application/](./src/views/Application) - folder for high level application views
     - [Goals/](./src/views/Goals/) - folder for different views on the goals page
     - [Overview/](./src/views/Overview/) - folder for different metrics cards on the overview page
+    - [Profile/](./src/views/Profile/) - folder for diffferent profile related views and login
     - [Progress/](./src/views/Progress/) - folder for different statistics views and charts on the Progress page
-    - [AddWorkoutView.tsx](./src/views/AddWorkoutView.tsx) - view for add workout page
-    - [FitnessDashboardView.tsx](./src/views/FitnessDashboardView.tsx) - view for dashboard page
-    - [LoggedInView.tsx](./src/views/LoggedInView.tsx) - view for profile page when logged in
-    - [LoginFormView.tsx](./src/views/LoginFormView.tsx) - view for profile page when not logged in
-    - [WorkoutsView.tsx](./src/views/WorkoutsView.tsx) - view for workouts page
+    - [Search/](./src/views/Search/) folder for Search related views
+    - [Workout/](./src/views/Workout/) folder for workout views
   - [firebase.ts](./src/firebase.ts) - firebase config and initialization
   - [helpers.ts](./src/helpers.ts) - common helper functions
   - [main.tsx](./src/main.tsx) - main component for react with providers for redux store, MUI theme and Tanstack router
@@ -98,3 +87,13 @@ When all of the above are implemented, a user evaluation of the platform needs t
 - [tsconfig.json](./tsconfig.json) - typescript configuration from Vite
 - [tsconfig.node.json](./tsconfig.node.json) - typescript configuration from Vite for nodejs
 - [vite.config.ts](./vite.config.ts) - Vite config
+
+## User feedback at the prototyping stage (30 min)
+[User feedback](https://docs.google.com/document/d/1k6fzGHI7aa6IgPLAlqMR2oYAVkYn4_AuWQaJ9bH7bTk/edit?usp=sharing)
+## User feedback at the formative evaluation stage (30 min)
+[User feedback](https://docs.google.com/document/d/1GcTGc8E_z0utTma-zfnyhMJC1-z6frFx-SRWyb9syuY/edit)
+
+The creative solution that was implemented based on user feedback was a chart visualizing the proportions between different exercise types. This way the user can see if they should prioritize cardio, strength training, stretching, etc. 
+
+## Other comments
+The group is aiming for grade A
