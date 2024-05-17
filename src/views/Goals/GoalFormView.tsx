@@ -12,6 +12,8 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import { SearchBarView } from "../Search/SearchBarView";
 import { Exercise, ExerciseType } from "../../Model/workouts/workoutsSlice";
@@ -148,6 +150,11 @@ export function GoalFormView({
           )}
         </Grid>
       </DialogContent>
+      <Alert severity="info">
+        <AlertTitle>Determining your starting point</AlertTitle>
+        The next time you log this exercise will set the starting point. After which, each subsequent workout will be
+        used to calculate your progress.
+      </Alert>
       <DialogActions>
         <Button onClick={() => setOpen(false)}>Cancel</Button>
         <Button onClick={() => handleSubmit()} disabled={isAddButtonDisabled}>
