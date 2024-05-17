@@ -90,12 +90,15 @@ All charts to visualize data are from [Recharts](https://recharts.org/) (except 
 
 ## User feedback at the prototyping stage (30 min)
 [User feedback](https://docs.google.com/document/d/1k6fzGHI7aa6IgPLAlqMR2oYAVkYn4_AuWQaJ9bH7bTk/edit?usp=sharing)
-To solve the confusion of how a workout is added we tried to make the button as explicit as possible and most of the users later thought the flow was clear when it was an interactive app rather than a pdf. The lack of a "Forgot Password" button sas solved by using google as the sign in option. The feedback about being a "corporate aesthetic" was not acted upon.
+To solve the confusion of how a workout is added we tried to make the button as explicit as possible and most of the users later thought the flow was clear when it was an interactive app rather than a pdf. The lack of a "Forgot Password" button sas solved by using google as the sign in option. The feedback about being a "corporate aesthetic" was not acted upon. After showing the deployed version the user believed the design looked good. The user feedback about not being able to delete a workout was implemented successfully. 
 
 ## User feedback at the formative evaluation stage (30 min)
 [User feedback](https://docs.google.com/document/d/1GcTGc8E_z0utTma-zfnyhMJC1-z6frFx-SRWyb9syuY/edit)
+The problem of showing the text "lower_back" was fixed on the progress page by using a custom function toFriendlyString. The problem of the instructions being too narrow in the add exercise card was solved by making the card wider and redesigning it. 
 
 The creative solution that was implemented based on user feedback was a chart visualizing the proportions between different exercise types. This way the user can see if they should prioritize cardio, strength training, stretching, etc. 
+
+
 
 ## Other comments
 The group is aiming for grade A
