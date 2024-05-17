@@ -16,6 +16,8 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import { DeleteForever, LocalFireDepartment } from "@mui/icons-material";
 import { Workout } from "../../Model/workouts/workoutsSlice";
@@ -135,9 +137,27 @@ const WorkoutsCard: React.FC<WorkoutCardProps> = ({ workout, deleteWorkout }) =>
           </Tooltip>
         </CardContent>
         <CardActions>
-          <Button startIcon={<DeleteForever />} color="error" onClick={() => deleteWorkout(workout.key!)}>
-            Delete Workout
-          </Button>
+          <Tooltip
+            componentsProps={{
+              tooltip: {
+                sx: { p: 0, borderRadius: 20 },
+              },
+              arrow: {
+                sx: { color: "#fff4e5" },
+              },
+            }}
+            title={
+              <Alert severity="warning" sx={{ borderRadius: 4 }}>
+                <AlertTitle>Delete forever?</AlertTitle>
+                This action cannot be undone.
+              </Alert>
+            }
+            arrow
+          >
+            <Button startIcon={<DeleteForever />} color="error" onClick={() => deleteWorkout(workout.key!)}>
+              Delete Workout
+            </Button>
+          </Tooltip>
         </CardActions>
       </Card>
     </Grid>

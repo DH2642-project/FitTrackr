@@ -1,14 +1,8 @@
-import {
-  Grid,
-  Button,
-  Card,
-  Stack,
-  Typography,
-  CardContent,
-} from "@mui/material";
+import { Grid, Button, Card, Stack, Typography, CardContent, Alert, AlertTitle, Tooltip } from "@mui/material";
 import { GoalProgressChart } from "../Progress/GoalProgressChart";
 import { Goal } from "../../Model/goals/goalsReducer";
 import { toFriendlyString } from "../../helpers";
+import { DeleteForever } from "@mui/icons-material";
 
 export function CurrentGoalsView({
   onDeleteGoal,
@@ -39,15 +33,33 @@ export function CurrentGoalsView({
               ></GoalProgressChart>
             </Grid>
           </Grid>
-
-          <Button
-            type="button"
-            variant="contained"
-            color="error"
-            onClick={() => onDeleteGoal(goal.key)}
+          <Tooltip
+            componentsProps={{
+              tooltip: {
+                sx: { p: 0, borderRadius: 20 },
+              },
+              arrow: {
+                sx: { color: "#fff4e5" },
+              },
+            }}
+            title={
+              <Alert severity="warning" sx={{ borderRadius: 4 }}>
+                <AlertTitle>Delete forever?</AlertTitle>
+                This action cannot be undone.
+              </Alert>
+            }
+            arrow
           >
-            Delete
-          </Button>
+            <Button
+              type="button"
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteForever />}
+              onClick={() => onDeleteGoal(goal.key)}
+            >
+              Delete goal
+            </Button>
+          </Tooltip>
         </CardContent>
       </Card>
     );
