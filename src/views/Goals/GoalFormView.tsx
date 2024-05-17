@@ -13,7 +13,7 @@ import {
   Radio,
   RadioGroup,
 } from "@mui/material";
-import { SearchBarView } from "../Workout/SearchBarView";
+import { SearchBarView } from "../Search/SearchBarView";
 import { Exercise, ExerciseType } from "../../Model/workouts/workoutsSlice";
 import FullscreenCircularProgress from "../Application/FullscreenCircularProgress";
 

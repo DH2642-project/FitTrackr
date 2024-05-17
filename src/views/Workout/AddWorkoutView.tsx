@@ -10,7 +10,7 @@ import { Exercise, ExerciseType } from "../../Model/workouts/workoutsSlice";
 import FullscreenCircularProgress from "../Application/FullscreenCircularProgress";
 import { useState } from "react";
 import { WorkoutSummaryView } from "./WorkoutSummaryView";
-import { SearchBarView } from "./SearchBarView";
+import { SearchBarView } from "../Search/SearchBarView";
 import { SearchResultCard } from "./SearchResultCard";
 import { AddExerciseCard } from "./AddExerciseCard";
 
